@@ -6,12 +6,16 @@
 //
 
 import SwiftUI
+import Moya
 
 @main
 struct SeatCatcherApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            let postRepository = PostRepositoryImpl(provider: MoyaProvider<PostAPI>())
+            let postUseCase = PostUseCaseImpl(repository: postRepository)
+            let postViewModel = PostViewModel(postUseCase: postUseCase)
+            PostView(viewModel: postViewModel)
         }
     }
 }
