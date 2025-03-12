@@ -32,6 +32,11 @@
 			path = SeatCatcherTests;
 			sourceTree = "<group>";
 		};
+		DF07F1222D8195980093E16F /* Entitlement */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Entitlement;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -55,6 +60,7 @@
 		DF07F0CF2D79C4E60093E16F = {
 			isa = PBXGroup;
 			children = (
+				DF07F1222D8195980093E16F /* Entitlement */,
 				DF07F0DA2D79C4E60093E16F /* SeatCatcher */,
 				DF07F0EB2D79C4E80093E16F /* SeatCatcherTests */,
 				DF07F0D92D79C4E60093E16F /* Products */,
@@ -87,6 +93,7 @@
 			);
 			fileSystemSynchronizedGroups = (
 				DF07F0DA2D79C4E60093E16F /* SeatCatcher */,
+				DF07F1222D8195980093E16F /* Entitlement */,
 			);
 			name = SeatCatcher;
 			packageProductDependencies = (
@@ -324,11 +331,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = SeatCatcher/SeatCatcher.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Entitlement/SeatCatcher.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"SeatCatcher/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"SeatCatcher/Resources/Preview Content\"";
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 6RUVHQW43D;
 				ENABLE_PREVIEWS = YES;
@@ -363,11 +370,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = SeatCatcher/SeatCatcher.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Entitlement/SeatCatcher.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"SeatCatcher/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"SeatCatcher/Resources/Preview Content\"";
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 6RUVHQW43D;
 				ENABLE_PREVIEWS = YES;
