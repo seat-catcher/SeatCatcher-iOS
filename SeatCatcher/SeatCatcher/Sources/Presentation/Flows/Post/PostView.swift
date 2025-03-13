@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct PostView: View {
-    private var viewModel: PostViewModel
+    private let viewModel: PostViewModel
 
     init(viewModel: PostViewModel) {
         self.viewModel = viewModel
@@ -23,11 +23,11 @@ struct PostView: View {
                 }
                 .padding()
 
-            case .loading:
+            case .isLoading:
                 Text("로딩 중입니다")
                     .padding()
 
-            case .loaded(let post):
+            case .isLoaded(let post):
                 VStack(spacing: 16) {
                     Text(post.title)
                         .font(.title)
@@ -39,7 +39,7 @@ struct PostView: View {
                     .padding()
                 }
 
-            case .error(let message):
+            case .isErrorOccurred(let message):
                 VStack(spacing: 16) {
                     Text(message)
                         .foregroundColor(.red)
@@ -48,6 +48,12 @@ struct PostView: View {
                     }
                     .padding()
                 }
+            }
+            Button("Next") {
+                viewModel.action(.isNextButtonTapped)
+            }
+            Button("Sheet") {
+                viewModel.action(.isSheetButtonTapped)
             }
         }
     }

@@ -12,36 +12,47 @@ final class PostViewModel: ViewModel {
     enum Action {
         case onFetchButtonTapped
         case onResetButtonTapped
+        case isSheetButtonTapped
+        case isNextButtonTapped
     }
 
     enum State {
         case idle
-        case loading
-        case loaded(Post)
-        case error(String)
+        case isLoading
+        case isLoaded(Post)
+        case isErrorOccurred(String)
     }
 
     private(set) var state = State.idle
     private let postUseCase: PostUseCase
+    private let coordinator: Coordinator
 
-    init(postUseCase: PostUseCase) {
+    init(
+        postUseCase: PostUseCase,
+        coordinator: Coordinator
+    ) {
         self.postUseCase = postUseCase
+        self.coordinator = coordinator
     }
 
     func action(_ action: Action) {
         switch action {
         case .onFetchButtonTapped:
             Task {
-                await MainActor.run { state = .loading }
+                await MainActor.run { state = .isLoading }
                 do {
                     let post = try await postUseCase.fetchPost(byID: 1)
-                    await MainActor.run { state = .loaded(post) }
+                    await MainActor.run { state = .isLoaded(post) }
                 } catch {
-                    await MainActor.run { state = .error(error.localizedDescription) }
+                    await MainActor.run { state = .isErrorOccurred(error.localizedDescription) }
                 }
             }
         case .onResetButtonTapped:
             state = .idle
+        case .isSheetButtonTapped:
+            coordinator.presentSheet(.post)
+        case .isNextButtonTapped:
+            coordinator.push(.next)
         }
     }
 }
