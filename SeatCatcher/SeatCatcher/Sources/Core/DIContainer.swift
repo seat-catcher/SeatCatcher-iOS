@@ -9,5 +9,5 @@ import Foundation
 import Moya
 
 protocol DIContainer {
-    func injectPostViewModel() -> PostViewModel
+    func resolvePostUseCase() -> PostUseCase
 }

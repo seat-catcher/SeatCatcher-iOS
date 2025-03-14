@@ -10,6 +10,8 @@ import SwiftUI
 
 @Observable
 final class CoordinatorImpl: Coordinator {
+    var diContainer: DIContainer
+
     var path = NavigationPath()
 
     var sheet: AppSheet?
@@ -18,11 +20,19 @@ final class CoordinatorImpl: Coordinator {
     var sheetOnDismiss: (() -> Void)?
     var fullScreenCoverOnDismiss: (() -> Void)?
 
+    init(diContainer: DIContainer) {
+        self.diContainer = diContainer
+    }
+
     @ViewBuilder
     func buildScene(_ scene: AppScene) -> some View {
         switch scene {
-        case let .post(viewModel):
-            PostView(viewModel: viewModel)
+        case .post:
+            let postViewModel = PostViewModel(
+                postUseCase: diContainer.resolvePostUseCase(),
+                coordinator: self
+            )
+            PostView(viewModel: postViewModel)
         case .next:
             NextView()
         }
