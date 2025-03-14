@@ -8,7 +8,7 @@
 import Foundation
 
 enum AppScene: Hashable {
-    case post(PostViewModel)
+    case post
     case next
 
     var id: String {

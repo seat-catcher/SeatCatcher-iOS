@@ -11,18 +11,17 @@ import Moya
 @main
 struct SeatCatcherApp: App {
     @State private var coordinator: CoordinatorImpl
-    @State private var diContainer: DIContainerImpl
 
     init() {
-        let coordinator = CoordinatorImpl()
+        let diContainer = DIContainerImpl()
+        let coordinator = CoordinatorImpl(diContainer: diContainer)
         _coordinator = State(initialValue: coordinator)
-        _diContainer = State(initialValue: DIContainerImpl(coordinator: coordinator))
     }
 
     var body: some Scene {
         WindowGroup {
             NavigationStack(path: $coordinator.path) {
-                coordinator.buildScene(.post(diContainer.injectPostViewModel()))
+                coordinator.buildScene(.post)
                     .navigationDestination(for: AppScene.self) {
                         coordinator.buildScene($0)
                     }
