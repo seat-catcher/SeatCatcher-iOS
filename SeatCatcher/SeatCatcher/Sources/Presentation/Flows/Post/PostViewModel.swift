@@ -6,6 +6,8 @@
 //
 
 import Foundation
+import SeatCatcherDomain
+import SeatCatcherCore
 
 @Observable
 final class PostViewModel: ViewModel {

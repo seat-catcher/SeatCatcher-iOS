@@ -7,6 +7,6 @@
 
 import Foundation
 
-protocol PostRepository {
+public protocol PostRepository {
     func fetchPost(byID id: Int) async throws -> Post
 }

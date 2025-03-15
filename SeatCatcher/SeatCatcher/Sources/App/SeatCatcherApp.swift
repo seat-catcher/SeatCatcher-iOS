@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import Moya
+import SeatCatcherCore
 
 @main
 struct SeatCatcherApp: App {
@@ -22,7 +22,7 @@ struct SeatCatcherApp: App {
         WindowGroup {
             NavigationStack(path: $coordinator.path) {
                 coordinator.buildScene(.post)
-                    .navigationDestination(for: AppScene.self) {
+                    .navigationDestination(for: SeatCatcherCore.AppScene.self) {
                         coordinator.buildScene($0)
                     }
                     .sheet(item: $coordinator.sheet) {

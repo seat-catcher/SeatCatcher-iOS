@@ -7,6 +7,8 @@
 
 import Foundation
 import Moya
+import SeatCatcherDomain
+import SeatCatcherCore
 
 @Observable
 final class DIContainerImpl: DIContainer {

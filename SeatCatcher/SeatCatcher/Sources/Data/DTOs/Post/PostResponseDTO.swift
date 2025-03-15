@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SeatCatcherDomain
 
 struct PostResponseDTO {
     let userId: Int

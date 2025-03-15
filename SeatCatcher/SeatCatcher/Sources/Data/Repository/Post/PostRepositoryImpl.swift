@@ -7,6 +7,7 @@
 
 import Foundation
 import Moya
+import SeatCatcherDomain
 
 final class PostRepositoryImpl: PostRepository {
     private let provider: MoyaProvider<PostAPI>

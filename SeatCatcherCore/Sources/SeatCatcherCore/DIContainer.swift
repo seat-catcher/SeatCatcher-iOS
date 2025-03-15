@@ -6,8 +6,8 @@
 //
 
 import Foundation
-import Moya
+import SeatCatcherDomain
 
-protocol DIContainer {
+public protocol DIContainer {
     func resolvePostUseCase() -> PostUseCase
 }
