@@ -7,6 +7,6 @@
 
 import Foundation
 
-struct PostRequestDTO: RequestDTO {
+public struct PostRequestDTO: RequestDTO {
     let id: Int
 }

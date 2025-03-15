@@ -10,6 +10,7 @@
 		DF07F1352D81A1BA0093E16F /* Moya in Frameworks */ = {isa = PBXBuildFile; productRef = DF07F1342D81A1BA0093E16F /* Moya */; };
 		DF07F1392D81A5790093E16F /* Moya in Frameworks */ = {isa = PBXBuildFile; productRef = DF07F1382D81A5790093E16F /* Moya */; };
 		DFDD84CC2D8575CD009A00FF /* SeatCatcherCore in Frameworks */ = {isa = PBXBuildFile; productRef = DFDD84CB2D8575CD009A00FF /* SeatCatcherCore */; };
+		DFDD85322D857C3D009A00FF /* SeatCatcherData in Frameworks */ = {isa = PBXBuildFile; productRef = DFDD85312D857C3D009A00FF /* SeatCatcherData */; };
 		DFF8CF842D85728700CDC6D6 /* SeatCatcherDomain in Frameworks */ = {isa = PBXBuildFile; productRef = DFF8CF832D85728700CDC6D6 /* SeatCatcherDomain */; };
 /* End PBXBuildFile section */
 
@@ -51,6 +52,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DFDD85322D857C3D009A00FF /* SeatCatcherData in Frameworks */,
 				DFF8CF842D85728700CDC6D6 /* SeatCatcherDomain in Frameworks */,
 				DF07F1352D81A1BA0093E16F /* Moya in Frameworks */,
 				DFDD84CC2D8575CD009A00FF /* SeatCatcherCore in Frameworks */,
@@ -111,6 +113,7 @@
 				DF07F1342D81A1BA0093E16F /* Moya */,
 				DFF8CF832D85728700CDC6D6 /* SeatCatcherDomain */,
 				DFDD84CB2D8575CD009A00FF /* SeatCatcherCore */,
+				DFDD85312D857C3D009A00FF /* SeatCatcherData */,
 			);
 			productName = SeatCatcher;
 			productReference = DF07F0D82D79C4E60093E16F /* SeatCatcher.app */;
@@ -172,6 +175,7 @@
 				DF07F1332D81A1BA0093E16F /* XCRemoteSwiftPackageReference "Moya" */,
 				DFF8CF822D85728700CDC6D6 /* XCLocalSwiftPackageReference "../SeatCatcherDomain" */,
 				DFDD84CA2D8575CD009A00FF /* XCLocalSwiftPackageReference "../SeatCatcherCore" */,
+				DFDD85302D857C3D009A00FF /* XCLocalSwiftPackageReference "../SeatCatcherData" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = DF07F0D92D79C4E60093E16F /* Products */;
@@ -507,6 +511,10 @@
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ../SeatCatcherCore;
 		};
+		DFDD85302D857C3D009A00FF /* XCLocalSwiftPackageReference "../SeatCatcherData" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../SeatCatcherData;
+		};
 		DFF8CF822D85728700CDC6D6 /* XCLocalSwiftPackageReference "../SeatCatcherDomain" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ../SeatCatcherDomain;
@@ -538,6 +546,10 @@
 		DFDD84CB2D8575CD009A00FF /* SeatCatcherCore */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SeatCatcherCore;
+		};
+		DFDD85312D857C3D009A00FF /* SeatCatcherData */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SeatCatcherData;
 		};
 		DFF8CF832D85728700CDC6D6 /* SeatCatcherDomain */ = {
 			isa = XCSwiftPackageProductDependency;

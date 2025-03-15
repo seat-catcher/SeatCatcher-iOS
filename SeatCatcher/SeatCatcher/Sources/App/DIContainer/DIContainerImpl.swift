@@ -9,12 +9,12 @@ import Foundation
 import Moya
 import SeatCatcherDomain
 import SeatCatcherCore
+import SeatCatcherData
 
 @Observable
 final class DIContainerImpl: DIContainer {
     func resolvePostUseCase() -> PostUseCase {
-        let provider = MoyaProvider<PostAPI>()
-        let postRepository = PostRepositoryImpl(provider: provider)
+        let postRepository = PostRepositoryImpl()
         let postUseCase = PostUseCaseImpl(repository: postRepository)
         return postUseCase
     }
