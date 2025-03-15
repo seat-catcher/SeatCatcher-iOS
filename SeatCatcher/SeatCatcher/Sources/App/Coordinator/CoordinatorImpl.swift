@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import SeatCatcherCore
 
 @Observable
 final class CoordinatorImpl: Coordinator {
@@ -14,8 +15,8 @@ final class CoordinatorImpl: Coordinator {
 
     var path = NavigationPath()
 
-    var sheet: AppSheet?
-    var fullScreenCover: AppFullScreenCover?
+    var sheet: SeatCatcherCore.AppSheet?
+    var fullScreenCover: SeatCatcherCore.AppFullScreenCover?
 
     var sheetOnDismiss: (() -> Void)?
     var fullScreenCoverOnDismiss: (() -> Void)?
@@ -25,7 +26,7 @@ final class CoordinatorImpl: Coordinator {
     }
 
     @ViewBuilder
-    func buildScene(_ scene: AppScene) -> some View {
+    func buildScene(_ scene: SeatCatcherCore.AppScene) -> some View {
         switch scene {
         case .post:
             let postViewModel = PostViewModel(
@@ -39,7 +40,7 @@ final class CoordinatorImpl: Coordinator {
     }
 
     @ViewBuilder
-    func buildSheet(_ sheet: AppSheet) -> some View {
+    func buildSheet(_ sheet: SeatCatcherCore.AppSheet) -> some View {
         switch sheet {
         case .post:
             PostSheetView()
@@ -47,7 +48,7 @@ final class CoordinatorImpl: Coordinator {
     }
 
     @ViewBuilder
-    func buildFullScreenCover(_ fullScreenCover: AppFullScreenCover) -> some View {
+    func buildFullScreenCover(_ fullScreenCover: SeatCatcherCore.AppFullScreenCover) -> some View {
         switch fullScreenCover {
         case .post:
             PostFullScreenCoverView()

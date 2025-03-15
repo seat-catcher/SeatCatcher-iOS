@@ -7,18 +7,18 @@
 
 import Foundation
 
-protocol PostUseCase {
+public protocol PostUseCase {
     func fetchPost(byID id: Int) async throws -> Post
 }
 
-final class PostUseCaseImpl: PostUseCase {
+public final class PostUseCaseImpl: PostUseCase {
     private let repository: PostRepository
 
-    init(repository: PostRepository) {
+    public init(repository: PostRepository) {
         self.repository = repository
     }
 
-    func fetchPost(byID id: Int) async throws -> Post {
+    public func fetchPost(byID id: Int) async throws -> Post {
         return try await repository.fetchPost(byID: id)
     }
 }
