@@ -8,10 +8,10 @@
 import SwiftUI
 
 public struct PostView: View {
-    private let viewModel: PostViewModel
+    @State private var viewModel: PostViewModel
 
     public init(viewModel: PostViewModel) {
-        self.viewModel = viewModel
+        self._viewModel = State(initialValue: viewModel)
     }
     
     public var body: some View {

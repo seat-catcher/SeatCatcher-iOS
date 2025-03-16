@@ -12,18 +12,18 @@ import SwiftUI
 public protocol Coordinator: AnyObject {
     var diContainer: DIContainer { get set }
     var path: NavigationPath { get set }
-    var sheet: AppSheet? { get set }
-    var fullScreenCover: AppFullScreenCover? { get set }
+    var sheet: (any AppRoute)? { get set }
+    var fullScreenCover: (any AppRoute)? { get set }
     var sheetOnDismiss: (() -> Void)? { get set }
     var fullScreenCoverOnDismiss: (() -> Void)? { get set }
 
-    func push(_ scene: AppScene)
+    func push(_ scene: any AppRoute)
     func pop()
     func popToRoot()
-    func presentSheet(_ sheet: AppSheet, onDismiss: (() -> Void)?)
+    func presentSheet(_ sheet: any AppRoute, onDismiss: (() -> Void)?)
     func dismissSheet()
     func presentFullScreenCover(
-        _ fullScreenCover: AppFullScreenCover,
+        _ fullScreenCover: any AppRoute,
         onDismiss: (() -> Void)?
     )
     func dismissFullScreenCover()
@@ -31,7 +31,7 @@ public protocol Coordinator: AnyObject {
 
 // MARK: - 기본 구현 제공
 public extension Coordinator {
-    func push(_ scene: AppScene) {
+    func push(_ scene: any AppRoute) {
         path.append(scene)
     }
 
@@ -43,7 +43,7 @@ public extension Coordinator {
         if !path.isEmpty { path.removeLast(path.count - 1) }
     }
 
-    func presentSheet(_ sheet: AppSheet, onDismiss: (() -> Void)? = nil) {
+    func presentSheet(_ sheet: any AppRoute, onDismiss: (() -> Void)? = nil) {
         self.sheet = sheet
         self.sheetOnDismiss = onDismiss
     }
@@ -55,7 +55,7 @@ public extension Coordinator {
     }
 
     func presentFullScreenCover(
-        _ fullScreenCover: AppFullScreenCover,
+        _ fullScreenCover: any AppRoute,
         onDismiss: (() -> Void)? = nil
     ) {
         self.fullScreenCover = fullScreenCover

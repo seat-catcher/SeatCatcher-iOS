@@ -1,17 +1,18 @@
 //
-//  Routes.swift
-//  SeatCatcher
+//  AppRoute.swift
+//  SeatCatcherPresentation
 //
-//  Created by 박현수 on 3/14/25.
+//  Created by 박현수 on 3/16/25.
 //
 
 import Foundation
+import SeatCatcherCore
 
-public enum AppScene: Hashable {
+public enum AppScene: AppRoute {
     case post
     case next
 
-    var id: String {
+    public var id: String {
         switch self {
         case .post: return "post"
         case .next: return "next"
@@ -26,7 +27,7 @@ public enum AppScene: Hashable {
     }
 }
 
-public enum AppSheet: Hashable, Identifiable {
+public enum AppSheet: AppRoute {
     case post
 
     public var id: String {
@@ -36,7 +37,7 @@ public enum AppSheet: Hashable, Identifiable {
     }
 }
 
-public enum AppFullScreenCover: Hashable, Identifiable {
+public enum AppFullScreenCover: AppRoute {
     case post
 
     public var id: String {
