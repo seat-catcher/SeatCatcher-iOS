@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import SeatCatcherCore
+import SeatCatcherPresentation
 
 @Observable
 final class CoordinatorImpl: Coordinator {
@@ -29,13 +30,13 @@ final class CoordinatorImpl: Coordinator {
     func buildScene(_ scene: SeatCatcherCore.AppScene) -> some View {
         switch scene {
         case .post:
-            let postViewModel = PostViewModel(
+            let postViewModel = SeatCatcherPresentation.PostViewModel(
                 postUseCase: diContainer.resolvePostUseCase(),
                 coordinator: self
             )
-            PostView(viewModel: postViewModel)
+            SeatCatcherPresentation.PostView(viewModel: postViewModel)
         case .next:
-            NextView()
+            SeatCatcherPresentation.NextView()
         }
     }
 

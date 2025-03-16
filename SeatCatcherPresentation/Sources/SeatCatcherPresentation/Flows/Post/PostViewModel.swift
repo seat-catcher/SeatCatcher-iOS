@@ -10,7 +10,7 @@ import SeatCatcherDomain
 import SeatCatcherCore
 
 @Observable
-final class PostViewModel: ViewModel {
+public final class PostViewModel: ViewModel {
     enum Action {
         case onFetchButtonTapped
         case onResetButtonTapped
@@ -29,7 +29,7 @@ final class PostViewModel: ViewModel {
     private let postUseCase: PostUseCase
     private let coordinator: Coordinator
 
-    init(
+    public init(
         postUseCase: PostUseCase,
         coordinator: Coordinator
     ) {
@@ -46,7 +46,7 @@ final class PostViewModel: ViewModel {
                     let post = try await postUseCase.fetchPost(byID: 1)
                     await MainActor.run { state = .isLoaded(post) }
                 } catch {
-                    await MainActor.run { state = .isErrorOccurred(error.localizedDescription) }
+                    await MainActor.run { state = .isErrorOccurred(error.localizedDescription)}
                 }
             }
         case .onResetButtonTapped:

@@ -7,8 +7,10 @@
 
 import SwiftUI
 
-struct PostFullScreenCoverView: View {
-    var body: some View {
+public struct PostFullScreenCoverView: View {
+    public init() {}
+    
+    public var body: some View {
         Text("Post")
     }
 }

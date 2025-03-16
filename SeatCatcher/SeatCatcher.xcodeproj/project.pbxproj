@@ -11,6 +11,7 @@
 		DF07F1392D81A5790093E16F /* Moya in Frameworks */ = {isa = PBXBuildFile; productRef = DF07F1382D81A5790093E16F /* Moya */; };
 		DFDD84CC2D8575CD009A00FF /* SeatCatcherCore in Frameworks */ = {isa = PBXBuildFile; productRef = DFDD84CB2D8575CD009A00FF /* SeatCatcherCore */; };
 		DFDD85322D857C3D009A00FF /* SeatCatcherData in Frameworks */ = {isa = PBXBuildFile; productRef = DFDD85312D857C3D009A00FF /* SeatCatcherData */; };
+		DFDD85482D86C265009A00FF /* SeatCatcherPresentation in Frameworks */ = {isa = PBXBuildFile; productRef = DFDD85472D86C265009A00FF /* SeatCatcherPresentation */; };
 		DFF8CF842D85728700CDC6D6 /* SeatCatcherDomain in Frameworks */ = {isa = PBXBuildFile; productRef = DFF8CF832D85728700CDC6D6 /* SeatCatcherDomain */; };
 /* End PBXBuildFile section */
 
@@ -55,6 +56,7 @@
 				DFDD85322D857C3D009A00FF /* SeatCatcherData in Frameworks */,
 				DFF8CF842D85728700CDC6D6 /* SeatCatcherDomain in Frameworks */,
 				DF07F1352D81A1BA0093E16F /* Moya in Frameworks */,
+				DFDD85482D86C265009A00FF /* SeatCatcherPresentation in Frameworks */,
 				DFDD84CC2D8575CD009A00FF /* SeatCatcherCore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -114,6 +116,7 @@
 				DFF8CF832D85728700CDC6D6 /* SeatCatcherDomain */,
 				DFDD84CB2D8575CD009A00FF /* SeatCatcherCore */,
 				DFDD85312D857C3D009A00FF /* SeatCatcherData */,
+				DFDD85472D86C265009A00FF /* SeatCatcherPresentation */,
 			);
 			productName = SeatCatcher;
 			productReference = DF07F0D82D79C4E60093E16F /* SeatCatcher.app */;
@@ -176,6 +179,7 @@
 				DFF8CF822D85728700CDC6D6 /* XCLocalSwiftPackageReference "../SeatCatcherDomain" */,
 				DFDD84CA2D8575CD009A00FF /* XCLocalSwiftPackageReference "../SeatCatcherCore" */,
 				DFDD85302D857C3D009A00FF /* XCLocalSwiftPackageReference "../SeatCatcherData" */,
+				DFDD85462D86C265009A00FF /* XCLocalSwiftPackageReference "../SeatCatcherPresentation" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = DF07F0D92D79C4E60093E16F /* Products */;
@@ -515,6 +519,10 @@
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ../SeatCatcherData;
 		};
+		DFDD85462D86C265009A00FF /* XCLocalSwiftPackageReference "../SeatCatcherPresentation" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../SeatCatcherPresentation;
+		};
 		DFF8CF822D85728700CDC6D6 /* XCLocalSwiftPackageReference "../SeatCatcherDomain" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ../SeatCatcherDomain;
@@ -550,6 +558,10 @@
 		DFDD85312D857C3D009A00FF /* SeatCatcherData */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SeatCatcherData;
+		};
+		DFDD85472D86C265009A00FF /* SeatCatcherPresentation */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SeatCatcherPresentation;
 		};
 		DFF8CF832D85728700CDC6D6 /* SeatCatcherDomain */ = {
 			isa = XCSwiftPackageProductDependency;

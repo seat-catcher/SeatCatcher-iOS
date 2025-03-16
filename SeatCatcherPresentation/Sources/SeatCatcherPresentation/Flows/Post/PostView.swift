@@ -7,14 +7,14 @@
 
 import SwiftUI
 
-struct PostView: View {
+public struct PostView: View {
     private let viewModel: PostViewModel
 
-    init(viewModel: PostViewModel) {
+    public init(viewModel: PostViewModel) {
         self.viewModel = viewModel
     }
     
-    var body: some View {
+    public var body: some View {
         VStack {
             switch viewModel.state {
             case .idle:

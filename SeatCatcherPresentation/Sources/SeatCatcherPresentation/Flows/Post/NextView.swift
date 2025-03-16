@@ -7,8 +7,10 @@
 
 import SwiftUI
 
-struct NextView: View {
-    var body: some View {
+public struct NextView: View {
+    public init() {}
+
+    public var body: some View {
         Text("Next")
     }
 }
