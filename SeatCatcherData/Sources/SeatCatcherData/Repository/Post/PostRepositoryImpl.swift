@@ -12,6 +12,9 @@ import SeatCatcherDomain
 public final class PostRepositoryImpl: PostRepository {
     private let provider = MoyaProvider<PostAPI>()
 
+    // MARK: - Thread 정보 확인 시 사용
+    // private let provider = MoyaProvider<PostAPI>(plugins: [ThreadLoggingPlugin()])
+
     public init() {}
 
     public func fetchPost(byID id: Int) async throws -> Post {

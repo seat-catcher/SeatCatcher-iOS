@@ -11,7 +11,7 @@ protocol ViewModel {
     associatedtype Action
     associatedtype State
 
-    var state: State { get }
+    @MainActor var state: State { get }
 
-    func action(_ action: Action)
+    @MainActor func action(_ action: Action)
 }
