@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SeatCatcherCore
+import SeatCatcherPresentation
 
 @main
 struct SeatCatcherApp: App {
@@ -22,13 +23,13 @@ struct SeatCatcherApp: App {
         WindowGroup {
             NavigationStack(path: $coordinator.path) {
                 coordinator.buildScene(.post)
-                    .navigationDestination(for: SeatCatcherCore.AppScene.self) {
+                    .navigationDestination(for: SeatCatcherPresentation.AppScene.self) {
                         coordinator.buildScene($0)
                     }
-                    .sheet(item: $coordinator.sheet) {
+                    .sheet(item: $coordinator.appSheet) {
                         coordinator.buildSheet($0)
                     }
-                    .fullScreenCover(item: $coordinator.fullScreenCover) {
+                    .fullScreenCover(item: $coordinator.appFullScreenCover) {
                         coordinator.buildFullScreenCover($0)
                     }
             }

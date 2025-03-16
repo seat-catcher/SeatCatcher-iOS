@@ -52,9 +52,11 @@ public final class PostViewModel: ViewModel {
         case .onResetButtonTapped:
             state = .idle
         case .isSheetButtonTapped:
-            coordinator.presentSheet(.post)
+            let post = AppSheet.post
+            coordinator.presentSheet(post)
         case .isNextButtonTapped:
-            coordinator.push(.next)
+            let next = AppScene.next
+            coordinator.push(next)
         }
     }
 }
