@@ -16,45 +16,20 @@ public struct PostView: View {
     
     public var body: some View {
         VStack {
-            switch viewModel.state {
-            case .idle:
-                Button("Fetch") {
-                    viewModel.action(.onFetchButtonTapped)
-                }
-                .padding()
-
-            case .isLoading:
+            if viewModel.state.isLoading {
                 Text("로딩 중입니다")
-                    .padding()
-
-            case .isLoaded(let post):
-                VStack(spacing: 16) {
-                    Text(post.title)
-                        .font(.title)
-                    Text(post.content)
-                        .font(.body)
-                    Button("Reset") {
-                        viewModel.action(.onResetButtonTapped)
-                    }
-                    .padding()
-                }
-
-            case .isErrorOccurred(let message):
-                VStack(spacing: 16) {
-                    Text(message)
-                        .foregroundColor(.red)
-                    Button("Reset") {
-                        viewModel.action(.onResetButtonTapped)
-                    }
-                    .padding()
-                }
+            } else if let errorMessage = viewModel.state.errorMessage {
+                Text(errorMessage)
+                Button("Reset") { withAnimation { viewModel.action(.onResetButtonTapped) } }
+            } else if let title = viewModel.state.title, let content = viewModel.state.content {
+                Text(title)
+                Text(content)
+                Button("Reset") { withAnimation { viewModel.action(.onResetButtonTapped) } }
+            } else {
+                Button("Fetch") { withAnimation { viewModel.action(.onFetchButtonTapped) } }
             }
-            Button("Next") {
-                viewModel.action(.isNextButtonTapped)
-            }
-            Button("Sheet") {
-                viewModel.action(.isSheetButtonTapped)
-            }
+            Button("sheet") { withAnimation { viewModel.action(.onSheetButtonTapped) } }
+            Button("Next") { withAnimation { viewModel.action(.onNextButtonTapped) } }
         }
     }
 }

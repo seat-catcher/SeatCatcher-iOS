@@ -38,13 +38,17 @@ final class CoordinatorImpl: Coordinator {
     func buildScene(_ scene: AppScene) -> some View {
         switch scene {
         case .post:
-            let postViewModel = SeatCatcherPresentation.PostViewModel(
+            let postViewModel = PostViewModel(
                 postUseCase: diContainer.resolvePostUseCase(),
                 coordinator: self
             )
-            SeatCatcherPresentation.PostView(viewModel: postViewModel)
-        case .next:
-            SeatCatcherPresentation.NextView()
+            PostView(viewModel: postViewModel)
+        case .login:
+            let loginViewModel = LoginViewModel(
+                appleLoginUseCase: diContainer.resolveAppleLoginUseCase(),
+                coordinator: self
+            )
+            LoginView(viewModel: loginViewModel)
         }
     }
 
@@ -63,7 +67,4 @@ final class CoordinatorImpl: Coordinator {
             PostFullScreenCoverView()
         }
     }
-
 }
-
-

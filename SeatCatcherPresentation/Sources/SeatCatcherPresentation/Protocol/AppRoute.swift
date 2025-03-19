@@ -10,12 +10,12 @@ import SeatCatcherCore
 
 public enum AppScene: AppRoute {
     case post
-    case next
+    case login
 
     public var id: String {
         switch self {
         case .post: return "post"
-        case .next: return "next"
+        case .login: return "login"
         }
     }
 

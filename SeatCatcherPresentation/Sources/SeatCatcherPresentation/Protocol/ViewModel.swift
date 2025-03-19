@@ -6,12 +6,9 @@
 //
 
 import Foundation
+import SeatCatcherCore
 
 protocol ViewModel {
     associatedtype Action
-    associatedtype State
-
-    @MainActor var state: State { get }
-
     @MainActor func action(_ action: Action)
 }
