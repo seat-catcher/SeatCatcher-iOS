@@ -23,7 +23,7 @@ struct SeatCatcherApp: App {
         WindowGroup {
             NavigationStack(path: $coordinator.path) {
                 coordinator.buildScene(.post)
-                    .navigationDestination(for: SeatCatcherPresentation.AppScene.self) {
+                    .navigationDestination(for: AppScene.self) {
                         coordinator.buildScene($0)
                     }
                     .sheet(item: $coordinator.appSheet) {
