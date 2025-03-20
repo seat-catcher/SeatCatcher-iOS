@@ -36,7 +36,6 @@ extension SeatCatcherAPI: TargetType {
         case let .postSignInWithApple(requestDTO):
             .requestParameters(
                 parameters: [
-                    "provider": "LOCAL",
                     "identityToken": requestDTO.identityToken
                 ],
                 encoding: URLEncoding.queryString
