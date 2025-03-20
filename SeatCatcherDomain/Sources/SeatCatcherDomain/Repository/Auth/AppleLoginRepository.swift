@@ -8,5 +8,5 @@
 import Foundation
 
 public protocol AppleLoginRepository {
-    func login(_ token: Data) -> String?
+    func login(identityToken token: String) async throws -> Token?
 }

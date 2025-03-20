@@ -44,14 +44,23 @@ public final class LoginViewModel: ViewModel {
         request.requestedScopes = [.fullName, .email]
     }
 
+    @MainActor
     func handleCompletion(_ result: Result<ASAuthorization, any Error>) {
         switch result {
         case let .success(authorization):
             guard let credential = authorization.credential as? ASAuthorizationAppleIDCredential,
                   let identityToken = credential.identityToken
             else { return }
+            Task {
+                do {
+                    let token = try await appleLoginUseCase.login(identityToken: identityToken.base64EncodedString())
+                    dump(token?.accessToken)
+                    dump(token?.refreshToken)
+                } catch {
+                    dump(error)
+                }
+            }
 
-            let accessToken = appleLoginUseCase.login(identityToken)
         case let .failure(error):
             dump(error)
         }
