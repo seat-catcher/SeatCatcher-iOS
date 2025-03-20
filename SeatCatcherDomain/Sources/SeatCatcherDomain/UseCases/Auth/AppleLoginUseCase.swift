@@ -8,7 +8,7 @@
 import Foundation
 
 public protocol AppleLoginUseCase {
-    func login(_ token: Data) -> String?
+    func login(identityToken token: String) async throws -> Token?
 }
 
 public final class AppleLoginUseCaseImpl: AppleLoginUseCase {
@@ -18,7 +18,7 @@ public final class AppleLoginUseCaseImpl: AppleLoginUseCase {
         self.appleLoginRepository = appleLoginRepository
     }
 
-    public func login(_ token: Data) -> String? {
-        return appleLoginRepository.login(token)
+    public func login(identityToken token: String) async throws -> Token? {
+        return try await appleLoginRepository.login(identityToken: token)
     }
 }
