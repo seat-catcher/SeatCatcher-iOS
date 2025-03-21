@@ -14,9 +14,8 @@ public final class AppleLoginRepositoryImpl: AppleLoginRepository {
 
     public init() {}
 
-    public func login(identityToken token: String) async throws -> Token? {
+    public func login(identityToken token: String) async throws -> Token {
         let requestDTO = AppleLoginRequestDTO(identityToken: token)
-        dump(requestDTO)
         let response = try await provider.request(.postSignInWithApple(requestDTO))
         let responseDTO = try JSONDecoder().decode(AppleLoginResponseDTO.self, from: response)
         return responseDTO.toEntity()

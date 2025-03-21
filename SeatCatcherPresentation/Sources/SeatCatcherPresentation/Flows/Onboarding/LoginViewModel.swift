@@ -54,8 +54,8 @@ public final class LoginViewModel: ViewModel {
             Task {
                 do {
                     let token = try await appleLoginUseCase.login(identityToken: identityToken.base64EncodedString())
-                    dump(token?.accessToken)
-                    dump(token?.refreshToken)
+                    dump("accessToken: \(token.accessToken)")
+                    dump("refreshToken: \(token.refreshToken)")
                 } catch {
                     dump(error)
                 }
