@@ -34,12 +34,7 @@ extension SeatCatcherAPI: TargetType {
     var task: Moya.Task {
         switch self {
         case let .postSignInWithApple(requestDTO):
-            .requestParameters(
-                parameters: [
-                    "identityToken": requestDTO.identityToken
-                ],
-                encoding: URLEncoding.queryString
-            )
+            .requestJSONEncodable(requestDTO)
         }
     }
 

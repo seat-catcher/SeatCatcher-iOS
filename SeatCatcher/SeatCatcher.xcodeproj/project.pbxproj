@@ -30,9 +30,22 @@
 		DF07F0E82D79C4E80093E16F /* SeatCatcherTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SeatCatcherTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		DF4104AC2D8C763900CE77C9 /* Exceptions for "SeatCatcher" folder in "SeatCatcher" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Resources/Plists/Info.plist,
+			);
+			target = DF07F0D72D79C4E60093E16F /* SeatCatcher */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		DF07F0DA2D79C4E60093E16F /* SeatCatcher */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				DF4104AC2D8C763900CE77C9 /* Exceptions for "SeatCatcher" folder in "SeatCatcher" target */,
+			);
 			path = SeatCatcher;
 			sourceTree = "<group>";
 		};
@@ -368,6 +381,7 @@
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 6RUVHQW43D;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = SeatCatcher/Resources/Plists/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -407,6 +421,7 @@
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 6RUVHQW43D;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = SeatCatcher/Resources/Plists/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
