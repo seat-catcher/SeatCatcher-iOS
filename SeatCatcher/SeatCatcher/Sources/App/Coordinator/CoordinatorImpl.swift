@@ -45,7 +45,7 @@ final class CoordinatorImpl: Coordinator {
             PostView(viewModel: postViewModel)
         case .login:
             let loginViewModel = LoginViewModel(
-                appleLoginUseCase: diContainer.resolveAppleLoginUseCase(),
+                loginUseCase: diContainer.resolveLoginUseCase(),
                 coordinator: self
             )
             LoginView(viewModel: loginViewModel)

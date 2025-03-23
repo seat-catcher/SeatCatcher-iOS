@@ -10,5 +10,5 @@ import SeatCatcherDomain
 
 public protocol DIContainer {
     func resolvePostUseCase() -> PostUseCase
-    func resolveAppleLoginUseCase() -> AppleLoginUseCase
+    func resolveLoginUseCase() -> LoginUseCase
 }

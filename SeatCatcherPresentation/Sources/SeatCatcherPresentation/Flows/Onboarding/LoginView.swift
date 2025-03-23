@@ -7,6 +7,9 @@
 
 import SwiftUI
 import AuthenticationServices
+import KakaoSDKCommon
+import KakaoSDKAuth
+import KakaoSDKUser
 
 public struct LoginView: View {
     @State private var viewModel: LoginViewModel
@@ -16,10 +19,25 @@ public struct LoginView: View {
     }
 
     public var body: some View {
-        SignInWithAppleButton(
-            onRequest: viewModel.handleRequest,
-            onCompletion: viewModel.handleCompletion
-        )
+        VStack {
+            Spacer()
+
+            SignInWithAppleButton(
+                onRequest: viewModel.handleRequest,
+                onCompletion: viewModel.handleCompletion
+            )
+            .frame(height: 50)
+
+            Button {
+                viewModel.action(.loginWithKakaoButtonTapped)
+            } label: {
+                Image("kakaoLoginButton", bundle: .module)
+                    .resizable()
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 50)
+            }
+        }
+        .padding(.horizontal, 20)
     }
 }
 

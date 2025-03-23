@@ -10,6 +10,7 @@ import Moya
 
 enum SeatCatcherAPI {
     case postSignInWithApple(_ requestDTO: AppleLoginRequestDTO)
+    case postSignInWithKakao(_ requestDTO: KakaoLoginRequestDTO)
 }
 
 extension SeatCatcherAPI: TargetType {
@@ -21,6 +22,8 @@ extension SeatCatcherAPI: TargetType {
         switch self {
         case .postSignInWithApple:
             return "/user/authenticate/apple"
+        case .postSignInWithKakao:
+            return "/user/authenticate/kakao"
         }
     }
     
@@ -28,13 +31,17 @@ extension SeatCatcherAPI: TargetType {
         switch self {
         case .postSignInWithApple:
             return .post
+        case .postSignInWithKakao:
+            return .post
         }
     }
     
     var task: Moya.Task {
         switch self {
         case let .postSignInWithApple(requestDTO):
-            .requestJSONEncodable(requestDTO)
+            return .requestJSONEncodable(requestDTO)
+        case let .postSignInWithKakao(requestDTO):
+            return .requestJSONEncodable(requestDTO)
         }
     }
 
@@ -43,6 +50,8 @@ extension SeatCatcherAPI: TargetType {
 
         switch self {
         case .postSignInWithApple:
+            return base
+        case .postSignInWithKakao:
             return base
         }
     }

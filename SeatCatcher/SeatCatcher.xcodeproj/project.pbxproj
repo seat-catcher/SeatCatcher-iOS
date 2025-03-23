@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		DF07F1352D81A1BA0093E16F /* Moya in Frameworks */ = {isa = PBXBuildFile; productRef = DF07F1342D81A1BA0093E16F /* Moya */; };
 		DF07F1392D81A5790093E16F /* Moya in Frameworks */ = {isa = PBXBuildFile; productRef = DF07F1382D81A5790093E16F /* Moya */; };
+		DF7781302D903ED3003B9EB6 /* KakaoSDKAuth in Frameworks */ = {isa = PBXBuildFile; productRef = DF77812F2D903ED3003B9EB6 /* KakaoSDKAuth */; };
+		DF7781322D903ED3003B9EB6 /* KakaoSDKCommon in Frameworks */ = {isa = PBXBuildFile; productRef = DF7781312D903ED3003B9EB6 /* KakaoSDKCommon */; };
 		DFDD84CC2D8575CD009A00FF /* SeatCatcherCore in Frameworks */ = {isa = PBXBuildFile; productRef = DFDD84CB2D8575CD009A00FF /* SeatCatcherCore */; };
 		DFDD85322D857C3D009A00FF /* SeatCatcherData in Frameworks */ = {isa = PBXBuildFile; productRef = DFDD85312D857C3D009A00FF /* SeatCatcherData */; };
 		DFDD85482D86C265009A00FF /* SeatCatcherPresentation in Frameworks */ = {isa = PBXBuildFile; productRef = DFDD85472D86C265009A00FF /* SeatCatcherPresentation */; };
@@ -67,10 +69,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				DFDD85322D857C3D009A00FF /* SeatCatcherData in Frameworks */,
+				DF7781322D903ED3003B9EB6 /* KakaoSDKCommon in Frameworks */,
 				DFF8CF842D85728700CDC6D6 /* SeatCatcherDomain in Frameworks */,
 				DF07F1352D81A1BA0093E16F /* Moya in Frameworks */,
 				DFDD85482D86C265009A00FF /* SeatCatcherPresentation in Frameworks */,
 				DFDD84CC2D8575CD009A00FF /* SeatCatcherCore in Frameworks */,
+				DF7781302D903ED3003B9EB6 /* KakaoSDKAuth in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -130,6 +134,8 @@
 				DFDD84CB2D8575CD009A00FF /* SeatCatcherCore */,
 				DFDD85312D857C3D009A00FF /* SeatCatcherData */,
 				DFDD85472D86C265009A00FF /* SeatCatcherPresentation */,
+				DF77812F2D903ED3003B9EB6 /* KakaoSDKAuth */,
+				DF7781312D903ED3003B9EB6 /* KakaoSDKCommon */,
 			);
 			productName = SeatCatcher;
 			productReference = DF07F0D82D79C4E60093E16F /* SeatCatcher.app */;
@@ -193,6 +199,7 @@
 				DFDD84CA2D8575CD009A00FF /* XCLocalSwiftPackageReference "../SeatCatcherCore" */,
 				DFDD85302D857C3D009A00FF /* XCLocalSwiftPackageReference "../SeatCatcherData" */,
 				DFDD85462D86C265009A00FF /* XCLocalSwiftPackageReference "../SeatCatcherPresentation" */,
+				DF77812E2D903ED3003B9EB6 /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = DF07F0D92D79C4E60093E16F /* Products */;
@@ -553,6 +560,14 @@
 				minimumVersion = 15.0.3;
 			};
 		};
+		DF77812E2D903ED3003B9EB6 /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kakao/kakao-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.24.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -565,6 +580,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = DF07F1332D81A1BA0093E16F /* XCRemoteSwiftPackageReference "Moya" */;
 			productName = Moya;
+		};
+		DF77812F2D903ED3003B9EB6 /* KakaoSDKAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DF77812E2D903ED3003B9EB6 /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */;
+			productName = KakaoSDKAuth;
+		};
+		DF7781312D903ED3003B9EB6 /* KakaoSDKCommon */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DF77812E2D903ED3003B9EB6 /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */;
+			productName = KakaoSDKCommon;
 		};
 		DFDD84CB2D8575CD009A00FF /* SeatCatcherCore */ = {
 			isa = XCSwiftPackageProductDependency;
