@@ -25,10 +25,16 @@ public final class LoginViewModel: ViewModel {
 
     private(set) var state = State()
     private let loginUseCase: LoginUseCase
+    private let tokenUseCase: TokenUseCase
     private let coordinator: Coordinator
 
-    public init(loginUseCase: LoginUseCase, coordinator: Coordinator) {
+    public init(
+        loginUseCase: LoginUseCase,
+        tokenUseCase: TokenUseCase,
+        coordinator: Coordinator
+    ) {
         self.loginUseCase = loginUseCase
+        self.tokenUseCase = tokenUseCase
         self.coordinator = coordinator
     }
 
@@ -54,7 +60,8 @@ public final class LoginViewModel: ViewModel {
     func loginWithKakao() async -> Bool {
         do {
             let token = try await loginUseCase.kakaoLogin()
-            dump(token)
+            try tokenUseCase.saveAccessToken(token.accessToken)
+            try tokenUseCase.saveRefreshToken(token.refreshToken)
             return true
         } catch {
             dump(error)
@@ -83,7 +90,8 @@ public final class LoginViewModel: ViewModel {
                 guard let self = self else { return }
                 do {
                     let token = try await loginUseCase.appleLogin(identityToken: identityToken.base64EncodedString())
-                    dump(token)
+                    try tokenUseCase.saveAccessToken(token.accessToken)
+                    try tokenUseCase.saveRefreshToken(token.refreshToken)
                     self.action(.loginSuccess)
                 } catch {
                     dump(error)

@@ -46,6 +46,7 @@ final class CoordinatorImpl: Coordinator {
         case .login:
             let loginViewModel = LoginViewModel(
                 loginUseCase: diContainer.resolveLoginUseCase(),
+                tokenUseCase: diContainer.resolveTokenUseCase(),
                 coordinator: self
             )
             LoginView(viewModel: loginViewModel)

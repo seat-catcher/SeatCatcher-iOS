@@ -24,4 +24,10 @@ final class DIContainerImpl: DIContainer {
         let loginUseCase = LoginUseCaseImpl(loginRepository: loginRepository)
         return loginUseCase
     }
+
+    func resolveTokenUseCase() -> TokenUseCase {
+        let tokenRepository = TokenRepositoryImpl()
+        let tokenUseCase = TokenUseCaseImpl(tokenRepository: tokenRepository)
+        return tokenUseCase
+    }
 }
