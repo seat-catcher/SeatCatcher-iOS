@@ -16,22 +16,22 @@ public struct TokenRepositoryImpl: TokenRepository {
 
     // MARK: - AccessToken
     public func saveAccessToken(_ token: String) throws {
-        try KeyChainService.save(token: token, key: accessToken)
+        try KeychainService.save(token: token, key: accessToken)
     }
     public func getAccessToken() throws -> String? {
-        return try KeyChainService.get(key: accessToken)
+        return try KeychainService.get(key: accessToken)
     }
     public func deleteAccessToken(_ token: String) throws {
-        try KeyChainService.get(key: accessToken)
+        try KeychainService.get(key: accessToken)
     }
     // MARK: - RefreshToken
     public func saveRefreshToken(_ token: String) throws {
-        try KeyChainService.save(token: token, key: refreshToken)
+        try KeychainService.save(token: token, key: refreshToken)
     }
     public func getRefreshToken() throws -> String? {
-        return try KeyChainService.get(key: refreshToken)
+        return try KeychainService.get(key: refreshToken)
     }
     public func deleteRefreshToken(_ token: String) throws {
-        try KeyChainService.get(key: refreshToken)
+        try KeychainService.get(key: refreshToken)
     }
 }

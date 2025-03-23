@@ -1,5 +1,5 @@
 //
-//  KeyChainService.swift
+//  KeychainService.swift
 //  SeatCatcherData
 //
 //  Created by 박현수 on 3/24/25.
@@ -8,7 +8,7 @@
 import Foundation
 import Security
 
-public struct KeyChainService {
+public struct KeychainService {
     private static let service = "com.SeatCatcher.SeatCatcher"
 
     enum KeyChainError: Error {
