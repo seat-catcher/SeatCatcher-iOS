@@ -7,7 +7,6 @@
 
 import Foundation
 import SeatCatcherDomain
-import Moya
 import KakaoSDKCommon
 import KakaoSDKAuth
 import KakaoSDKUser
@@ -17,23 +16,19 @@ public final class LoginRepositoryImpl: LoginRepository {
         case tokenNotFound
         case loginNotAvailable
     }
-    
-    private let provider = MoyaProvider<SeatCatcherAPI>()
+
+    private let networkService = NetworkService()
 
     public init() {}
 
-    public func appleLogin(identityToken token: String) async throws -> SeatCatcherDomain.Token {
-        let requestDTO = AppleLoginRequestDTO(identityToken: token)
-        let response = try await provider.request(.postSignInWithApple(requestDTO))
-        let responseDTO = try JSONDecoder().decode(AppleLoginResponseDTO.self, from: response)
+    public func appleLogin(identityToken: String) async throws -> SeatCatcherDomain.Token {
+        let responseDTO = try await networkService.postAppleLogin(identityToken)
         return responseDTO.toEntity()
     }
 
     public func kakaoLogin() async throws -> SeatCatcherDomain.Token {
         let accessToken = try await getKakaoLoginAccessToken()
-        let requestDTO = KakaoLoginRequestDTO(accessToken: accessToken)
-        let response = try await provider.request(.postSignInWithKakao(requestDTO))
-        let responseDTO = try JSONDecoder().decode(KakaoLoginResponseDTO.self, from: response)
+        let responseDTO = try await networkService.postKakaoLogin(accessToken)
         return responseDTO.toEntity()
     }
 
