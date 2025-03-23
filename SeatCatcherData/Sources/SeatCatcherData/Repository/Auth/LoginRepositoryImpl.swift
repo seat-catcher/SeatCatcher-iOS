@@ -13,6 +13,11 @@ import KakaoSDKAuth
 import KakaoSDKUser
 
 public final class LoginRepositoryImpl: LoginRepository {
+    enum KakaoLoginError: Error {
+        case tokenNotFound
+        case loginNotAvailable
+    }
+    
     private let provider = MoyaProvider<SeatCatcherAPI>()
 
     public init() {}
@@ -54,9 +59,4 @@ public final class LoginRepositoryImpl: LoginRepository {
             }
         }
     }
-}
-
-enum KakaoLoginError: Error {
-    case tokenNotFound
-    case loginNotAvailable
 }
