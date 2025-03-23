@@ -19,9 +19,9 @@ final class DIContainerImpl: DIContainer {
         return postUseCase
     }
 
-    func resolveAppleLoginUseCase() -> AppleLoginUseCase {
-        let appleLoginRepository = AppleLoginRepositoryImpl()
-        let appleLoginUseCase = AppleLoginUseCaseImpl(appleLoginRepository: appleLoginRepository)
-        return appleLoginUseCase
+    func resolveLoginUseCase() -> LoginUseCase {
+        let loginRepository = LoginRepositoryImpl()
+        let loginUseCase = LoginUseCaseImpl(loginRepository: loginRepository)
+        return loginUseCase
     }
 }

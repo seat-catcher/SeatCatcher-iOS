@@ -14,7 +14,7 @@ let package = Package(
     ],
     dependencies: [
         .package(name: "SeatCatcherDomain", path: "../SeatCatcherDomain"),
-        .package(name: "SeatCatcherCore", path: "../SeatCatcherCore"),
+        .package(name: "SeatCatcherCore", path: "../SeatCatcherCore")
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -24,8 +24,8 @@ let package = Package(
             dependencies: [
                 "SeatCatcherDomain",
                 "SeatCatcherCore"
-            ]
-        ),
-
+            ],
+            resources: [.process("Resources")]
+        )
     ]
 )
