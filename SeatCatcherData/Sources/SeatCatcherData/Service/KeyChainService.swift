@@ -11,7 +11,7 @@ import Security
 public struct KeyChainService {
     private static let service = "com.SeatCatcher.SeatCatcher"
 
-    enum KeychainError: Error {
+    enum KeyChainError: Error {
         case saveError
         case getError
         case deleteError
@@ -30,9 +30,7 @@ public struct KeyChainService {
         SecItemDelete(query as CFDictionary)
 
         let status = SecItemAdd(query as CFDictionary, nil)
-        guard status == errSecSuccess else {
-            throw KeychainError.saveError
-        }
+        guard status == errSecSuccess else { throw KeyChainError.saveError }
     }
 
     static func get(key: String) throws -> String? {
@@ -47,14 +45,11 @@ public struct KeyChainService {
         var item: AnyObject?
         let status = SecItemCopyMatching(query as CFDictionary, &item)
 
-        if status == errSecItemNotFound {
-            return nil
-        }
+        if status == errSecItemNotFound { return nil }
         guard status == errSecSuccess,
               let data = item as? Data,
-              let token = String(data: data, encoding: .utf8) else {
-            throw KeychainError.getError
-        }
+              let token = String(data: data, encoding: .utf8)
+        else { throw KeyChainError.getError }
         return token
     }
 
@@ -66,8 +61,8 @@ public struct KeyChainService {
         ]
 
         let status = SecItemDelete(query as CFDictionary)
-        guard status == errSecSuccess || status == errSecItemNotFound else {
-            throw KeychainError.deleteError
-        }
+
+        guard status == errSecSuccess || status == errSecItemNotFound
+        else { throw KeyChainError.deleteError }
     }
 }
