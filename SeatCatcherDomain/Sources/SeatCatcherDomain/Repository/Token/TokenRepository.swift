@@ -8,9 +8,9 @@
 public protocol TokenRepository {
     func saveAccessToken(_ token: String) throws
     func getAccessToken() throws -> String?
-    func deleteAccessToken(_ token: String) throws
+    func deleteAccessToken() throws
 
     func saveRefreshToken(_ token: String) throws
     func getRefreshToken() throws -> String?
-    func deleteRefreshToken(_ token: String) throws
+    func deleteRefreshToken() throws
 }

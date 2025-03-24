@@ -15,7 +15,10 @@ enum SeatCatcherAPI {
 
 extension SeatCatcherAPI: TargetType {
     var baseURL: URL {
-        .init(string: "https://api.seatcatcher.site")!
+        guard let url = URL(string: "https://api.seatcatcher.site") else {
+            fatalError("Base URL이 올바르지 않습니다.")
+        }
+        return url
     }
     
     var path: String {

@@ -21,7 +21,7 @@ public struct TokenRepositoryImpl: TokenRepository {
     public func getAccessToken() throws -> String? {
         return try KeychainService.get(key: accessToken)
     }
-    public func deleteAccessToken(_ token: String) throws {
+    public func deleteAccessToken() throws {
         try KeychainService.delete(key: accessToken)
     }
     // MARK: - RefreshToken
@@ -31,7 +31,7 @@ public struct TokenRepositoryImpl: TokenRepository {
     public func getRefreshToken() throws -> String? {
         return try KeychainService.get(key: refreshToken)
     }
-    public func deleteRefreshToken(_ token: String) throws {
+    public func deleteRefreshToken() throws {
         try KeychainService.delete(key: refreshToken)
     }
 }
