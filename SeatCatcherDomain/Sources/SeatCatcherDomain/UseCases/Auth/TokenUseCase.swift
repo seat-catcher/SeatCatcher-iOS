@@ -8,15 +8,15 @@
 public protocol TokenUseCase {
     func saveAccessToken(_ token: String) throws
     func getAccessToken() throws -> String?
-    func deleteAccessToken(_ token: String) throws
+    func deleteAccessToken() throws
 
     func saveRefreshToken(_ token: String) throws
     func getRefreshToken() throws -> String?
-    func deleteRefreshToken(_ token: String) throws
+    func deleteRefreshToken() throws
 }
 
 public final class TokenUseCaseImpl: TokenUseCase {
-    let tokenRepository: TokenRepository
+    private let tokenRepository: TokenRepository
 
     public init(tokenRepository: TokenRepository) {
         self.tokenRepository = tokenRepository
@@ -28,8 +28,8 @@ public final class TokenUseCaseImpl: TokenUseCase {
     public func getAccessToken() throws -> String? {
         return try tokenRepository.getAccessToken()
     }
-    public func deleteAccessToken(_ token: String) throws {
-        try tokenRepository.deleteAccessToken(token)
+    public func deleteAccessToken() throws {
+        try tokenRepository.deleteAccessToken()
     }
     // MARK: - RefreshToken
     public func saveRefreshToken(_ token: String) throws {
@@ -38,7 +38,7 @@ public final class TokenUseCaseImpl: TokenUseCase {
     public func getRefreshToken() throws -> String? {
         return try tokenRepository.getRefreshToken()
     }
-    public func deleteRefreshToken(_ token: String) throws {
-        try tokenRepository.deleteRefreshToken(token)
+    public func deleteRefreshToken() throws {
+        try tokenRepository.deleteRefreshToken()
     }
 }
