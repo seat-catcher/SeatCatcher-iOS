@@ -178,10 +178,10 @@
 				};
 			};
 			buildConfigurationList = DF07F0D32D79C4E60093E16F /* Build configuration list for PBXProject "SeatCatcher" */;
-			developmentRegion = en;
+			developmentRegion = ko;
 			hasScannedForEncodings = 0;
 			knownRegions = (
-				en,
+				ko,
 				Base,
 			);
 			mainGroup = DF07F0CF2D79C4E60093E16F;
