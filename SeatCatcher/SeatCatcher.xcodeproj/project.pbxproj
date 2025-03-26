@@ -36,6 +36,8 @@
 		DF4104AC2D8C763900CE77C9 /* Exceptions for "SeatCatcher" folder in "SeatCatcher" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				Resources/Configurations/Debug.xcconfig,
+				Resources/Configurations/Release.xcconfig,
 				Resources/Plists/Info.plist,
 			);
 			target = DF07F0D72D79C4E60093E16F /* SeatCatcher */;

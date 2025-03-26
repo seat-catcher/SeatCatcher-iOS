@@ -9,13 +9,11 @@ import Foundation
 import SeatCatcherCore
 
 public enum AppScene: AppRoute {
-    case post
-    case login
+    case home
 
     public var id: String {
         switch self {
-        case .post: return "post"
-        case .login: return "login"
+        case .home: return "home"
         }
     }
 
@@ -28,21 +26,21 @@ public enum AppScene: AppRoute {
 }
 
 public enum AppSheet: AppRoute {
-    case post
+    case home
 
     public var id: String {
         switch self {
-        case .post: return "post"
+        case .home: return "home"
         }
     }
 }
 
 public enum AppFullScreenCover: AppRoute {
-    case post
+    case home
 
     public var id: String {
         switch self {
-        case .post: return "post"
+        case .home: return "home"
         }
     }
 }

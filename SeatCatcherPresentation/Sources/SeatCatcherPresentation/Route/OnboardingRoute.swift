@@ -10,12 +10,14 @@ import SeatCatcherCore
 
 public enum OnboardingScene: AppRoute {
     case login
+    case onboarding
     case generateName
     case selectTag
 
     public var id: String {
         switch self {
         case .login: return "login"
+        case .onboarding: return "onboarding"
         case .generateName: return "generateName"
         case .selectTag: return "selectTag"
         }

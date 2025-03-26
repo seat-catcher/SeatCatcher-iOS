@@ -15,8 +15,8 @@ import KakaoSDKUser
 @main
 struct SeatCatcherApp: App {
     @State private var coordinator: OnboardingCoordinator
-    @AppStorage("isSignedIn") var isSignedIn: Bool = false
-    @AppStorage("isOnboardingRequired") var isOnboardingRequired: Bool = false
+    @AppStorage("isSignedIn") private var isSignedIn = false
+    @AppStorage("isOnboardingRequired") private var isOnboardingRequired = true
 
     init() {
         let diContainer = DIContainerImpl()
@@ -44,6 +44,9 @@ struct SeatCatcherApp: App {
             // - 온보딩 완료했으나 로그인 상태 아닐시 온보딩 플로우 내 로그인 뷰에서 플로우 시작
             // - 로그인 상태이면 유저 플로우로
             Group {
+                if isSignedIn {
+                    
+                }
                 NavigationStack(path: $coordinator.path) {
                     coordinator.buildScene(.login)
                         .navigationDestination(for: OnboardingScene.self) { coordinator.buildScene($0) }

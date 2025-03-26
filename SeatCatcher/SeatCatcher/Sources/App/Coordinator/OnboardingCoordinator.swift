@@ -36,6 +36,8 @@ final class OnboardingCoordinator: Coordinator {
                 coordinator: self
             )
             LoginView(viewModel: loginViewModel)
+        case .onboarding:
+            OnboardingView()
         case .generateName:
             Text("generateName")
         case .selectTag:

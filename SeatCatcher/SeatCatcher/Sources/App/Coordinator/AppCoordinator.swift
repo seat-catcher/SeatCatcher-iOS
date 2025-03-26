@@ -11,7 +11,7 @@ import SeatCatcherCore
 import SeatCatcherPresentation
 
 @Observable
-final class CoordinatorImpl: Coordinator {
+final class AppCoordinator: Coordinator {
     var diContainer: DIContainer
 
     var path = NavigationPath()
@@ -37,35 +37,24 @@ final class CoordinatorImpl: Coordinator {
     @ViewBuilder
     func buildScene(_ scene: AppScene) -> some View {
         switch scene {
-        case .post:
-            let postViewModel = PostViewModel(
-                postUseCase: diContainer.resolvePostUseCase(),
-                coordinator: self
-            )
-            PostView(viewModel: postViewModel)
-        case .login:
-            let loginViewModel = LoginViewModel(
-                loginUseCase: diContainer.resolveLoginUseCase(),
-                tokenUseCase: diContainer.resolveTokenUseCase(),
-                coordinator: self
-            )
-            LoginView(viewModel: loginViewModel)
+        case .home:
+            HomeView()
         }
     }
 
     @ViewBuilder
     func buildSheet(_ sheet: AppSheet) -> some View {
         switch sheet {
-        case .post:
-            PostSheetView()
+        case .home:
+            HomeView()
         }
     }
 
     @ViewBuilder
     func buildFullScreenCover(_ fullScreenCover: AppFullScreenCover) -> some View {
         switch fullScreenCover {
-        case .post:
-            PostFullScreenCoverView()
+        case .home:
+            HomeView()
         }
     }
 }

@@ -23,10 +23,6 @@ let package = Package(
             dependencies: [
                 "SeatCatcherDomain"
             ]
-        ),
-        .testTarget(
-            name: "SeatCatcherCoreTests",
-            dependencies: ["SeatCatcherCore"]
-        ),
+        )
     ]
 )
