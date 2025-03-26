@@ -1,5 +1,5 @@
 //
-//  OnboardingView.swift
+//  HomeView.swift
 //  SeatCatcherPresentation
 //
 //  Created by 박현수 on 3/26/25.
@@ -7,13 +7,15 @@
 
 import SwiftUI
 
-public struct OnboardingView: View {
+public struct HomeView: View {
 
     public init() {}
 
     public var body: some View {
-        VStack {
-
-        }
+        Text("Home")
     }
+}
+
+#Preview {
+    HomeView()
 }
