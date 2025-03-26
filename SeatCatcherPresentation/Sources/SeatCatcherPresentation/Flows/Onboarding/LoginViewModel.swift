@@ -50,9 +50,9 @@ public final class LoginViewModel: ViewModel {
                 }
             }
         case .loginSuccess:
-            print("hi")
+            coordinator.setLoginStatus(true)
         case .loginFailure:
-            print("hi")
+            dump(self.state.errorMessage)
         }
     }
 
@@ -65,6 +65,7 @@ public final class LoginViewModel: ViewModel {
             return true
         } catch {
             dump(error)
+            state.errorMessage = error.localizedDescription
             return false
         }
     }
@@ -95,6 +96,7 @@ public final class LoginViewModel: ViewModel {
                     self.action(.loginSuccess)
                 } catch {
                     dump(error)
+                    state.errorMessage = error.localizedDescription
                     self.action(.loginFailure)
                 }
             }
@@ -102,6 +104,7 @@ public final class LoginViewModel: ViewModel {
         // 로컬에서 identityToken 받아오기 실패
         case let .failure(error):
             dump(error)
+            state.errorMessage = error.localizedDescription
             self.action(.loginFailure)
         }
     }
