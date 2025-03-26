@@ -14,11 +14,13 @@ import KakaoSDKUser
 
 @main
 struct SeatCatcherApp: App {
-    @State private var coordinator: CoordinatorImpl
+    @State private var coordinator: OnboardingCoordinator
+    @AppStorage("isSignedIn") var isSignedIn: Bool = false
+    @AppStorage("isOnboardingRequired") var isOnboardingRequired: Bool = false
 
     init() {
         let diContainer = DIContainerImpl()
-        let coordinator = CoordinatorImpl(diContainer: diContainer)
+        let coordinator = OnboardingCoordinator(diContainer: diContainer)
         _coordinator = State(initialValue: coordinator)
 
         guard let kakaoAppKey = Bundle.main.infoDictionary?["KAKAO_APP_KEY"] as? String
@@ -41,13 +43,13 @@ struct SeatCatcherApp: App {
             // - 온보딩 필요 시 온보딩 플로우 첫 뷰로
             // - 온보딩 완료했으나 로그인 상태 아닐시 온보딩 플로우 내 로그인 뷰에서 플로우 시작
             // - 로그인 상태이면 유저 플로우로
-            NavigationStack(path: $coordinator.path) {
-                coordinator.buildScene(.post)
-                    .navigationDestination(for: AppScene.self) { coordinator.buildScene($0) }
-                    .sheet(item: $coordinator.appSheet) { coordinator.buildSheet($0) }
-                    .fullScreenCover(item: $coordinator.appFullScreenCover) { coordinator.buildFullScreenCover($0) }
-                    .onOpenURL { handleURL($0) }
+            Group {
+                NavigationStack(path: $coordinator.path) {
+                    coordinator.buildScene(.login)
+                        .navigationDestination(for: OnboardingScene.self) { coordinator.buildScene($0) }
+                }
             }
+            .onOpenURL { handleURL($0) }
         }
     }
 }
