@@ -15,13 +15,11 @@ import SeatCatcherData
 final class DIContainerImpl: DIContainer {
     func resolveLoginUseCase() -> LoginUseCase {
         let loginRepository = LoginRepositoryImpl()
-        let loginUseCase = LoginUseCaseImpl(loginRepository: loginRepository)
-        return loginUseCase
-    }
-
-    func resolveTokenUseCase() -> TokenUseCase {
         let tokenRepository = TokenRepositoryImpl()
-        let tokenUseCase = TokenUseCaseImpl(tokenRepository: tokenRepository)
-        return tokenUseCase
+        let loginUseCase = LoginUseCaseImpl(
+            loginRepository: loginRepository,
+            tokenRepository: tokenRepository
+        )
+        return loginUseCase
     }
 }
