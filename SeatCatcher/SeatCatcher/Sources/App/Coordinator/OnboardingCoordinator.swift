@@ -32,12 +32,14 @@ final class OnboardingCoordinator: Coordinator {
         case .login:
             let loginViewModel = LoginViewModel(
                 loginUseCase: diContainer.resolveLoginUseCase(),
-                tokenUseCase: diContainer.resolveTokenUseCase(),
                 coordinator: self
             )
             LoginView(viewModel: loginViewModel)
         case .onboarding:
-            OnboardingView()
+            let onboardingViewModel = OnboardingViewModel(
+                coordinator: self
+            )
+            OnboardingView(viewModel: onboardingViewModel)
         case .generateName:
             Text("generateName")
         case .selectTag:

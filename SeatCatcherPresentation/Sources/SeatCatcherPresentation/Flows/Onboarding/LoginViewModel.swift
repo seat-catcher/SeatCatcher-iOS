@@ -15,7 +15,7 @@ public final class LoginViewModel: ViewModel {
     enum Action {
         case loginWithKakaoButtonTapped
         case loginSuccess
-        case loginFailure
+        case loginFailure(_ error: any Error)
     }
 
     struct State {
@@ -25,16 +25,13 @@ public final class LoginViewModel: ViewModel {
 
     private(set) var state = State()
     private let loginUseCase: LoginUseCase
-    private let tokenUseCase: TokenUseCase
     private let coordinator: Coordinator
 
     public init(
         loginUseCase: LoginUseCase,
-        tokenUseCase: TokenUseCase,
         coordinator: Coordinator
     ) {
         self.loginUseCase = loginUseCase
-        self.tokenUseCase = tokenUseCase
         self.coordinator = coordinator
     }
 
@@ -43,31 +40,25 @@ public final class LoginViewModel: ViewModel {
         case .loginWithKakaoButtonTapped:
             Task { [weak self] in
                 guard let self = self else { return }
-                if await loginWithKakao() {
-                    self.action(.loginSuccess)
-                } else {
-                    self.action(.loginFailure)
+                do {
+                    try await loginWithKakao()
+                } catch {
+                    self.action(.loginFailure(error))
                 }
             }
         case .loginSuccess:
             coordinator.setLoginStatus(true)
-        case .loginFailure:
-            dump(self.state.errorMessage)
+        case let .loginFailure(error):
+            dump(error)
+            state.errorMessage = error.localizedDescription
         }
     }
 
     /// 카카오 SDK에서 accessToken을 받아 오고, 해당 accessToken을 통해 서버와 로그인 로직 수행
-    func loginWithKakao() async -> Bool {
-        do {
-            let token = try await loginUseCase.kakaoLogin()
-            try tokenUseCase.saveAccessToken(token.accessToken)
-            try tokenUseCase.saveRefreshToken(token.refreshToken)
-            return true
-        } catch {
-            dump(error)
-            state.errorMessage = error.localizedDescription
-            return false
-        }
+    func loginWithKakao() async throws {
+        let token = try await loginUseCase.kakaoLogin()
+        try loginUseCase.saveAccessToken(token.accessToken)
+        try loginUseCase.saveRefreshToken(token.refreshToken)
     }
 
     /// 애플 로그인 리퀘스트 파라미터 설정
@@ -91,21 +82,17 @@ public final class LoginViewModel: ViewModel {
                 guard let self = self else { return }
                 do {
                     let token = try await loginUseCase.appleLogin(identityToken: identityToken.base64EncodedString())
-                    try tokenUseCase.saveAccessToken(token.accessToken)
-                    try tokenUseCase.saveRefreshToken(token.refreshToken)
+                    try loginUseCase.saveAccessToken(token.accessToken)
+                    try loginUseCase.saveRefreshToken(token.refreshToken)
                     self.action(.loginSuccess)
                 } catch {
-                    dump(error)
-                    state.errorMessage = error.localizedDescription
-                    self.action(.loginFailure)
+                    self.action(.loginFailure(error))
                 }
             }
 
         // 로컬에서 identityToken 받아오기 실패
         case let .failure(error):
-            dump(error)
-            state.errorMessage = error.localizedDescription
-            self.action(.loginFailure)
+            self.action(.loginFailure(error))
         }
     }
 }
