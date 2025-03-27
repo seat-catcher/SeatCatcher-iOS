@@ -106,6 +106,7 @@ private struct OnboardingMessageView: View {
         }
         .font(.system(size: 26, weight: .semibold))
         .foregroundStyle(.white)
+        .multilineTextAlignment(.center)
         .lineSpacing(4)
         .padding(.top, 50)
     }
