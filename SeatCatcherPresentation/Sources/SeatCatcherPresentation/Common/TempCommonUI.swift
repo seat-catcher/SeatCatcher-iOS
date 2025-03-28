@@ -10,29 +10,29 @@ import SeatCatcherCore
 
 struct SCNavigationBar: View {
     let coordinator: Coordinator
-    let isBackButtonHiden: Bool
+    let isBackButtonHidden: Bool
     let title: String?
     let withBorder: Bool
 
-    var isEmpty: Bool { !isBackButtonHiden && title == nil }
+    var isEmpty: Bool { isBackButtonHidden && title == nil }
 
     init(
         _ coordinator: Coordinator,
-        isBackButtonHiden: Bool = false,
+        isBackButtonHidden: Bool = false,
         title: String? = nil,
         withBorder: Bool = false
     ) {
         self.coordinator = coordinator
-        self.isBackButtonHiden = isBackButtonHiden
+        self.isBackButtonHidden = isBackButtonHidden
         self.title = title
         self.withBorder = withBorder
     }
 
     var body: some View {
         VStack(spacing: 0) {
-            if isEmpty {
+            if !isEmpty {
                 HStack {
-                    if !isBackButtonHiden {
+                    if !isBackButtonHidden {
                         Button {
                             coordinator.pop()
                         } label: {

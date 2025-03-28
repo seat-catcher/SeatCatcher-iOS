@@ -23,7 +23,7 @@ public struct GenerateNameView: View {
         }
         .padding(.horizontal, 20)
         .applyToolbarVisibility(.hidden, for: .navigationBar)
-        .withNavigationBar(viewModel.coordinator, isBackButtonHiden: true)
+        .withNavigationBar(viewModel.coordinator, isBackButtonHidden: true)
         .withBackground()
     }
 }
