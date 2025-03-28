@@ -15,9 +15,9 @@ extension View {
         .background(ignoresSafeAreaEdges: .all)
     }
 
-    func withNavigationBar(_ coordinator: Coordinator, isBackButtonHiden: Bool = false, title: String? = nil, withBorder: Bool = false) -> some View {
+    func withNavigationBar(_ coordinator: Coordinator, isBackButtonHidden: Bool = false, title: String? = nil, withBorder: Bool = false) -> some View {
         VStack(spacing: 0) {
-            SCNavigationBar(coordinator, isBackButtonHiden: isBackButtonHiden, title: title, withBorder: withBorder)
+            SCNavigationBar(coordinator, isBackButtonHidden: isBackButtonHidden, title: title, withBorder: withBorder)
             self
         }
     }

@@ -15,10 +15,10 @@ extension NicknameResponseDTO: ResponseDTO {
     static let randomElements = (0..<5).map { "랜덤 닉네임 \($0)" }
 
     static func stub() -> Self {
-        return .init(nickName: randomElements.randomElement()!)
+        return .init(nickName: randomElements.randomElement() ?? "랜덤 닉네임 0")
     }
 
     func toEntity() -> String {
-        return NicknameResponseDTO.randomElements.randomElement()!
+        return self.nickName
     }
 }
