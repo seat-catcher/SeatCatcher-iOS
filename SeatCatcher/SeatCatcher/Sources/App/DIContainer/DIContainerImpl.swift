@@ -22,4 +22,10 @@ final class DIContainerImpl: DIContainer {
         )
         return loginUseCase
     }
+
+    func resolveUserUseCase() -> UserUseCase {
+        let userRepository = UserRepositoryImpl()
+        let userUseCase = UserUseCaseImpl(userRepository: userRepository)
+        return userUseCase
+    }
 }

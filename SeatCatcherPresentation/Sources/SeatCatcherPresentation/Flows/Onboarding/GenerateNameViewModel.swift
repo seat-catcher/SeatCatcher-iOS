@@ -7,6 +7,7 @@
 
 import Foundation
 import SeatCatcherCore
+import SeatCatcherDomain
 
 @Observable
 public final class GenerateNameViewModel: ViewModel {
@@ -17,20 +18,34 @@ public final class GenerateNameViewModel: ViewModel {
 
     struct State {
         var nickname = "친절한 짐꾼"
+        var errorMessage: String?
     }
-
-    let coordinator: Coordinator
 
     private(set) var state = State()
 
-    public init(coordinator: Coordinator) {
+    let coordinator: Coordinator
+    private let userUseCase: UserUseCase
+
+    public init(
+        userUseCase: UserUseCase,
+        coordinator: Coordinator
+    ) {
+        self.userUseCase = userUseCase
         self.coordinator = coordinator
     }
 
     func action(_ action: Action) {
         switch action {
         case .regenerateButtonTapped:
-            print(#function)
+            Task { [weak self] in
+                guard let self = self else { return }
+                do {
+                    let nickname = try await self.userUseCase.getRandomNickname()
+                    await MainActor.run { self.state.nickname = nickname }
+                } catch {
+                    await MainActor.run { self.state.errorMessage = error.localizedDescription }
+                }
+            }
         case .nextButtonTapped:
             print(#function)
         }
