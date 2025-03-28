@@ -41,7 +41,10 @@ final class OnboardingCoordinator: Coordinator {
             )
             OnboardingView(viewModel: onboardingViewModel)
         case .generateName:
-            Text("generateName")
+            let generateNameViewModel = GenerateNameViewModel(
+                coordinator: self
+            )
+            GenerateNameView(viewModel: generateNameViewModel)
         case .selectTag:
             Text("selectTag")
         }

@@ -30,9 +30,11 @@ public final class OnboardingViewModel: ViewModel {
     func action(_ action: Action) {
         switch action {
         case .skipButtonTapped:
-            dump(#function)
+            coordinator.setOnboardingStatus(true)
+            coordinator.push(OnboardingScene.generateName)
         case .nextButtonTapped:
-            dump(#function)
+            coordinator.setOnboardingStatus(true)
+            coordinator.push(OnboardingScene.generateName)
         }
     }
 
