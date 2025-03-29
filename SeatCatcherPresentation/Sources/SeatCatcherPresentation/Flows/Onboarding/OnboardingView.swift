@@ -68,13 +68,16 @@ private struct OnboardingContentsView: View {
     @Binding var scrollID: Int?
     let size: CGSize
 
+    let pageCount = 4
+    let contentsRatio: CGFloat = 400 / 375
+
     var body: some View {
         ScrollView(.horizontal) {
             LazyHStack(spacing: 0) {
-                ForEach(0..<4, id: \.self) { idx in
+                ForEach(0..<pageCount, id: \.self) { idx in
                     Rectangle()
                         .fill(idx % 2 == 0 ? Color.blue : Color.red)
-                        .frame(width: size.width, height: size.width / 375 * 400)
+                        .frame(width: size.width, height: size.width * contentsRatio)
                 }
             }
             .scrollTargetLayout()
