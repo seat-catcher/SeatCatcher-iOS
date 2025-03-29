@@ -18,9 +18,14 @@ struct SeatCatcherApp: App {
     @State private var onboardingCoordinator: OnboardingCoordinator
     @AppStorage("isSignedIn") private var isSignedIn = false
     @AppStorage("isOnboardingRequired") private var isOnboardingRequired = true
+    @AppStorage("isUserInfoRequired") private var isUserInfoRequired = true
 
     private var currentFlow: AppFlow {
-        if isSignedIn { isOnboardingRequired ? .onboarding : .authenticated }
+        if isSignedIn {
+            if isOnboardingRequired { .onboarding }
+            else if isUserInfoRequired { .userInfoRequired }
+            else { .authenticated }
+        }
         else { .unauthenticated }
     }
 
@@ -40,11 +45,14 @@ struct SeatCatcherApp: App {
     var body: some Scene {
         WindowGroup {
             HStack {
-                Button("로그인 토글") {
+                Button("로그인") {
                     UserDefaults.standard.set(!UserDefaults.standard.bool(forKey: "isSignedIn"), forKey: "isSignedIn")
                 }
-                Button("온보딩 토글") {
+                Button("온보딩") {
                     UserDefaults.standard.set(!UserDefaults.standard.bool(forKey: "isOnboardingRequired"), forKey: "isOnboardingRequired")
+                }
+                Button("정보 입력") {
+                    UserDefaults.standard.set(!UserDefaults.standard.bool(forKey: "isUserInfoRequired"), forKey: "isUserInfoRequired")
                 }
             }
             Group {
@@ -62,17 +70,20 @@ struct SeatCatcherApp: App {
                                 appCoordinator.buildFullScreenCover($0)
                             }
                     }
+                case .userInfoRequired:
+                    NavigationStack(path: $onboardingCoordinator.path) {
+                        onboardingCoordinator.buildScene(.generateName)
+                            .navigationDestination(for: OnboardingScene.self) { onboardingCoordinator.buildScene($0) }
+                    }
                 case .onboarding:
                     NavigationStack(path: $onboardingCoordinator.path) {
                         onboardingCoordinator.buildScene(.onboarding)
-                            .navigationDestination(for: OnboardingScene.self) { onboardingCoordinator.buildScene($0)
-                            }
+                            .navigationDestination(for: OnboardingScene.self) { onboardingCoordinator.buildScene($0) }
                     }
                 case .unauthenticated:
                     NavigationStack(path: $onboardingCoordinator.path) {
                         onboardingCoordinator.buildScene(.login)
-                            .navigationDestination(for: OnboardingScene.self) { onboardingCoordinator.buildScene($0)
-                            }
+                            .navigationDestination(for: OnboardingScene.self) { onboardingCoordinator.buildScene($0) }
                     }
                 }
             }
@@ -93,5 +104,5 @@ extension SeatCatcherApp {
 
 
 enum AppFlow {
-    case authenticated, onboarding, unauthenticated
+    case authenticated, userInfoRequired, onboarding, unauthenticated
 }

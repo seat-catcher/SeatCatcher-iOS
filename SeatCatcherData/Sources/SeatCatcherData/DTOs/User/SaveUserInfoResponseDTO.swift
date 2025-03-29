@@ -1,0 +1,22 @@
+//
+//  SaveUserInfoResponseDTO.swift
+//  SeatCatcherData
+//
+//  Created by 박현수 on 3/29/25.
+//
+
+struct SaveUserInfoResponseDTO {
+    let status: Bool
+}
+
+extension SaveUserInfoResponseDTO: ResponseDTO {
+    typealias Entity = Bool
+
+    static func stub() -> Self {
+        return .init(status: true)
+    }
+
+    func toEntity() -> Bool {
+        return self.status
+    }
+}

@@ -47,7 +47,7 @@ public final class GenerateNameViewModel: ViewModel {
                 }
             }
         case .nextButtonTapped:
-            print(#function)
+            coordinator.push(OnboardingScene.selectTag(state.nickname))
         }
     }
 }
