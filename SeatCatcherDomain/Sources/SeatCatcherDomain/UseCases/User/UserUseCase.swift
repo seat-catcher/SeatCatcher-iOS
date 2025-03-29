@@ -9,7 +9,7 @@ import Foundation
 
 public protocol UserUseCase {
     func getRandomNickname() async throws -> String
-    func saveUserInfo(nickname: String, tag: Int) async throws
+    func saveUserInfo(nickname: String, tag: Int) async throws -> Bool
 }
 
 public final class UserUseCaseImpl: UserUseCase {
@@ -24,7 +24,8 @@ public final class UserUseCaseImpl: UserUseCase {
         return nickname
     }
 
-    public func saveUserInfo(nickname: String, tag: Int) async throws {
-        try await userRepository.saveUserInfo(nickname: nickname, tag: tag)
+    public func saveUserInfo(nickname: String, tag: Int) async throws -> Bool {
+        let result = try await userRepository.saveUserInfo(nickname: nickname, tag: tag)
+        return result
     }
 }

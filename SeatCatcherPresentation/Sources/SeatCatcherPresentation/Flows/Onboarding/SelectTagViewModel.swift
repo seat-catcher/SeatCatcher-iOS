@@ -57,8 +57,11 @@ public final class SelectTagViewModel: ViewModel {
         Task { [weak self] in
             guard let self = self else { return }
             do {
-                try await self.userUseCase.saveUserInfo(nickname: self.nickname, tag: tag)
-                await MainActor.run { coordinator.setUserInfoRequiredStatus(false) }
+                if try await self.userUseCase.saveUserInfo(nickname: self.nickname, tag: tag) {
+                    coordinator.setUserInfoRequiredStatus(false)
+                } else {
+                    self.state.errorMessage = "유저 정보 저장에 실패했습니다."
+                }
             } catch {
                 self.action(.errorOccured(error.localizedDescription))
             }

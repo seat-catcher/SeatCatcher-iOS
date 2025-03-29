@@ -7,5 +7,5 @@
 
 public protocol UserRepository {
     func fetchRandomNickname() async throws -> String
-    func saveUserInfo(nickname: String, tag: Int) async throws
+    func saveUserInfo(nickname: String, tag: Int) async throws -> Bool
 }

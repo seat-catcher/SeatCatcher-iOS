@@ -44,6 +44,7 @@ struct SeatCatcherApp: App {
 
     var body: some Scene {
         WindowGroup {
+            #if DEBUG
             HStack {
                 Button("로그인") {
                     UserDefaults.standard.set(!UserDefaults.standard.bool(forKey: "isSignedIn"), forKey: "isSignedIn")
@@ -55,6 +56,7 @@ struct SeatCatcherApp: App {
                     UserDefaults.standard.set(!UserDefaults.standard.bool(forKey: "isUserInfoRequired"), forKey: "isUserInfoRequired")
                 }
             }
+            #endif
             Group {
                 switch currentFlow {
                 case .authenticated:

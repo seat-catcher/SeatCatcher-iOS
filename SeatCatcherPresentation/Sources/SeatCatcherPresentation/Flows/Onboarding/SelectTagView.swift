@@ -91,8 +91,10 @@ private struct SelectTagNextButton: View {
                 .font(.system(size: 16, weight: .bold))
                 .padding(.vertical, 16)
                 .frame(maxWidth: .infinity)
-                .background(.green)
+                .background(viewModel.state.currentTag != nil ? .green : .gray)
                 .clipShape(.rect(cornerRadius: 8))
         }
+        .disabled(viewModel.state.currentTag == nil)
+
     }
 }
