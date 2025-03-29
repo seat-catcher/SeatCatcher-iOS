@@ -19,21 +19,21 @@ public final class OnboardingViewModel: ViewModel {
         var scrollID: Int?
     }
 
+    private(set) var state = State()
+
     let coordinator: Coordinator
 
     public init(coordinator: Coordinator) {
         self.coordinator = coordinator
     }
 
-    private(set) var state = State()
-
     func action(_ action: Action) {
         switch action {
         case .skipButtonTapped:
-            coordinator.setOnboardingStatus(true)
+            coordinator.setOnboardingRequiredStatus(false)
             coordinator.push(OnboardingScene.generateName)
         case .nextButtonTapped:
-            coordinator.setOnboardingStatus(true)
+            coordinator.setOnboardingRequiredStatus(false)
             coordinator.push(OnboardingScene.generateName)
         }
     }

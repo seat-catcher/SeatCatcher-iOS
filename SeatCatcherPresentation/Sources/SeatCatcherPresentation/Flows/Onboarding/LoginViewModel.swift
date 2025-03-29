@@ -42,6 +42,7 @@ public final class LoginViewModel: ViewModel {
                 guard let self = self else { return }
                 do {
                     try await loginWithKakao()
+                    self.action(.loginSuccess)
                 } catch {
                     self.action(.loginFailure(error))
                 }

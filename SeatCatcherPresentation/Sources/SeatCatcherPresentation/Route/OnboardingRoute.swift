@@ -12,7 +12,7 @@ public enum OnboardingScene: AppRoute {
     case login
     case onboarding
     case generateName
-    case selectTag
+    case selectTag(_ nickname: String)
 
     public var id: String {
         switch self {

@@ -46,8 +46,13 @@ final class OnboardingCoordinator: Coordinator {
                 coordinator: self
             )
             GenerateNameView(viewModel: generateNameViewModel)
-        case .selectTag:
-            Text("selectTag")
+        case let .selectTag(nickname):
+            let selectTagViewModel = SelectTagViewModel(
+                nickname: nickname,
+                userUseCase: diContainer.resolveUserUseCase(),
+                coordinator: self
+            )
+            SelectTagView(viewModel: selectTagViewModel)
         }
     }
 }
