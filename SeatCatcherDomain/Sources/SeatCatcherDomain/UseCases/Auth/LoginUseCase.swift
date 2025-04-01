@@ -9,17 +9,8 @@ import Foundation
 
 public protocol LoginUseCase {
     // MARK: - 로그인
-    func appleLogin(identityToken token: String) async throws -> Token
-    func kakaoLogin() async throws -> Token
-
-    // MARK: - 토큰
-    func saveAccessToken(_ token: String) throws
-    func getAccessToken() throws -> String?
-    func deleteAccessToken() throws
-
-    func saveRefreshToken(_ token: String) throws
-    func getRefreshToken() throws -> String?
-    func deleteRefreshToken() throws
+    func appleLogin(identityToken token: String) async throws
+    func kakaoLogin() async throws
 }
 
 public final class LoginUseCaseImpl: LoginUseCase {
@@ -34,33 +25,25 @@ public final class LoginUseCaseImpl: LoginUseCase {
         self.tokenRepository = tokenRepository
     }
 
-    public func appleLogin(identityToken token: String) async throws -> Token {
-        return try await loginRepository.appleLogin(identityToken: token)
+    public func appleLogin(identityToken token: String) async throws {
+        let token = try await loginRepository.appleLogin(identityToken: token)
+        try saveAccessToken(token.accessToken)
+        try saveRefreshToken(token.refreshToken)
     }
 
-    public func kakaoLogin() async throws -> Token {
-        return try await loginRepository.kakaoLogin()
+    public func kakaoLogin() async throws {
+        let token = try await loginRepository.kakaoLogin()
+        try saveAccessToken(token.accessToken)
+        try saveRefreshToken(token.refreshToken)
     }
 
     // MARK: - AccessToken
-    public func saveAccessToken(_ token: String) throws {
+    private func saveAccessToken(_ token: String) throws {
         try tokenRepository.saveAccessToken(token)
-    }
-    public func getAccessToken() throws -> String? {
-        return try tokenRepository.getAccessToken()
-    }
-    public func deleteAccessToken() throws {
-        try tokenRepository.deleteAccessToken()
     }
     
     // MARK: - RefreshToken
-    public func saveRefreshToken(_ token: String) throws {
+    private func saveRefreshToken(_ token: String) throws {
         try tokenRepository.saveRefreshToken(token)
-    }
-    public func getRefreshToken() throws -> String? {
-        return try tokenRepository.getRefreshToken()
-    }
-    public func deleteRefreshToken() throws {
-        try tokenRepository.deleteRefreshToken()
     }
 }
