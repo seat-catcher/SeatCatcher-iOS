@@ -10,7 +10,7 @@ struct NicknameResponseDTO {
 }
 
 extension NicknameResponseDTO: ResponseDTO {
-    typealias Entity = String
+    typealias DomainModel = String
 
     static let randomElements = (0..<5).map { "랜덤 닉네임 \($0)" }
 
