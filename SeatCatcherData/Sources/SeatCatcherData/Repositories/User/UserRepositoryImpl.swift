@@ -13,12 +13,12 @@ public final class UserRepositoryImpl: UserRepository {
     public func fetchRandomNickname() async throws -> String {
         let dto = NicknameResponseDTO.stub()
         try await Task.sleep(for: .seconds(0.2))
-        return dto.toEntity()
+        return dto.toDomainModel()
     }
 
     public func saveUserInfo(nickname: String, tag: Int) async throws -> Bool {
         let dto = SaveUserInfoResponseDTO.stub()
         try await Task.sleep(for: .seconds(0.2))
-        return dto.toEntity()
+        return dto.toDomainModel()
     }
 }
