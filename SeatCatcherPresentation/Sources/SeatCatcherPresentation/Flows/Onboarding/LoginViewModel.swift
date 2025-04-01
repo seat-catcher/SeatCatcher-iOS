@@ -57,9 +57,7 @@ public final class LoginViewModel: ViewModel {
 
     /// 카카오 SDK에서 accessToken을 받아 오고, 해당 accessToken을 통해 서버와 로그인 로직 수행
     func loginWithKakao() async throws {
-        let token = try await loginUseCase.kakaoLogin()
-        try loginUseCase.saveAccessToken(token.accessToken)
-        try loginUseCase.saveRefreshToken(token.refreshToken)
+        try await loginUseCase.kakaoLogin()
     }
 
     /// 애플 로그인 리퀘스트 파라미터 설정
@@ -83,8 +81,6 @@ public final class LoginViewModel: ViewModel {
                 guard let self = self else { return }
                 do {
                     let token = try await loginUseCase.appleLogin(identityToken: identityToken.base64EncodedString())
-                    try loginUseCase.saveAccessToken(token.accessToken)
-                    try loginUseCase.saveRefreshToken(token.refreshToken)
                     self.action(.loginSuccess)
                 } catch {
                     self.action(.loginFailure(error))
