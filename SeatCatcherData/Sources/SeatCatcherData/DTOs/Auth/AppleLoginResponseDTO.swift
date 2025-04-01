@@ -14,7 +14,7 @@ struct AppleLoginResponseDTO {
 }
 
 extension AppleLoginResponseDTO: ResponseDTO {
-    typealias Entity = TokenVO
+    typealias DomainModel = TokenVO
 
     static func stub() -> Self {
         return .init(accessToken: "accessToken", refreshToken: "refreshToken")
