@@ -14,13 +14,13 @@ struct AppleLoginResponseDTO {
 }
 
 extension AppleLoginResponseDTO: ResponseDTO {
-    typealias Entity = Token
+    typealias Entity = TokenVO
 
     static func stub() -> Self {
         return .init(accessToken: "accessToken", refreshToken: "refreshToken")
     }
 
-    func toEntity() -> Token {
+    func toDomainModel() -> TokenVO {
         return .init(accessToken: accessToken, refreshToken: refreshToken)
     }
 }

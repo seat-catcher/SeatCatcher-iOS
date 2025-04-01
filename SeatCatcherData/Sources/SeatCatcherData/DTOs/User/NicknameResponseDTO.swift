@@ -18,7 +18,7 @@ extension NicknameResponseDTO: ResponseDTO {
         return .init(nickname: randomElements.randomElement() ?? "랜덤 닉네임 0")
     }
 
-    func toEntity() -> String {
+    func toDomainModel() -> String {
         return self.nickname
     }
 }

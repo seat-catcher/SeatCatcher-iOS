@@ -21,15 +21,15 @@ public final class LoginRepositoryImpl: LoginRepository {
 
     public init() {}
 
-    public func appleLogin(identityToken: String) async throws -> SeatCatcherDomain.Token {
+    public func appleLogin(identityToken: String) async throws -> SeatCatcherDomain.TokenVO {
         let responseDTO = try await networkService.postAppleLogin(identityToken)
-        return responseDTO.toEntity()
+        return responseDTO.toDomainModel()
     }
 
-    public func kakaoLogin() async throws -> SeatCatcherDomain.Token {
+    public func kakaoLogin() async throws -> SeatCatcherDomain.TokenVO {
         let accessToken = try await getKakaoLoginAccessToken()
         let responseDTO = try await networkService.postKakaoLogin(accessToken)
-        return responseDTO.toEntity()
+        return responseDTO.toDomainModel()
     }
 
     /// - 카카오톡에서 카카오 로그인 후 토큰 정보를 가져오는 메소드입니다.

@@ -1,5 +1,5 @@
 //
-//  Token.swift
+//  TokenVO.swift
 //  SeatCatcherDomain
 //
 //  Created by 박현수 on 3/21/25.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct Token: Sendable {
+public struct TokenVO: Sendable {
     public let accessToken: String
     public let refreshToken: String
 

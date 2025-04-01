@@ -16,7 +16,7 @@ extension SaveUserInfoResponseDTO: ResponseDTO {
         return .init(status: true)
     }
 
-    func toEntity() -> Bool {
+    func toDomainModel() -> Bool {
         return self.status
     }
 }
