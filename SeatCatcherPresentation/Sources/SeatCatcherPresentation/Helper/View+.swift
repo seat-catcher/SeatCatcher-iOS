@@ -30,4 +30,30 @@ extension View {
             self.toolbar(visibility, for: bar)
         }
     }
+    
+    func cornerRadius(_ radius: CGFloat, corners: UIRectCorner) -> some View {
+        clipShape(Path(UIBezierPath(
+            roundedRect: UIScreen.main.bounds,
+            byRoundingCorners: corners,
+            cornerRadii: CGSize(width: radius, height: radius)
+        ).cgPath))
+    }
+    
+    @ViewBuilder
+    func bottomSheet<Content: View>(
+        isPresented: Binding<Bool>,
+        height: CGFloat,
+        content: @escaping () -> Content
+    ) -> some View {
+        self
+            .animation(.easeInOut(duration: 0.25), value: isPresented.wrappedValue)
+            .sheet(isPresented: isPresented) {
+                content()
+                    .cornerRadius(24, corners: [.topLeft, .topRight])
+                    .presentationDetents([.height(height)])
+                    .presentationBackgroundInteraction(.enabled)
+                    .presentationDragIndicator(.visible)
+                    .presentationBackground(.clear)
+            }
+    }
 }
