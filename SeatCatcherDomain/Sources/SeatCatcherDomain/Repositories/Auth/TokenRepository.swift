@@ -6,6 +6,9 @@
 //
 
 public protocol TokenRepository {
+    func refreshTokens() async throws -> TokenVO
+    func getTokenValidStatus() async throws -> Bool
+
     func saveAccessToken(_ token: String) throws
     func getAccessToken() throws -> String?
     func deleteAccessToken() throws

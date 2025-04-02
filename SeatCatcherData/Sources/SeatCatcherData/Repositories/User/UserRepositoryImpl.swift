@@ -11,14 +11,14 @@ public final class UserRepositoryImpl: UserRepository {
     public init() {}
 
     public func fetchRandomNickname() async throws -> String {
-        let dto = NicknameResponseDTO.stub()
+        let dto = NicknameResponseDTO.stub
         try await Task.sleep(for: .seconds(0.2))
-        return dto.toDomainModel()
+        return dto.domainModel
     }
 
     public func saveUserInfo(nickname: String, tag: Int) async throws -> Bool {
-        let dto = SaveUserInfoResponseDTO.stub()
+        let dto = SaveUserInfoResponseDTO.stub
         try await Task.sleep(for: .seconds(0.2))
-        return dto.toDomainModel()
+        return dto.domainModel
     }
 }

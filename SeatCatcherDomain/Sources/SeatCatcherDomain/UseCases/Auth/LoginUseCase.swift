@@ -11,6 +11,8 @@ public protocol LoginUseCase {
     // MARK: - 로그인
     func appleLogin(identityToken token: String) async throws
     func kakaoLogin() async throws
+    func refreshTokens() async throws
+    func isAccessTokenValid() async throws -> Bool
 }
 
 public final class LoginUseCaseImpl: LoginUseCase {
@@ -28,6 +30,7 @@ public final class LoginUseCaseImpl: LoginUseCase {
     public func appleLogin(identityToken token: String) async throws {
         let token = try await loginRepository.appleLogin(identityToken: token)
         try saveAccessToken(token.accessToken)
+        dump(token)
         try saveRefreshToken(token.refreshToken)
     }
 
@@ -35,6 +38,16 @@ public final class LoginUseCaseImpl: LoginUseCase {
         let token = try await loginRepository.kakaoLogin()
         try saveAccessToken(token.accessToken)
         try saveRefreshToken(token.refreshToken)
+    }
+
+    public func refreshTokens() async throws {
+        let token = try await tokenRepository.refreshTokens()
+        try saveAccessToken(token.accessToken)
+        try saveRefreshToken(token.refreshToken)
+    }
+
+    public func isAccessTokenValid() async throws -> Bool {
+        return try await tokenRepository.getTokenValidStatus()
     }
 
     // MARK: - AccessToken

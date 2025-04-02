@@ -12,11 +12,7 @@ struct SaveUserInfoResponseDTO {
 extension SaveUserInfoResponseDTO: ResponseDTO {
     typealias DomainModel = Bool
 
-    static func stub() -> Self {
-        return .init(status: true)
-    }
+    static var stub: Self { .init(status: true) }
 
-    func toDomainModel() -> Bool {
-        return self.status
-    }
+    var domainModel: Bool { self.status }
 }
