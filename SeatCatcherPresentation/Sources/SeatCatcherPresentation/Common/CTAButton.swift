@@ -9,19 +9,50 @@ import SwiftUI
 
 struct CTAButton: View {
     let title: String
-    let isEnabled: Bool
     let action: () -> Void
+    let style: SCButtonStyle
+    
+    enum SCButtonStyle {
+        case bottomEnabled
+        case bottomDisabled
+        case mainLeft
+        case mainRight
+        case selectionYes
+        case selectionNo
+    }
+    
+    var backgroundColor: Color {
+        switch style {
+        case .bottomEnabled, .mainRight, .selectionYes:
+            .scGreen
+        case .mainLeft, .selectionNo:
+            .scGreen700
+        case .bottomDisabled:
+            .gray500
+        }
+    }
+    
+    var textColor: Color {
+        switch style {
+        case .bottomEnabled, .mainRight, .selectionYes:
+            .scWhite
+        case .mainLeft, .selectionNo:
+            .scGreen
+        case .bottomDisabled:
+            .gray300
+        }
+    }
     
     var body: some View {
         Button(action: action) {
             Text(title)
                 .font(.B01_SB)
-                .foregroundStyle(isEnabled ? .white : .gray300)
+                .foregroundStyle(textColor)
                 .frame(maxWidth: .infinity)
                 .frame(height: 52)
         }
-        .disabled(!isEnabled)
-        .background(isEnabled ? .scGreen : .gray500)
+        .disabled(style == .bottomDisabled)
+        .background(backgroundColor)
         .cornerRadius(8)
         .padding(.horizontal, 18)
     }
