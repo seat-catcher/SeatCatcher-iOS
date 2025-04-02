@@ -8,11 +8,33 @@
 import SeatCatcherDomain
 
 public struct TokenRepositoryImpl: TokenRepository {
+    enum TokenError: Error {
+        case accessTokenNotFoundInKeychain
+        case refreshTokenNotFoundInKeychain
+    }
+
     // 키체인 접근 Key
     private let accessToken = "accessToken"
     private let refreshToken = "refreshToken"
 
+    private let networkService = NetworkService()
+
     public init() {}
+
+    public func refreshTokens() async throws -> TokenVO {
+        guard let refreshToken = try getRefreshToken() else { throw TokenError.refreshTokenNotFoundInKeychain }
+        dump(refreshToken)
+        let responseDTO = try await networkService.postRefreshToken(refreshToken)
+        return responseDTO.domainModel
+    }
+    
+    public func getTokenValidStatus() async throws -> Bool {
+        guard let accessToken = try getAccessToken() else { throw TokenError.accessTokenNotFoundInKeychain }
+        dump(accessToken)
+        let responsePlainText = try await networkService.getAccessTokenValidStatus(accessToken)
+        dump(responsePlainText)
+        return responsePlainText == "Valid" ? true : false
+    }
 
     // MARK: - AccessToken
     public func saveAccessToken(_ token: String) throws {

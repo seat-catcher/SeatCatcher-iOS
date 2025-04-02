@@ -1,22 +1,21 @@
 //
-//  File.swift
+//  RefreshTokenResponseDTO.swift
 //  SeatCatcherData
 //
-//  Created by 박현수 on 3/21/25.
+//  Created by 박현수 on 4/2/25.
 //
 
-import Foundation
 import SeatCatcherDomain
 
-struct AppleLoginResponseDTO {
+struct RefreshTokenResponseDTO {
     let accessToken: String
     let refreshToken: String
 }
 
-extension AppleLoginResponseDTO: ResponseDTO {
+extension RefreshTokenResponseDTO: ResponseDTO {
     typealias DomainModel = TokenVO
 
-    static var stub: Self { .init(accessToken: "accessToken", refreshToken: "refreshToken") }
+    static var stub: Self { .init(accessToken: "accessToken", refreshToken: "accessToken") }
 
     var domainModel: TokenVO { .init(accessToken: accessToken, refreshToken: refreshToken) }
 }

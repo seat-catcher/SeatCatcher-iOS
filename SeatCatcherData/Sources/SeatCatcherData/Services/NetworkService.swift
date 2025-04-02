@@ -9,6 +9,10 @@ import Foundation
 import Moya
 
 final class NetworkService {
+    enum DecodingError: Error {
+        case plaintextDecodingError
+    }
+
     private let provider = MoyaProvider<SeatCatcherAPI>()
 
     func postAppleLogin(_ token: String) async throws -> AppleLoginResponseDTO {
@@ -23,5 +27,19 @@ final class NetworkService {
         let response = try await provider.request(.postSignInWithKakao(requestDTO))
         let responseDTO = try JSONDecoder().decode(KakaoLoginResponseDTO.self, from: response)
         return responseDTO
+    }
+
+    func postRefreshToken(_ refreshToken: String) async throws -> RefreshTokenResponseDTO {
+        let requestDTO = RefreshTokenRequestDTO(refreshToken: refreshToken)
+        let response = try await provider.request(.postRefreshToken(requestDTO))
+        let responseDTO = try JSONDecoder().decode(RefreshTokenResponseDTO.self, from: response)
+        return responseDTO
+    }
+
+    func getAccessTokenValidStatus(_ accessToken: String) async throws -> String {
+        let response = try await provider.request(.getAccessTokenValidStatus(accessToken))
+
+        guard let decodedResponse = String(data: response, encoding: .utf8) else { throw DecodingError.plaintextDecodingError }
+        return decodedResponse
     }
 }

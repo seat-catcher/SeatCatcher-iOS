@@ -12,8 +12,8 @@ protocol ResponseDTO: Codable {
     associatedtype DomainModel
 
     /// 테스트용 Stub 인스턴스 리턴
-    static func stub() -> Self
+    static var stub: Self { get }
 
     /// DTO -> Entity 매핑
-    func toDomainModel() -> DomainModel
+    var domainModel: DomainModel { get }
 }

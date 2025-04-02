@@ -16,11 +16,7 @@ struct KakaoLoginResponseDTO {
 extension KakaoLoginResponseDTO: ResponseDTO {
     typealias DomainModel = TokenVO
 
-    static func stub() -> Self {
-        return .init(accessToken: "accessToken", refreshToken: "refreshToken")
-    }
+    static var stub: Self { .init(accessToken: "accessToken", refreshToken: "refreshToken") }
 
-    func toDomainModel() -> TokenVO {
-        return .init(accessToken: accessToken, refreshToken: refreshToken)
-    }
+    var domainModel: TokenVO { .init(accessToken: accessToken, refreshToken: refreshToken) }
 }

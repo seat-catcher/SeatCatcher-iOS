@@ -14,11 +14,7 @@ extension NicknameResponseDTO: ResponseDTO {
 
     static let randomElements = (0..<5).map { "랜덤 닉네임 \($0)" }
 
-    static func stub() -> Self {
-        return .init(nickname: randomElements.randomElement() ?? "랜덤 닉네임 0")
-    }
+    static var stub: Self { .init(nickname: randomElements.randomElement() ?? "랜덤 닉네임 0") }
 
-    func toDomainModel() -> String {
-        return self.nickname
-    }
+    var domainModel: String { self.nickname }
 }

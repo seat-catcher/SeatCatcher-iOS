@@ -12,6 +12,8 @@ import KakaoSDKCommon
 import KakaoSDKAuth
 import KakaoSDKUser
 
+import SeatCatcherDomain
+
 @main
 struct SeatCatcherApp: App {
     @State private var appCoordinator: AppCoordinator
@@ -54,6 +56,15 @@ struct SeatCatcherApp: App {
                 }
                 Button("정보 입력") {
                     UserDefaults.standard.set(!UserDefaults.standard.bool(forKey: "isUserInfoRequired"), forKey: "isUserInfoRequired")
+                }
+                Button("갱신") {
+                    Task { try await DIContainerImpl().resolveLoginUseCase().refreshTokens() }
+                }
+                Button("유효성") {
+                    Task {
+                        let status = try await DIContainerImpl().resolveLoginUseCase().isAccessTokenValid()
+                        dump(status)
+                    }
                 }
             }
             #endif
