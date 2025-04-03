@@ -11,7 +11,6 @@ public protocol AuthUseCase {
     // MARK: - 로그인
     func appleLogin(identityToken token: String) async throws
     func kakaoLogin() async throws
-    func reissueAndSaveToken() async throws
     func isAccessTokenValid() async throws
     func logout() throws
 }
@@ -38,11 +37,6 @@ public final class AuthUseCaseImpl: AuthUseCase {
         let token = try await loginRepository.kakaoLogin()
         try tokenRepository.saveTokens(token)
         UserDefaults.standard.set(true, forKey: "isSignedIn")
-    }
-
-    public func reissueAndSaveToken() async throws {
-        let token = try await tokenRepository.reissue()
-        try tokenRepository.saveTokens(token)
     }
 
     public func isAccessTokenValid() async throws {
