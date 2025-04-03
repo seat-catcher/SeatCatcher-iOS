@@ -6,14 +6,48 @@
 //
 
 import Foundation
+import Alamofire
 import Moya
 
-final class NetworkService {
+struct NetworkService {
+
+    struct _AuthInterceptor: RequestInterceptor {
+
+        struct _CompletionWrapper: @unchecked Sendable {
+            let closure: (RetryResult) -> Void
+            func call(with result: RetryResult) {
+                closure(result)
+            }
+        }
+
+        func retry(_ request: Request, for session: Session, dueTo error: any Error, completion: @escaping (RetryResult) -> Void) {
+            guard let response = request.task?.response as? HTTPURLResponse, response.statusCode == 401, let pathComponents =
+                    request.request?.url?.pathComponents,
+                    !pathComponents.contains("refresh")
+            else {
+                dump("donotretry")
+                completion(.doNotRetryWithError(error))
+                return
+            }
+            let completion = _CompletionWrapper(closure: completion)
+            let tokenRepository = TokenRepositoryImpl()
+            _Concurrency.Task {
+                do {
+                    let token = try await tokenRepository.refreshTokens()
+                    completion.call(with: .retry)
+                } catch {
+                    completion.call(with: .doNotRetryWithError(error))
+                    UserDefaults.standard.set(false, forKey: "isSignedIn")
+                }
+            }
+        }
+    }
+
     enum DecodingError: Error {
         case plaintextDecodingError
     }
 
-    private let provider = MoyaProvider<SeatCatcherAPI>()
+    private let provider = MoyaProvider<SeatCatcherAPI>(session: Session(interceptor: _AuthInterceptor()))
 
     func postAppleLogin(_ token: String) async throws -> AppleLoginResponseDTO {
         let requestDTO = AppleLoginRequestDTO(identityToken: token)

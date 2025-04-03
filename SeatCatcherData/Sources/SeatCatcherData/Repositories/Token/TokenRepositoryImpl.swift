@@ -23,16 +23,13 @@ public struct TokenRepositoryImpl: TokenRepository {
 
     public func refreshTokens() async throws -> TokenVO {
         guard let refreshToken = try getRefreshToken() else { throw TokenError.refreshTokenNotFoundInKeychain }
-        dump(refreshToken)
         let responseDTO = try await networkService.postRefreshToken(refreshToken)
         return responseDTO.domainModel
     }
     
     public func getTokenValidStatus() async throws -> Bool {
         guard let accessToken = try getAccessToken() else { throw TokenError.accessTokenNotFoundInKeychain }
-        dump(accessToken)
         let responsePlainText = try await networkService.getAccessTokenValidStatus(accessToken)
-        dump(responsePlainText)
         return responsePlainText == "Valid" ? true : false
     }
 
