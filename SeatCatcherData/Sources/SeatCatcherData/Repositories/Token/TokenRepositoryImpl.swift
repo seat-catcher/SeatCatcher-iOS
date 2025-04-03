@@ -21,16 +21,15 @@ public struct TokenRepositoryImpl: TokenRepository {
 
     public init() {}
 
-    public func refreshTokens() async throws -> TokenVO {
+    public func reissue() async throws -> TokenVO {
         guard let refreshToken = try getRefreshToken() else { throw TokenError.refreshTokenNotFoundInKeychain }
         let responseDTO = try await networkService.postRefreshToken(refreshToken)
         return responseDTO.domainModel
     }
     
-    public func getTokenValidStatus() async throws -> Bool {
+    public func getTokenValidStatus() async throws {
         guard let accessToken = try getAccessToken() else { throw TokenError.accessTokenNotFoundInKeychain }
-        let responsePlainText = try await networkService.getAccessTokenValidStatus(accessToken)
-        return responsePlainText == "Valid" ? true : false
+        try await networkService.getAccessTokenValidStatus(accessToken)
     }
 
     // MARK: - AccessToken
@@ -52,5 +51,15 @@ public struct TokenRepositoryImpl: TokenRepository {
     }
     public func deleteRefreshToken() throws {
         try KeychainService.delete(key: refreshToken)
+    }
+
+    public func saveTokens(_ token: TokenVO) throws {
+        try saveAccessToken(token.accessToken)
+        try saveRefreshToken(token.refreshToken)
+    }
+
+    public func deleteTokens() throws {
+        try deleteAccessToken()
+        try deleteRefreshToken()
     }
 }

@@ -7,6 +7,7 @@
 
 import Foundation
 import SeatCatcherCore
+import SeatCatcherDomain
 
 @Observable
 public final class OnboardingViewModel: ViewModel {
@@ -21,19 +22,21 @@ public final class OnboardingViewModel: ViewModel {
 
     private(set) var state = State()
 
+    private let userUseCase: UserUseCase
     let coordinator: Coordinator
 
-    public init(coordinator: Coordinator) {
+    public init(userUseCase: UserUseCase, coordinator: Coordinator) {
+        self.userUseCase = userUseCase
         self.coordinator = coordinator
     }
 
     func action(_ action: Action) {
         switch action {
         case .skipButtonTapped:
-            coordinator.setOnboardingRequiredStatus(false)
+            userUseCase.setOnboardingRequiredStatus(false)
             coordinator.push(OnboardingScene.generateName)
         case .nextButtonTapped:
-            coordinator.setOnboardingRequiredStatus(false)
+            userUseCase.setOnboardingRequiredStatus(false)
             coordinator.push(OnboardingScene.generateName)
         }
     }
