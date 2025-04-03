@@ -14,8 +14,7 @@ import SeatCatcherCore
 public final class LoginViewModel: ViewModel {
     enum Action {
         case loginWithKakaoButtonTapped
-        case loginSuccess
-        case loginFailure(_ error: any Error)
+        case loginFailure(Error)
     }
 
     struct State {
@@ -24,14 +23,14 @@ public final class LoginViewModel: ViewModel {
     }
 
     private(set) var state = State()
-    private let loginUseCase: LoginUseCase
+    private let authUseCase: AuthUseCase
     private let coordinator: Coordinator
 
     public init(
-        loginUseCase: LoginUseCase,
+        authUseCase: AuthUseCase,
         coordinator: Coordinator
     ) {
-        self.loginUseCase = loginUseCase
+        self.authUseCase = authUseCase
         self.coordinator = coordinator
     }
 
@@ -41,14 +40,11 @@ public final class LoginViewModel: ViewModel {
             Task { [weak self] in
                 guard let self = self else { return }
                 do {
-                    try await loginWithKakao()
-                    self.action(.loginSuccess)
+                    try await authUseCase.kakaoLogin()
                 } catch {
                     self.action(.loginFailure(error))
                 }
             }
-        case .loginSuccess:
-            coordinator.setLoginStatus(true)
         case let .loginFailure(error):
             dump(error)
             state.errorMessage = error.localizedDescription
@@ -57,7 +53,7 @@ public final class LoginViewModel: ViewModel {
 
     /// 카카오 SDK에서 accessToken을 받아 오고, 해당 accessToken을 통해 서버와 로그인 로직 수행
     func loginWithKakao() async throws {
-        try await loginUseCase.kakaoLogin()
+        try await authUseCase.kakaoLogin()
     }
 
     /// 애플 로그인 리퀘스트 파라미터 설정
@@ -76,12 +72,11 @@ public final class LoginViewModel: ViewModel {
                   let identityToken = credential.identityToken
             else { return }
 
-            // loginUseCase에 identityToken을 넘겨 서버와 로그인 로직 수행
+            // authUseCase에 identityToken을 넘겨 서버와 로그인 로직 수행
             Task { [weak self] in
                 guard let self = self else { return }
                 do {
-                    let token = try await loginUseCase.appleLogin(identityToken: identityToken.base64EncodedString())
-                    self.action(.loginSuccess)
+                    try await authUseCase.appleLogin(identityToken: identityToken.base64EncodedString())
                 } catch {
                     self.action(.loginFailure(error))
                 }

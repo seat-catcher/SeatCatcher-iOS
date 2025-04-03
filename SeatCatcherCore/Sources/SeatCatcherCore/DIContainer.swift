@@ -9,6 +9,6 @@ import Foundation
 import SeatCatcherDomain
 
 public protocol DIContainer {
-    func resolveLoginUseCase() -> LoginUseCase
+    func resolveAuthUseCase() -> AuthUseCase
     func resolveUserUseCase() -> UserUseCase
 }

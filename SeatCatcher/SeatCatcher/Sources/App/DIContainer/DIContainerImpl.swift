@@ -13,14 +13,14 @@ import SeatCatcherData
 
 @Observable
 final class DIContainerImpl: DIContainer {
-    func resolveLoginUseCase() -> LoginUseCase {
+    func resolveAuthUseCase() -> AuthUseCase {
         let loginRepository = LoginRepositoryImpl()
         let tokenRepository = TokenRepositoryImpl()
-        let loginUseCase = LoginUseCaseImpl(
+        let authUseCase = AuthUseCaseImpl(
             loginRepository: loginRepository,
             tokenRepository: tokenRepository
         )
-        return loginUseCase
+        return authUseCase
     }
 
     func resolveUserUseCase() -> UserUseCase {

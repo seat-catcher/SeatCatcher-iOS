@@ -31,12 +31,13 @@ final class OnboardingCoordinator: Coordinator {
         switch scene {
         case .login:
             let loginViewModel = LoginViewModel(
-                loginUseCase: diContainer.resolveLoginUseCase(),
+                authUseCase: diContainer.resolveAuthUseCase(),
                 coordinator: self
             )
             LoginView(viewModel: loginViewModel)
         case .onboarding:
             let onboardingViewModel = OnboardingViewModel(
+                userUseCase: diContainer.resolveUserUseCase(),
                 coordinator: self
             )
             OnboardingView(viewModel: onboardingViewModel)

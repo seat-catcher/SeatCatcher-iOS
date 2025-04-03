@@ -22,6 +22,8 @@ struct SeatCatcherApp: App {
     @AppStorage("isOnboardingRequired") private var isOnboardingRequired = true
     @AppStorage("isUserInfoRequired") private var isUserInfoRequired = true
 
+    private let diContainer = DIContainerImpl()
+
     private var currentFlow: AppFlow {
         if isSignedIn {
             if isOnboardingRequired { .onboarding }
@@ -32,7 +34,6 @@ struct SeatCatcherApp: App {
     }
 
     init() {
-        let diContainer = DIContainerImpl()
         let appCoordinator = AppCoordinator(diContainer: diContainer)
         let onboardingCoordinator = OnboardingCoordinator(diContainer: diContainer)
 
@@ -42,6 +43,8 @@ struct SeatCatcherApp: App {
         guard let kakaoAppKey = Bundle.main.infoDictionary?["KAKAO_APP_KEY"] as? String
         else { fatalError("Kakao Native App Key를 불러올 수 없습니다.") }
         KakaoSDK.initSDK(appKey: kakaoAppKey)
+
+        checkLoginStatus()
     }
 
     var body: some Scene {
@@ -58,13 +61,10 @@ struct SeatCatcherApp: App {
                     UserDefaults.standard.set(!UserDefaults.standard.bool(forKey: "isUserInfoRequired"), forKey: "isUserInfoRequired")
                 }
                 Button("갱신") {
-                    Task { try await DIContainerImpl().resolveLoginUseCase().refreshTokens() }
+                    Task { try await diContainer.resolveAuthUseCase().reissueAndSaveToken() }
                 }
                 Button("유효성") {
-                    Task {
-                        let status = try await DIContainerImpl().resolveLoginUseCase().isAccessTokenValid()
-                        dump(status)
-                    }
+                    Task { try await diContainer.resolveAuthUseCase().isAccessTokenValid() }
                 }
             }
             #endif
@@ -113,6 +113,22 @@ extension SeatCatcherApp {
             _ = AuthController.handleOpenUrl(url: url)
         }
     }
+
+    private func checkLoginStatus() {
+        let authUseCase = diContainer.resolveAuthUseCase()
+        Task {
+            do {
+                try await authUseCase.isAccessTokenValid()
+            } catch {
+                do {
+                    try authUseCase.logout()
+                } catch {
+                    fatalError("로그아웃 실패")
+                }
+            }
+        }
+    }
+    
 }
 
 

@@ -27,10 +27,6 @@ public protocol Coordinator: AnyObject {
         onDismiss: (() -> Void)?
     )
     func dismissFullScreenCover()
-
-    func setLoginStatus(_ status: Bool)
-    func setOnboardingRequiredStatus(_ status: Bool)
-    func setUserInfoRequiredStatus(_ status: Bool)
 }
 
 // MARK: - 기본 구현 제공
@@ -70,18 +66,6 @@ public extension Coordinator {
         self.fullScreenCover = nil
         if let onDismiss = fullScreenCoverOnDismiss { onDismiss() }
         self.fullScreenCoverOnDismiss = nil
-    }
-
-    func setLoginStatus(_ status: Bool) {
-        UserDefaults.standard.set(status, forKey: "isSignedIn")
-    }
-    
-    func setOnboardingRequiredStatus(_ status: Bool) {
-        UserDefaults.standard.set(status, forKey: "isOnboardingRequired")
-    }
-
-    func setUserInfoRequiredStatus(_ status: Bool) {
-        UserDefaults.standard.set(status, forKey: "isUserInfoRequired")
     }
 }
 
