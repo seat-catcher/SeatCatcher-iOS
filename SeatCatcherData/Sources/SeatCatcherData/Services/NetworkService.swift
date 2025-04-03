@@ -8,6 +8,7 @@
 import Foundation
 import Alamofire
 import Moya
+import SeatCatcherDomain
 
 struct NetworkService {
     enum TokenError: Error {
@@ -47,20 +48,16 @@ struct NetworkService {
                     // 토큰이 nil인 경우 에러를 던집니다.
                     guard let accessToken = try tokenRepository.getAccessToken() else {
                         completion(.failure(TokenError.accessTokenIsNil))
-                        // 토큰이 없는 경우, 저장된 토큰을 삭제하고 로그인 상태를 false로 설정합니다.
-                        try? tokenRepository.deleteTokens()
-                        UserDefaults.standard.set(false, forKey: "isSignedIn")
-                        return
+                        throw TokenError.accessTokenIsNil
                     }
                     // "Authorization" 헤더에 "Bearer <accessToken>" 형식으로 값을 설정합니다.
                     urlRequestWithReissuedToken.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
                     // 수정된 URLRequest를 성공 결과로 반환합니다.
                     completion(.success(urlRequestWithReissuedToken))
                 } catch {
-                    // 토큰을 가져오거나 수정하는 중 에러가 발생하면, 에러 결과를 반환합니다.
+                    // 토큰을 가져오거나 수정하는 중 에러가 발생하면 로그아웃합니다.
                     completion(.failure(error))
-                    try? tokenRepository.deleteTokens()
-                    UserDefaults.standard.set(false, forKey: "isSignedIn")
+                    logout(tokenRepository: tokenRepository)
                 }
             } else {
                 // 만약 "isTokenRefreshed" 플래그가 false이면, 원본 URLRequest를 그대로 반환합니다.
@@ -94,8 +91,7 @@ struct NetworkService {
 
                 // 키체인에 저장된 토큰을 삭제하고 로그아웃합니다.
                 let tokenRepository = TokenRepositoryImpl()
-                try? tokenRepository.deleteTokens()
-                UserDefaults.standard.set(false, forKey: "isSignedIn")
+                logout(tokenRepository: tokenRepository)
                 return
             }
 
@@ -122,11 +118,14 @@ struct NetworkService {
 
                     // 키체인에 저장된 토큰을 삭제하고 로그아웃합니다.
                     let tokenRepository = TokenRepositoryImpl()
-                    try? tokenRepository.deleteTokens()
-                    UserDefaults.standard.set(false, forKey: "isSignedIn")
-                    return
+                    logout(tokenRepository: tokenRepository)
                 }
             }
+        }
+
+        func logout(tokenRepository: TokenRepository) {
+            try? tokenRepository.deleteTokens()
+            UserDefaults.standard.set(false, forKey: "isSignedIn")
         }
     }
 
