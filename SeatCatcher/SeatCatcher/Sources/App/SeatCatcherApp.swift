@@ -61,20 +61,6 @@ struct SeatCatcherApp: App {
                 Button("정보 입력") {
                     UserDefaults.standard.set(!UserDefaults.standard.bool(forKey: "isUserInfoRequired"), forKey: "isUserInfoRequired")
                 }
-                Button("갱신") {
-                    Task { try await diContainer.resolveAuthUseCase().reissueAndSaveToken() }
-                }
-                Button("유효성") {
-                    Task { try await diContainer.resolveAuthUseCase().isAccessTokenValid() }
-                }
-                Button("a") {
-                    let keychain = TokenRepositoryImpl()
-                    try? keychain.saveAccessToken("access")
-                }
-                Button("r") {
-                    let keychain = TokenRepositoryImpl()
-                    try? keychain.saveRefreshToken("r")
-                }
             }
             #endif
             Group {
