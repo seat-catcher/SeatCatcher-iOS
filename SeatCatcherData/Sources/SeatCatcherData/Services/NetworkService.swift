@@ -117,7 +117,6 @@ struct NetworkService {
                     completion(.doNotRetryWithError(error))
 
                     // 키체인에 저장된 토큰을 삭제하고 로그아웃합니다.
-                    let tokenRepository = TokenRepositoryImpl()
                     logout(tokenRepository: tokenRepository)
                 }
             }
