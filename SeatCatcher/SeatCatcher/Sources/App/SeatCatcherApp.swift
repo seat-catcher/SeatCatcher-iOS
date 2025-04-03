@@ -12,6 +12,7 @@ import KakaoSDKCommon
 import KakaoSDKAuth
 import KakaoSDKUser
 
+import SeatCatcherData
 import SeatCatcherDomain
 
 @main
@@ -65,6 +66,14 @@ struct SeatCatcherApp: App {
                 }
                 Button("유효성") {
                     Task { try await diContainer.resolveAuthUseCase().isAccessTokenValid() }
+                }
+                Button("a") {
+                    let keychain = TokenRepositoryImpl()
+                    try? keychain.saveAccessToken("access")
+                }
+                Button("r") {
+                    let keychain = TokenRepositoryImpl()
+                    try? keychain.saveRefreshToken("r")
                 }
             }
             #endif

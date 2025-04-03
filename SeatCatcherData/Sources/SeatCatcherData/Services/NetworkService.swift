@@ -10,10 +10,13 @@ import Alamofire
 import Moya
 
 struct NetworkService {
+    enum TokenError: Error {
+        case accessTokenIsNil
+    }
+
     /// _AuthInterceptor는 Alamofire의 RequestInterceptor 프로토콜을 채택하여,
     /// HTTP 응답이 401(Unauthorized)일 때 토큰 리이슈를 시도하고, 그 결과에 따라 요청을 재시도할지 결정하는 역할을 합니다.
     struct _AuthInterceptor: RequestInterceptor {
-
         /// _CompletionWrapper는 non‑Sendable인 completion 클로저를 @unchecked Sendable로 감싸기 위한 래퍼 타입입니다.
         /// retry 메소드의 completion 클로저가 내부에서 별도의 mutable한 상태를 캡처하거나 변경하지 않고,
         /// 오직 retry 메소드 내부에서만 사용되며,
@@ -27,6 +30,56 @@ struct NetworkService {
             /// 전달받은 RetryResult를 가지고 저장된 클로저를 호출합니다.
             func call(with result: RetryResult) {
                 closure(result)
+            }
+        }
+
+        /// Alamofire의 RequestInterceptor 프로토콜을 채택한 _AuthInterceptor의 adapt 메소드입니다.
+        /// 이 메소드는 HTTP 요청을 보낼 때 호출되며,
+        /// 만약 UserDefaults에 "isTokenRefreshed" 값이 true로 설정되어 있다면,
+        /// 새롭게 갱신된 토큰을 사용해 Authorization 헤더를 업데이트한 후 수정된 URLRequest를 반환합니다.
+        func adapt(
+            _ urlRequest: URLRequest,
+            for session: Session,
+            completion: @escaping (Result<URLRequest, any Error>) -> Void
+        ) {
+            // UserDefaults에서 "isTokenRefreshed" 플래그를 읽습니다.
+            // 이 값은 이전에 토큰 리이슈 작업이 성공했음을 나타내며, 새 토큰을 적용해야 함을 의미합니다.
+            let isTokenRefreshed = UserDefaults.standard.bool(forKey: "isTokenRefreshed")
+
+            // 만약 토큰이 새로 갱신된 상태라면, HTTP 헤더의 Authorization 값을 갱신합니다.
+            if isTokenRefreshed {
+                dump("HTTP 헤더 AccessToken 교체 후 재시도")
+
+                // 새로운 토큰을 가져오기 위해 TokenRepositoryImpl 인스턴스를 생성합니다.
+                let tokenRepository = TokenRepositoryImpl()
+                // urlRequest를 복사하여 수정할 새 변수에 저장합니다.
+                var urlRequestWithReissuedToken = urlRequest
+                // 재시도 후에는 "isTokenRefreshed" 플래그를 false로 리셋합니다.
+                UserDefaults.standard.set(false, forKey: "isTokenRefreshed")
+
+                do {
+                    // TokenRepositoryImpl에서 액세스 토큰을 가져옵니다.
+                    // 토큰이 nil인 경우 에러를 던집니다.
+                    guard let accessToken = try tokenRepository.getAccessToken() else {
+                        completion(.failure(TokenError.accessTokenIsNil))
+                        // 토큰이 없는 경우, 저장된 토큰을 삭제하고 로그인 상태를 false로 설정합니다.
+                        try? tokenRepository.deleteTokens()
+                        UserDefaults.standard.set(false, forKey: "isSignedIn")
+                        return
+                    }
+                    // "Authorization" 헤더에 "Bearer <accessToken>" 형식으로 값을 설정합니다.
+                    urlRequestWithReissuedToken.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+                    // 수정된 URLRequest를 성공 결과로 반환합니다.
+                    completion(.success(urlRequestWithReissuedToken))
+                } catch {
+                    // 토큰을 가져오거나 수정하는 중 에러가 발생하면, 에러 결과를 반환합니다.
+                    completion(.failure(error))
+                    try? tokenRepository.deleteTokens()
+                    UserDefaults.standard.set(false, forKey: "isSignedIn")
+                }
+            } else {
+                // 만약 "isTokenRefreshed" 플래그가 false이면, 원본 URLRequest를 그대로 반환합니다.
+                completion(.success(urlRequest))
             }
         }
 
@@ -46,7 +99,6 @@ struct NetworkService {
                 completion(.doNotRetryWithError(error))
                 return
             }
-
             // reissue 엔드포인트("/token/refresh")로부터 온 응답이 아닌지 검사
             // reissue 엔드포인트로부터 온 응답이라면 로그아웃
             guard let pathComponents = request.request?.url?.pathComponents,
@@ -55,11 +107,9 @@ struct NetworkService {
                 completion(.doNotRetryWithError(error))
                 dump("HTTP Request Failed | 리프레시 토큰 만료, 로그아웃")
 
-                // 키체인에 저장된 토큰을 삭제합니다.
+                // 키체인에 저장된 토큰을 삭제하고 로그아웃합니다.
                 let tokenRepository = TokenRepositoryImpl()
                 try? tokenRepository.deleteTokens()
-
-                // 로그인 상태를 false로 설정하여, 사용자를 로그아웃시킵니다.
                 UserDefaults.standard.set(false, forKey: "isSignedIn")
                 return
             }
@@ -79,6 +129,7 @@ struct NetworkService {
                     // 토큰을 새로 갱신합니다.
                     let token = try await tokenRepository.reissue()
                     try tokenRepository.saveTokens(token)
+                    UserDefaults.standard.set(true, forKey: "isTokenRefreshed")
                     dump("HTTP Request Failed | 토큰 갱신 성공, 재시도")
                     // 토큰 갱신에 성공하면 completion 클로저에 .retry를 전달하여 요청 재시도를 알립니다.
                     completion.call(with: .retry)
@@ -87,11 +138,9 @@ struct NetworkService {
                     // 토큰 갱신에 실패하면 completion 클로저에 실패 결과를 전달합니다.
                     completion.call(with: .doNotRetryWithError(error))
 
-                    // 키체인에 저장된 토큰을 삭제합니다.
+                    // 키체인에 저장된 토큰을 삭제하고 로그아웃합니다.
                     let tokenRepository = TokenRepositoryImpl()
                     try? tokenRepository.deleteTokens()
-
-                    // 로그인 상태를 false로 설정하여, 사용자를 로그아웃시킵니다.
                     UserDefaults.standard.set(false, forKey: "isSignedIn")
                     return
                 }
