@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		DF07F1352D81A1BA0093E16F /* Moya in Frameworks */ = {isa = PBXBuildFile; productRef = DF07F1342D81A1BA0093E16F /* Moya */; };
-		DF07F1392D81A5790093E16F /* Moya in Frameworks */ = {isa = PBXBuildFile; productRef = DF07F1382D81A5790093E16F /* Moya */; };
 		DF7781302D903ED3003B9EB6 /* KakaoSDKAuth in Frameworks */ = {isa = PBXBuildFile; productRef = DF77812F2D903ED3003B9EB6 /* KakaoSDKAuth */; };
 		DF7781322D903ED3003B9EB6 /* KakaoSDKCommon in Frameworks */ = {isa = PBXBuildFile; productRef = DF7781312D903ED3003B9EB6 /* KakaoSDKCommon */; };
 		DFDD84CC2D8575CD009A00FF /* SeatCatcherCore in Frameworks */ = {isa = PBXBuildFile; productRef = DFDD84CB2D8575CD009A00FF /* SeatCatcherCore */; };
@@ -17,19 +16,8 @@
 		DFF8CF842D85728700CDC6D6 /* SeatCatcherDomain in Frameworks */ = {isa = PBXBuildFile; productRef = DFF8CF832D85728700CDC6D6 /* SeatCatcherDomain */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		DF07F0E92D79C4E80093E16F /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = DF07F0D02D79C4E60093E16F /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = DF07F0D72D79C4E60093E16F;
-			remoteInfo = SeatCatcher;
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXFileReference section */
 		DF07F0D82D79C4E60093E16F /* SeatCatcher.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SeatCatcher.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		DF07F0E82D79C4E80093E16F /* SeatCatcherTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SeatCatcherTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -53,11 +41,6 @@
 			path = SeatCatcher;
 			sourceTree = "<group>";
 		};
-		DF07F0EB2D79C4E80093E16F /* SeatCatcherTests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = SeatCatcherTests;
-			sourceTree = "<group>";
-		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -75,14 +58,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		DF07F0E52D79C4E80093E16F /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				DF07F1392D81A5790093E16F /* Moya in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -90,7 +65,6 @@
 			isa = PBXGroup;
 			children = (
 				DF07F0DA2D79C4E60093E16F /* SeatCatcher */,
-				DF07F0EB2D79C4E80093E16F /* SeatCatcherTests */,
 				DF07F0D92D79C4E60093E16F /* Products */,
 			);
 			sourceTree = "<group>";
@@ -99,7 +73,6 @@
 			isa = PBXGroup;
 			children = (
 				DF07F0D82D79C4E60093E16F /* SeatCatcher.app */,
-				DF07F0E82D79C4E80093E16F /* SeatCatcherTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -136,30 +109,6 @@
 			productReference = DF07F0D82D79C4E60093E16F /* SeatCatcher.app */;
 			productType = "com.apple.product-type.application";
 		};
-		DF07F0E72D79C4E80093E16F /* SeatCatcherTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = DF07F0FF2D79C4E80093E16F /* Build configuration list for PBXNativeTarget "SeatCatcherTests" */;
-			buildPhases = (
-				DF07F0E42D79C4E80093E16F /* Sources */,
-				DF07F0E52D79C4E80093E16F /* Frameworks */,
-				DF07F0E62D79C4E80093E16F /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				DF07F0EA2D79C4E80093E16F /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				DF07F0EB2D79C4E80093E16F /* SeatCatcherTests */,
-			);
-			name = SeatCatcherTests;
-			packageProductDependencies = (
-				DF07F1382D81A5790093E16F /* Moya */,
-			);
-			productName = SeatCatcherTests;
-			productReference = DF07F0E82D79C4E80093E16F /* SeatCatcherTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -172,10 +121,6 @@
 				TargetAttributes = {
 					DF07F0D72D79C4E60093E16F = {
 						CreatedOnToolsVersion = 16.2;
-					};
-					DF07F0E72D79C4E80093E16F = {
-						CreatedOnToolsVersion = 16.2;
-						TestTargetID = DF07F0D72D79C4E60093E16F;
 					};
 				};
 			};
@@ -202,20 +147,12 @@
 			projectRoot = "";
 			targets = (
 				DF07F0D72D79C4E60093E16F /* SeatCatcher */,
-				DF07F0E72D79C4E80093E16F /* SeatCatcherTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		DF07F0D62D79C4E60093E16F /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		DF07F0E62D79C4E80093E16F /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -232,22 +169,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		DF07F0E42D79C4E80093E16F /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		DF07F0EA2D79C4E80093E16F /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = DF07F0D72D79C4E60093E16F /* SeatCatcher */;
-			targetProxy = DF07F0E92D79C4E80093E16F /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		DF07F0FA2D79C4E80093E16F /* Debug */ = {
@@ -379,6 +301,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = SeatCatcher/Resources/Entitlement/SeatCatcher.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
@@ -453,52 +376,6 @@
 			};
 			name = Release;
 		};
-		DF07F1002D79C4E80093E16F /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 6RUVHQW43D;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.SeatCatcher.SeatCatcherTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
-				SUPPORTS_MACCATALYST = NO;
-				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
-				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SeatCatcher.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/SeatCatcher";
-			};
-			name = Debug;
-		};
-		DF07F1012D79C4E80093E16F /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 6RUVHQW43D;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.SeatCatcher.SeatCatcherTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
-				SUPPORTS_MACCATALYST = NO;
-				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
-				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SeatCatcher.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/SeatCatcher";
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -516,15 +393,6 @@
 			buildConfigurations = (
 				DF07F0FD2D79C4E80093E16F /* Debug */,
 				DF07F0FE2D79C4E80093E16F /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		DF07F0FF2D79C4E80093E16F /* Build configuration list for PBXNativeTarget "SeatCatcherTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				DF07F1002D79C4E80093E16F /* Debug */,
-				DF07F1012D79C4E80093E16F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -571,11 +439,6 @@
 
 /* Begin XCSwiftPackageProductDependency section */
 		DF07F1342D81A1BA0093E16F /* Moya */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = DF07F1332D81A1BA0093E16F /* XCRemoteSwiftPackageReference "Moya" */;
-			productName = Moya;
-		};
-		DF07F1382D81A5790093E16F /* Moya */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = DF07F1332D81A1BA0093E16F /* XCRemoteSwiftPackageReference "Moya" */;
 			productName = Moya;

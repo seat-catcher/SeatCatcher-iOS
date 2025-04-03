@@ -78,4 +78,6 @@ extension SeatCatcherAPI: TargetType {
             return base
         }
     }
+
+    var validationType: ValidationType { .successCodes }
 }
