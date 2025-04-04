@@ -43,17 +43,25 @@ struct CTAButton: View {
         }
     }
     
+    var height: CGFloat {
+        switch style {
+        case .bottomEnabled, .bottomDisabled, .selectionYes, .selectionNo:
+            52
+        case .mainLeft, .mainRight:
+            87
+        }
+    }
+    
     var body: some View {
         Button(action: action) {
             Text(title)
                 .font(.B01_SB)
                 .foregroundStyle(textColor)
                 .frame(maxWidth: .infinity)
-                .frame(height: 52)
+                .frame(height: height)
         }
         .disabled(style == .bottomDisabled)
         .background(backgroundColor)
         .cornerRadius(8)
-        .padding(.horizontal, 18)
     }
 }

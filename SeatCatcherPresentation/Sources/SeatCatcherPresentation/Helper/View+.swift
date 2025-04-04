@@ -49,11 +49,17 @@ extension View {
             .animation(.easeInOut(duration: 0.25), value: isPresented.wrappedValue)
             .sheet(isPresented: isPresented) {
                 content()
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .cornerRadius(24, corners: [.topLeft, .topRight])
-                    .presentationDetents([.height(height)])
+                    .presentationDetents([.height(height-34)])
                     .presentationBackgroundInteraction(.enabled)
                     .presentationDragIndicator(.visible)
                     .presentationBackground(.clear)
             }
+    }
+    
+    func loadCustomFonts() -> some View {
+        Fonts.registerCustomFonts()
+        return self
     }
 }

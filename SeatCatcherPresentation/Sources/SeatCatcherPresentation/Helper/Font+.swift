@@ -7,6 +7,13 @@
 
 import SwiftUICore
 
+enum SCFontName: String, CaseIterable {
+    case bold = "Pretendard-Bold"
+    case semibold = "Pretendard-SemiBold"
+    case medium = "Pretendard-Medium"
+    case regular = "Pretendard-Regular"
+}
+
 public enum SCFontStyle {
     case T01_B
     case T01_SB
@@ -31,13 +38,13 @@ public enum SCFontStyle {
     var weight: String {
         switch self {
         case .T01_B, .T02_B, .T03_B, .B01_B, .B02_B, .B03_B:
-            return "Pretendard-Bold"
+            return SCFontName.bold.rawValue
         case .T01_SB, .T02_SB, .T03_SB, .B01_SB, .B02_SB, .B03_SB:
-            return "Pretendard-Semibold"
+            return SCFontName.semibold.rawValue
         case .B01_M, .B02_M, .B03_M, .C01_M:
-            return "Pretendard-Medium"
+            return SCFontName.medium.rawValue
         case .C01_R:
-            return "Pretendard-Regular"
+            return SCFontName.regular.rawValue
         }
     }
     
@@ -96,5 +103,14 @@ extension View {
         self
             .font(style.font)
             .lineSpacing(style.lineSpacing)
+    }
+}
+
+public struct Fonts {
+    public static func registerCustomFonts() {
+        SCFontName.allCases.forEach { font in
+            guard let url = Bundle.module.url(forResource: font.rawValue, withExtension: "ttf") else { return }
+            CTFontManagerRegisterFontsForURL(url as CFURL, .process, nil)
+        }
     }
 }
