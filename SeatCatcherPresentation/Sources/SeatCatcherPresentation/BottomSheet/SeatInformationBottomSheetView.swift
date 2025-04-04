@@ -9,20 +9,42 @@ import SwiftUI
 
 struct SeatInformationBottomSheetView: View {
     
-    @Binding private var isPresented: Bool
-    
+    let profileConfig: ProfileConfig
+    let station: String
+    let minutesLeft: Int
+        
     var body: some View {
         SCBottomSheetBuilder()
-            .setProfile(
-                name: "신기한 발바닥",
-                profileImage: .catchy1,
-                tag: "짐꾼")
-            .setDoubleButtons(
-                leftTitle: "거절할래요",
+            .withProfile(profileConfig: profileConfig)
+            .withContent(
+                HStack(alignment: .center, spacing: 19) {
+                    VStack(alignment: .leading, spacing: 10) {
+                        Text("하차")
+                            .font(.B02_M)
+                            .foregroundStyle(.gray300)
+                        Text("하차까지")
+                            .font(.B02_M)
+                            .foregroundStyle(.gray300)
+                    }
+                    VStack(alignment: .leading, spacing: 10) {
+                        Text(station)
+                            .font(.B02_M)
+                            .foregroundStyle(.gray100)
+                        Text("\(minutesLeft)분 남았어요")
+                            .font(.B02_M)
+                            .foregroundStyle(.gray100)
+                    }.padding(.trailing, 19)
+                    Spacer(minLength: 0)
+                }
+                .padding(.horizontal, 2)
+                .padding(.vertical, 33)
+            )
+            .withDoubleButtons(
+                leftTitle: "찜하기",
                 leftAction: {
                     
                 },
-                rightTitle: "수락할래요",
+                rightTitle: "좌석요청",
                 rightAction: {
                     
                 })

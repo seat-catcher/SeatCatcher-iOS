@@ -9,16 +9,15 @@ import SwiftUI
 
 struct AskSeatChangedBottomSheetView: View {
     
-    @Binding private var isPresented : Bool
+    let ctaButtonAction: () -> Void
     
     var body : some View {
         SCBottomSheetBuilder()
-            .setTitle("좌석을 넘기셨나요?")
-            .setImage(.iconChangeSeat)
-            .setCTAButton(
-                title: "좌석을 넘겼어요",
+            .withTitle("좌석을 넘기셨나요?")
+            .withImage(.iconChangeSeat)
+            .withCTA(title: "좌석을 넘겼어요",
                 action: {
-                    
+                ctaButtonAction()
             })
             .build()
             .frame(maxWidth: .infinity, maxHeight: .infinity)

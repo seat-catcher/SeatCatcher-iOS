@@ -8,16 +8,13 @@
 import SwiftUI
 
 struct DibsBottomSheetView: View {
-    
-    @Binding private var isPresented: Bool
-    
+        
     var body: some View {
         SCBottomSheetBuilder()
-            .setTitle("좌석을 찜했어요",
+            .withTitle("좌석을 찜했어요",
                       subtitle: "좌석요청을 통해 찜한 좌석에 앉아보세요")
-            .setImage(.iconSeatHeart)
+            .withImage(.iconSeatHeart)
             .build()
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(.gray900)
     }
 }

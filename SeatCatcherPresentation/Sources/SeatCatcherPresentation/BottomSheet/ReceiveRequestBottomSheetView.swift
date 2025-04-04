@@ -9,14 +9,21 @@ import SwiftUI
 
 struct ReceiveRequestBottomSheetView: View {
     
-    @Binding private var isPresented: Bool
-    
+    let profileConfig: ProfileConfig
+        
     var body: some View {
         SCBottomSheetBuilder()
-            .setTitle("요청을 수락할까요?",
+            .withTitle("요청을 수락할까요?",
                       subtitle: "요청을 수락하면 코인을 받을 수 있어요",
-                      isSubtitleUnderlined: true)
-            .setDoubleButtons(
+                      underlined: true)
+            .withContent(
+                ProfileView(profile: profileConfig)
+                    .padding(12)
+                    .frame(width: 190, height: 92)
+                    .background(.gray850)
+                    .cornerRadius(8)
+            )
+            .withDoubleButtons(
                 leftTitle: "거절할래요",
                 leftAction: {
                     
