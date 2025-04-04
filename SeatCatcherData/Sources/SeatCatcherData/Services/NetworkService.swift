@@ -122,7 +122,7 @@ struct NetworkService {
             }
         }
 
-        func logout(tokenRepository: TokenRepository) {
+        private func logout(tokenRepository: TokenRepository) {
             try? tokenRepository.deleteTokens()
             UserDefaults.standard.set(false, forKey: "isSignedIn")
         }
