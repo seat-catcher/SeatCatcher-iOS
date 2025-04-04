@@ -17,7 +17,7 @@ struct NetworkService {
 
     /// _AuthInterceptor는 Alamofire의 RequestInterceptor 프로토콜을 채택하여,
     /// HTTP 응답이 401(Unauthorized)일 때 토큰 리이슈를 시도하고, 그 결과에 따라 요청을 재시도할지 결정하는 역할을 합니다.
-    struct _AuthInterceptor: RequestInterceptor {
+    private struct AuthInterceptor: RequestInterceptor {
 
         /// Alamofire의 RequestInterceptor 프로토콜을 채택한 _AuthInterceptor의 adapt 메소드입니다.
         /// 이 메소드는 HTTP 요청을 보낼 때 호출되며,
@@ -34,8 +34,6 @@ struct NetworkService {
 
             // 만약 토큰이 새로 갱신된 상태라면, HTTP 헤더의 Authorization 값을 갱신합니다.
             if isTokenRefreshed {
-                dump("HTTP 헤더 AccessToken 교체 후 재시도")
-
                 // 새로운 토큰을 가져오기 위해 TokenRepositoryImpl 인스턴스를 생성합니다.
                 let tokenRepository = TokenRepositoryImpl()
                 // urlRequest를 복사하여 수정할 새 변수에 저장합니다.
@@ -52,9 +50,12 @@ struct NetworkService {
                     }
                     // "Authorization" 헤더에 "Bearer <accessToken>" 형식으로 값을 설정합니다.
                     urlRequestWithReissuedToken.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+
+                    dump("HTTP Request Failed | HTTP Authorization 헤더 AccessToken 교체 후 재시도")
                     // 수정된 URLRequest를 성공 결과로 반환합니다.
                     completion(.success(urlRequestWithReissuedToken))
                 } catch {
+                    dump("HTTP Request Failed | AccessToken Not Found")
                     // 토큰을 가져오거나 수정하는 중 에러가 발생하면 로그아웃합니다.
                     completion(.failure(error))
                     logout(tokenRepository: tokenRepository)
@@ -132,7 +133,7 @@ struct NetworkService {
         case plaintextDecodingError
     }
 
-    private let provider = MoyaProvider<SeatCatcherAPI>(session: Session(interceptor: _AuthInterceptor()))
+    private let provider = MoyaProvider<SeatCatcherAPI>(session: Session(interceptor: AuthInterceptor()))
 
     func postAppleLogin(_ token: String) async throws -> AppleLoginResponseDTO {
         let requestDTO = AppleLoginRequestDTO(identityToken: token)
