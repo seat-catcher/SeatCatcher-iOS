@@ -195,7 +195,7 @@ struct SCBottomSheet: View {
                 .padding(.top, 40)
                 Spacer()
                 if let leftButton, let rightButton {
-                    HStack(spacing: 8) {
+                    HStack(spacing: 19) {
                         CTAButton(title: leftButton.title ?? "", action: leftButton.action ?? {}, style: .mainLeft)
                         CTAButton(title: rightButton.title ?? "", action: rightButton.action ?? {}, style: .mainRight)
                     }
