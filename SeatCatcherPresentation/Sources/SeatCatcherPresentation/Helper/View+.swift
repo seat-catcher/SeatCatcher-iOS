@@ -17,7 +17,7 @@ extension View {
 
     func withNavigationBar(_ coordinator: Coordinator, isBackButtonHidden: Bool = false, title: String? = nil, withBorder: Bool = false) -> some View {
         VStack(spacing: 0) {
-            SCNavigationBar(coordinator, isBackButtonHidden: isBackButtonHidden, title: title, withBorder: withBorder)
+//            SCNavigationBar(coordinator, isBackButtonHidden: isBackButtonHidden, title: title, withBorder: withBorder)
             self
         }
     }
@@ -45,18 +45,26 @@ extension View {
         height: CGFloat,
         content: @escaping () -> Content
     ) -> some View {
-        self
-            .animation(.easeInOut(duration: 0.25), value: isPresented.wrappedValue)
-            .sheet(isPresented: isPresented) {
-                content()
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .cornerRadius(24, corners: [.topLeft, .topRight])
-                    .presentationDetents([.height(height)])
-                    .ignoresSafeArea()
-                    .presentationBackgroundInteraction(.enabled)
-                    .presentationDragIndicator(.visible)
-                    .presentationBackground(.clear)
+        ZStack {
+            self
+            if isPresented.wrappedValue {
+                Color(white: 0, opacity: 0.4)
+                    .zIndex(1)
+                    .ignoresSafeArea(.all)
+                    .opacity(isPresented.wrappedValue ? 1 : 0)
             }
+        }
+        .animation(.easeInOut(duration: 0.25), value: isPresented.wrappedValue)
+        .sheet(isPresented: isPresented) {
+            content()
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .cornerRadius(24, corners: [.topLeft, .topRight])
+                .presentationDetents([.height(height)])
+                .ignoresSafeArea()
+                .presentationBackgroundInteraction(.enabled)
+                .presentationDragIndicator(.visible)
+                .presentationBackground(.clear)
+        }
     }
     
     func loadCustomFonts() -> some View {
