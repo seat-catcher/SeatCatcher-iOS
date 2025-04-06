@@ -6,9 +6,11 @@
 //
 
 import SwiftUI
+import SeatCatcherCore
 
 struct SCNavigationBar: View {
     
+    let coordinator: Coordinator
     let config: SCNavigationBarConfig
     
     enum SCNavigationBarConfig {
@@ -59,10 +61,13 @@ struct SCNavigationBar: View {
                 }
                 .padding(.horizontal, 18)
                 .padding(.bottom, 10)
-            case .title(let title, let action):
+            case .title(let title, let backButtonAction):
                 ZStack(alignment: .center) {
                     HStack {
-                        Button(action: action) {
+                        Button(action: {
+                            backButtonAction()
+                            coordinator.pop()
+                        }) {
                             Image(.iconLeftArrow)
                                 .resizable()
                                 .frame(width: 24, height: 24)
@@ -76,7 +81,10 @@ struct SCNavigationBar: View {
                 }.padding(.bottom, 10)
             case .titleWithHomeButton(let title, let backButtonAction, let homeButtonAction):
                 HStack {
-                    Button(action: backButtonAction) {
+                    Button(action: {
+                        backButtonAction()
+                        coordinator.pop()
+                    }) {
                         Image(.iconLeftArrow)
                             .resizable()
                             .frame(width: 24, height: 24)
@@ -86,7 +94,10 @@ struct SCNavigationBar: View {
                         .font(.B02_SB)
                         .foregroundStyle(.gray300)
                     Spacer()
-                    Button(action: homeButtonAction) {
+                    Button(action: {
+                        homeButtonAction()
+                        coordinator.popToRoot()
+                    }) {
                         Image(.iconHome)
                             .resizable()
                             .frame(width: 24, height: 24)
