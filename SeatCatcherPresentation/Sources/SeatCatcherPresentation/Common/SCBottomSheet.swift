@@ -209,7 +209,7 @@ struct SCBottomSheet: View {
                             .padding(.horizontal, 6)
                             .frame(width: 78, height: 28)
                             .background(.gray500)
-                            .cornerRadius(6)
+                            .clipShape(.rect(cornerRadius: 6))
                         }
                     }
                 }

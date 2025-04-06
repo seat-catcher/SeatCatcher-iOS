@@ -27,7 +27,7 @@ struct ProfileView: View {
                     .padding(.horizontal, 6)
                     .padding(.vertical, 4)
                     .background(.scGreen700)
-                    .cornerRadius(6)
+                    .clipShape(.rect(cornerRadius: 6))
             }
             Spacer(minLength: 0)
         }

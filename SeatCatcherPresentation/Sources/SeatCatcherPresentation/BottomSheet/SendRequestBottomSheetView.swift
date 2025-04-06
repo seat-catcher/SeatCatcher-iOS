@@ -25,7 +25,7 @@ struct SendRequestBottomSheetView: View {
                     .padding(12)
                     .frame(width: 190, height: 92)
                     .background(.gray850)
-                    .cornerRadius(8)
+                    .clipShape(.rect(cornerRadius: 8))
             )
             .withDoubleButtonsCoin(
                 leftTitle: "돌아갈래요",

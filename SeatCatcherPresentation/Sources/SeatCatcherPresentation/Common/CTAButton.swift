@@ -96,6 +96,6 @@ struct CTAButton: View {
         }
         .disabled(style == .bottomDisabled)
         .background(backgroundColor)
-        .cornerRadius(8)
+        .clipShape(.rect(cornerRadius: 8))
     }
 }
