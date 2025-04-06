@@ -31,6 +31,11 @@ struct SCNavigationBar: View {
         )
     }
     
+    init(_ coordinator: Coordinator, config: SCNavigationBarConfig) {
+        self.coordinator = coordinator
+        self.config = config
+    }
+    
     var body: some View {
         VStack(spacing: 0) {
             Spacer()

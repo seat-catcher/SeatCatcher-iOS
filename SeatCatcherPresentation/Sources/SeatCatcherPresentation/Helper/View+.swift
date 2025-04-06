@@ -14,10 +14,10 @@ extension View {
         .background(.black)
         .background(ignoresSafeAreaEdges: .all)
     }
-
-    func withNavigationBar(_ coordinator: Coordinator, isBackButtonHidden: Bool = false, title: String? = nil, withBorder: Bool = false) -> some View {
+    
+    func withNavigationBar(_ coordinator: Coordinator, config: SCNavigationBar.SCNavigationBarConfig) -> some View {
         VStack(spacing: 0) {
-            SCNavigationBar(coordinator, isBackButtonHidden: isBackButtonHidden, title: title, withBorder: withBorder)
+            SCNavigationBar(coordinator, config: config)
             self
         }
     }
