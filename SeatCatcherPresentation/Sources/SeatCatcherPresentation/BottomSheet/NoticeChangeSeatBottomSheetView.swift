@@ -18,6 +18,7 @@ struct NoticeChangeSeatBottomSheetView: View {
                       underlined: true)
             .withImage(.iconClock)
             .withCTA(title: "\(minutesLeft)분 남았어요")
+            .disableCTA()
             .build()
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(.gray900)

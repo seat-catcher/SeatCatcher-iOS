@@ -12,6 +12,12 @@ struct SeatInformationBottomSheetView: View {
     let profileConfig: ProfileConfig
     let station: String
     let minutesLeft: Int
+    let leftButtonAction: () -> Void
+    let heartFilled: Bool
+    let heartCount: Int
+    let rightButtonAction: () -> Void
+    let coinCount: Int
+    let reportAction: () -> Void
         
     var body: some View {
         SCBottomSheetBuilder()
@@ -39,15 +45,16 @@ struct SeatInformationBottomSheetView: View {
                 .padding(.horizontal, 2)
                 .padding(.vertical, 33)
             )
-            .withDoubleButtons(
-                leftTitle: "찜하기",
-                leftAction: {
-                    
-                },
+            .withDoubleButtonsDibsAndCoin(
+                leftTitle: !heartFilled ? "찜하기" : "찜하기 취소",
+                leftAction: leftButtonAction,
+                heartFilled: heartFilled,
+                heartCount: heartCount,
                 rightTitle: "좌석요청",
-                rightAction: {
-                    
-                })
+                rightAction: rightButtonAction,
+                coinCount: coinCount
+            )
+            .setReportAction(reportAction: reportAction)
             .build()
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(.gray900)

@@ -3,10 +3,16 @@ import SwiftUI
 struct ButtonConfig {
     let title: String
     let action: () -> Void
+    let heartFilled: Bool?
+    let heartCount: Int?
+    let coinCount: Int?
     
-    init(title: String = "", action: @escaping () -> Void = {}) {
+    init(title: String = "", action: @escaping () -> Void = {}, heartFilled: Bool? = nil, heartCount: Int? = nil, coinCount: Int? = nil) {
         self.title = title
         self.action = action
+        self.heartFilled = heartFilled
+        self.heartCount = heartCount
+        self.coinCount = coinCount
     }
 }
 
@@ -25,19 +31,22 @@ struct TitleConfig {
 final class SCBottomSheetBuilder {
     private var titleConfig = TitleConfig()
     private var profileConfig: ProfileConfig?
+    private var reportAction: (() -> Void)?
     private var image: ImageResource?
     private var contentView: AnyView?
     private var buttons: [ButtonType] = []
+    private var isCTADisabled: Bool = false
     private var buttonStyle: SCBottomSheetButtonStyle = .none
     
     enum ButtonType {
         case cta(ButtonConfig)
         case double(left: ButtonConfig, right: ButtonConfig)
+        case doubleWithOptions(left: ButtonConfig, right: ButtonConfig)
         case yesNo(yes: ButtonConfig, no: ButtonConfig)
     }
     
     enum SCBottomSheetButtonStyle {
-        case hasCTAEnabled, hasCTADisabled, hasDouble, hasYesOrNo, none
+        case hasCTAEnabled, hasCTADisabled, hasDouble, hasYesOrNo, hasDoubleWithOptions, none
     }
     
     @discardableResult
@@ -62,7 +71,13 @@ final class SCBottomSheetBuilder {
     func withCTA(title: String, action: @escaping () -> Void = {}) -> Self {
         let config = ButtonConfig(title: title, action: action)
         buttons = [.cta(config)]
-        buttonStyle = action != nil ? .hasCTAEnabled : .hasCTADisabled
+        buttonStyle = isCTADisabled ? .hasCTADisabled : .hasCTAEnabled
+        return self
+    }
+    
+    @discardableResult
+    func disableCTA() -> Self {
+        isCTADisabled = true
         return self
     }
     
@@ -73,6 +88,26 @@ final class SCBottomSheetBuilder {
         let right = ButtonConfig(title: rightTitle, action: rightAction)
         buttons = [.double(left: left, right: right)]
         buttonStyle = .hasDouble
+        return self
+    }
+    
+    @discardableResult
+    func withDoubleButtonsDibsAndCoin(leftTitle: String, leftAction: @escaping () -> Void = {}, heartFilled: Bool, heartCount: Int,
+                                      rightTitle: String, rightAction: @escaping () -> Void = {}, coinCount: Int) -> Self {
+        let left = ButtonConfig(title: leftTitle, action: leftAction, heartFilled: heartFilled, heartCount: heartCount)
+        let right = ButtonConfig(title: rightTitle, action: rightAction, coinCount: coinCount)
+        buttons = [.doubleWithOptions(left: left, right: right)]
+        buttonStyle = .hasDoubleWithOptions
+        return self
+    }
+    
+    @discardableResult
+    func withDoubleButtonsCoin(leftTitle: String, leftAction: @escaping () -> Void = {},
+                           rightTitle: String, rightAction: @escaping () -> Void = {}, coinCount: Int) -> Self {
+        let left = ButtonConfig(title: leftTitle, action: leftAction)
+        let right = ButtonConfig(title: rightTitle, action: rightAction, coinCount: coinCount)
+        buttons = [.doubleWithOptions(left: left, right: right)]
+        buttonStyle = .hasDoubleWithOptions
         return self
     }
     
@@ -92,6 +127,12 @@ final class SCBottomSheetBuilder {
         return self
     }
     
+    @discardableResult
+    func setReportAction(reportAction: @escaping () -> Void) -> Self {
+        self.reportAction = reportAction
+        return self
+    }
+    
     @MainActor
     func build() -> SCBottomSheet {
         SCBottomSheet(builder: self)
@@ -102,10 +143,11 @@ final class SCBottomSheetBuilder {
         profile: ProfileConfig?,
         image: ImageResource?,
         content: AnyView?,
+        reportAction: (() -> Void)?,
         buttons: [ButtonType],
         buttonStyle: SCBottomSheetButtonStyle
     ) {
-        (titleConfig, profileConfig, image, contentView, buttons, buttonStyle)
+        (titleConfig, profileConfig, image, contentView, reportAction, buttons, buttonStyle)
     }
 }
 
@@ -114,6 +156,7 @@ struct SCBottomSheet: View {
     private let profileConfig: ProfileConfig?
     private let image: ImageResource?
     private let contentView: AnyView?
+    private let reportAction: (() -> Void)?
     private let buttons: [SCBottomSheetBuilder.ButtonType]
     private let buttonStyle: SCBottomSheetBuilder.SCBottomSheetButtonStyle
     
@@ -123,6 +166,7 @@ struct SCBottomSheet: View {
         self.profileConfig = config.profile
         self.image = config.image
         self.contentView = config.content
+        self.reportAction = config.reportAction
         self.buttons = config.buttons
         self.buttonStyle = config.buttonStyle
     }
@@ -147,7 +191,7 @@ struct SCBottomSheet: View {
             .padding(.top, 40)
             .padding(.horizontal, 18)
             
-        case .hasDouble:
+        case .hasDouble, .hasDoubleWithOptions:
             VStack(alignment: .leading, spacing: 0) {
                 HStack(alignment: .top) {
                     if let profileConfig {
@@ -156,17 +200,17 @@ struct SCBottomSheet: View {
                         titleView
                     }
                     Spacer()
-                    Button(action: {
-                        // 신고하기
-                    }) {
-                        HStack(spacing: 0) {
-                            Image(.iconAlarm)
-                            Text("신고하기").font(.C01_M).foregroundStyle(.gray300)
+                    if let reportAction {
+                        Button(action: reportAction) {
+                            HStack(spacing: 0) {
+                                Image(.iconAlarm)
+                                Text("신고하기").font(.C01_M).foregroundStyle(.gray300)
+                            }
+                            .padding(.horizontal, 6)
+                            .frame(width: 78, height: 28)
+                            .background(.gray500)
+                            .cornerRadius(6)
                         }
-                        .padding(.horizontal, 6)
-                        .frame(width: 78, height: 28)
-                        .background(.gray500)
-                        .cornerRadius(6)
                     }
                 }
                 .frame(minHeight: 54, maxHeight: 68)
@@ -182,6 +226,19 @@ struct SCBottomSheet: View {
                     HStack(spacing: 19) {
                         CTAButton(title: left.title, action: left.action, style: .mainLeft)
                         CTAButton(title: right.title, action: right.action, style: .mainRight)
+                    }.padding(.bottom, 33)
+                } else if case .doubleWithOptions(let left, let right) = buttons.first {
+                    HStack(spacing: 19) {
+                        if let heartFilled = left.heartFilled, let heartCount = left.heartCount {
+                            CTAButton(title: left.title, action: left.action, heartFilled: heartFilled, heartCount: heartCount, style: .mainLeft)
+                        }else {
+                            CTAButton(title: left.title, action: left.action, style: .mainLeft)
+                        }
+                        if let coinCount = right.coinCount {
+                            CTAButton(title: right.title, action: right.action, coinCount: coinCount, style: .mainRight)
+                        }else {
+                            CTAButton(title: right.title, action: right.action, style: .mainRight)
+                        }
                     }.padding(.bottom, 33)
                 }
             }

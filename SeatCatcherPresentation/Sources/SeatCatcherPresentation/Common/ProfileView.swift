@@ -12,7 +12,7 @@ struct ProfileView: View {
     let profile: ProfileConfig
     
     var body: some View {
-        HStack(alignment: .center) {
+        HStack(alignment: .center, spacing: 0) {
             Image(profile.profileImage)
                 .resizable()
                 .frame(width: 68, height: 68)
@@ -29,7 +29,7 @@ struct ProfileView: View {
                     .background(.scGreen700)
                     .cornerRadius(6)
             }
-            Spacer()
+            Spacer(minLength: 0)
         }
     }
 }

@@ -10,7 +10,19 @@ import SwiftUI
 struct CTAButton: View {
     let title: String
     let action: () -> Void
+    let heartFilled: Bool?
+    let heartCount: Int?
+    let coinCount: Int?
     let style: SCButtonStyle
+    
+    init(title: String, action: @escaping () -> Void, heartFilled: Bool? = nil, heartCount: Int? = nil, coinCount: Int? = nil, style: SCButtonStyle) {
+        self.title = title
+        self.action = action
+        self.heartFilled = heartFilled
+        self.heartCount = heartCount
+        self.coinCount = coinCount
+        self.style = style
+    }
     
     enum SCButtonStyle {
         case bottomEnabled
@@ -54,11 +66,33 @@ struct CTAButton: View {
     
     var body: some View {
         Button(action: action) {
-            Text(title)
-                .font(.B01_SB)
-                .foregroundStyle(textColor)
-                .frame(maxWidth: .infinity)
-                .frame(height: height)
+            VStack(spacing: 3) {
+                Text(title)
+                    .font(.B01_SB)
+                    .foregroundStyle(textColor)
+                if let heartCount, let heartFilled {
+                    HStack(spacing: 3) {
+                        Image(heartFilled ? .iconHeartFilled : .iconHeartFilled)
+                            .resizable()
+                            .frame(width: 24, height: 24)
+                        Text("\(heartCount)")
+                            .font(.B02_SB)
+                            .foregroundStyle(.scGreen)
+                    }
+                }
+                if let coinCount {
+                    HStack(spacing: 3) {
+                        Image(.iconCoin)
+                            .resizable()
+                            .frame(width: 24, height: 24)
+                        Text("\(coinCount)")
+                            .font(.B02_SB)
+                            .foregroundStyle(.scWhite)
+                    }
+                }
+            }
+            .frame(maxWidth: .infinity)
+            .frame(height: height)
         }
         .disabled(style == .bottomDisabled)
         .background(backgroundColor)

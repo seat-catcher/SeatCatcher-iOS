@@ -10,6 +10,10 @@ import SwiftUI
 struct SendRequestBottomSheetView: View {
     
     let profileConfig: ProfileConfig
+    let leftButtonAction: () -> Void
+    let rightButtonAction: () -> Void
+    let coinCount: Int
+    let reportAction: () -> Void
     
     var body: some View {
         SCBottomSheetBuilder()
@@ -23,15 +27,14 @@ struct SendRequestBottomSheetView: View {
                     .background(.gray850)
                     .cornerRadius(8)
             )
-            .withDoubleButtons(
-                leftTitle: "찜하기",
-                leftAction: {
-                    
-                },
+            .withDoubleButtonsCoin(
+                leftTitle: "돌아갈래요",
+                leftAction: leftButtonAction,
                 rightTitle: "앉을래요",
-                rightAction: {
-                    
-                })
+                rightAction: rightButtonAction,
+                coinCount: coinCount
+            )
+            .setReportAction(reportAction: reportAction)
             .build()
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(.gray900)

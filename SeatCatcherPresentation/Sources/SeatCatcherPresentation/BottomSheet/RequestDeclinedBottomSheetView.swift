@@ -9,15 +9,14 @@ import SwiftUI
 
 struct RequestDeclinedBottomSheetView: View {
     
-    let minutesLeft: Int
+    let action: () -> Void
     
     var body: some View {
         SCBottomSheetBuilder()
-            .withTitle("하차역에서 좌석을 넘겨주세요",
-                      subtitle: "하차역에 도착하기 전까지 계속 앉을 수 있어요",
-                      underlined: true)
-            .withImage(.iconClock)
-            .withCTA(title: "\(minutesLeft)분 남았어요")
+            .withTitle("좌석 요청이 거절됐어요",
+                      subtitle: "다른 좌석을 도전해봐요")
+            .withImage(.iconSeatWarning)
+            .withCTA(title: "다른 좌석 볼래요", action: action)
             .build()
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(.gray900)

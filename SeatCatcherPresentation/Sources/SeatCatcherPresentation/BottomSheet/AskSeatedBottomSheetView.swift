@@ -9,15 +9,13 @@ import SwiftUI
 
 struct AskSeatedBottomSheetView: View {
     
-    let minutesLeft: Int
+    let action: () -> Void
     
     var body: some View {
         SCBottomSheetBuilder()
-            .withTitle("하차역에서 좌석을 넘겨주세요",
-                       subtitle: "하차역에 도착하기 전까지 계속 앉을 수 있어요",
-                       underlined: true)
+            .withTitle("좌석에 앉았나요?")
             .withImage(.iconCheck)
-            .withCTA(title: "\(minutesLeft)분 남았어요")
+            .withCTA(title: "좌석에 앉았어요", action: action)
             .build()
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(.gray900)
