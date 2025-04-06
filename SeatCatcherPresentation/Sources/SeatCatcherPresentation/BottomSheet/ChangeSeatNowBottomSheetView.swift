@@ -9,7 +9,6 @@ import SwiftUI
 
 struct ChangeSeatNowBottomSheetView: View {
     
-    let minutesLeft: Int
     let action: () -> Void
         
     var body: some View {
