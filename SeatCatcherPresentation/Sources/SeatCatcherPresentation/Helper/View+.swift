@@ -17,7 +17,7 @@ extension View {
 
     func withNavigationBar(_ coordinator: Coordinator, isBackButtonHidden: Bool = false, title: String? = nil, withBorder: Bool = false) -> some View {
         VStack(spacing: 0) {
-//            SCNavigationBar(coordinator, isBackButtonHidden: isBackButtonHidden, title: title, withBorder: withBorder)
+            SCNavigationBar(coordinator, isBackButtonHidden: isBackButtonHidden, title: title, withBorder: withBorder)
             self
         }
     }
@@ -32,11 +32,12 @@ extension View {
     }
     
     func cornerRadius(_ radius: CGFloat, corners: UIRectCorner) -> some View {
-        clipShape(Path(UIBezierPath(
-            roundedRect: UIScreen.main.bounds,
-            byRoundingCorners: corners,
-            cornerRadii: CGSize(width: radius, height: radius)
-        ).cgPath))
+        clipShape(.rect(
+            topLeadingRadius: corners.contains(.topLeft) ? radius : 0,
+            bottomLeadingRadius: corners.contains(.bottomLeft) ? radius : 0,
+            bottomTrailingRadius: corners.contains(.bottomRight) ? radius : 0,
+            topTrailingRadius: corners.contains(.topRight) ? radius : 0
+        ))
     }
     
     @ViewBuilder
