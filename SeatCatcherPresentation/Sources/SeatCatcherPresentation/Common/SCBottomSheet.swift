@@ -98,7 +98,7 @@ final class SCBottomSheetBuilder {
     
     @discardableResult
     func withDoubleButtonsCoin(leftTitle: String, leftAction: @escaping () -> Void = {},
-                           rightTitle: String, rightAction: @escaping () -> Void = {}, coinCount: Int) -> Self {
+                               rightTitle: String, rightAction: @escaping () -> Void = {}, coinCount: Int) -> Self {
         let left = ButtonConfig(title: leftTitle, action: leftAction)
         let right = ButtonConfig(title: rightTitle, action: rightAction, coinCount: coinCount)
         buttons = [.doubleWithOptions(left: left, right: right)]
@@ -169,116 +169,13 @@ struct SCBottomSheet: View {
     var body: some View {
         switch buttonStyle {
         case .hasCTAEnabled, .hasCTADisabled:
-            VStack(alignment: .leading, spacing: 0) {
-                titleView
-                Spacer(minLength: 0)
-                if let image {
-                    Image(image)
-                        .padding(.bottom, 61)
-                        .frame(maxWidth: .infinity)
-                }
-                if case .cta(let config) = buttons.first {
-                    CTAButton(title: config.title, action: config.action,
-                            style: buttonStyle == .hasCTAEnabled ? .bottomEnabled : .bottomDisabled)
-                    .padding(.bottom, 33)
-                }
-            }
-            .padding(.top, 40)
-            .padding(.horizontal, 18)
-            
+            ctaButtonView
         case .hasDouble, .hasDoubleWithOptions:
-            VStack(alignment: .leading, spacing: 0) {
-                HStack(alignment: .top) {
-                    if let profileConfig {
-                        profileView
-                    }else {
-                        titleView
-                    }
-                    Spacer()
-                    if let reportAction {
-                        Button(action: reportAction) {
-                            HStack(spacing: 0) {
-                                Image(.iconAlarm)
-                                Text("신고하기").font(.C01_M).foregroundStyle(.gray300)
-                            }
-                            .padding(.horizontal, 6)
-                            .frame(width: 78, height: 28)
-                            .background(.gray500)
-                            .clipShape(.rect(cornerRadius: 6))
-                        }
-                    }
-                }
-                .frame(minHeight: 54, maxHeight: 68)
-                .padding(.top, 40)
-                HStack {
-                    Spacer(minLength: 0)
-                    contentView
-                    Spacer(minLength: 0)
-                }
-                .frame(maxHeight: 132)
-                Spacer(minLength: 0)
-                if case .double(let left, let right) = buttons.first {
-                    HStack(spacing: 19) {
-                        CTAButton(title: left.title, action: left.action, style: .mainLeft)
-                        CTAButton(title: right.title, action: right.action, style: .mainRight)
-                    }.padding(.bottom, 33)
-                } else if case .doubleWithOptions(let left, let right) = buttons.first {
-                    HStack(spacing: 19) {
-                        if let heartFilled = left.heartFilled, let heartCount = left.heartCount {
-                            CTAButton(title: left.title, action: left.action, heartFilled: heartFilled, heartCount: heartCount, style: .mainLeft)
-                        }else {
-                            CTAButton(title: left.title, action: left.action, style: .mainLeft)
-                        }
-                        if let coinCount = right.coinCount {
-                            CTAButton(title: right.title, action: right.action, coinCount: coinCount, style: .mainRight)
-                        }else {
-                            CTAButton(title: right.title, action: right.action, style: .mainRight)
-                        }
-                    }.padding(.bottom, 33)
-                }
-            }
-            .padding(.horizontal, 18)
-            
+            doubleButtonsView
         case .hasYesOrNo:
-            VStack(alignment: .leading, spacing: 0) {
-                titleView
-                    .padding(.top, 40)
-                Spacer(minLength: 0)
-                if let image {
-                    HStack {
-                        Spacer()
-                        Image(image)
-                            .frame(maxHeight: 108)
-                            .padding(.bottom, 35)
-                        Spacer()
-                    }
-                }
-                Spacer(minLength: 0)
-                if case .yesNo(let yes, let no) = buttons.first {
-                    HStack(spacing: 10) {
-                        CTAButton(title: no.title, action: no.action, style: .selectionNo)
-                        CTAButton(title: yes.title, action: yes.action, style: .selectionYes)
-                    }
-                    .padding(.bottom, 33)
-                }
-            }
-            .padding(.horizontal, 18)
-            
+            yesOrNoButtonsView
         case .none:
-            VStack(alignment: .leading) {
-                titleView
-                    .padding(.top, 40)
-                if let image {
-                    HStack(alignment: .center) {
-                        Spacer()
-                        Image(image)
-                        Spacer()
-                    }
-                    .frame(height: 220)
-                }
-                Spacer(minLength: 0)
-            }
-            .padding(.horizontal, 18)
+            noButtonView
         }
     }
     
@@ -300,9 +197,129 @@ struct SCBottomSheet: View {
     }
     
     @ViewBuilder
-    var profileView: some View {
+    private var profileView: some View {
         if let profile = profileConfig {
             ProfileView(profile: profile)
         }
+    }
+    
+    @ViewBuilder
+    private var ctaButtonView: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            titleView
+            Spacer(minLength: 0)
+            if let image {
+                Image(image)
+                    .padding(.bottom, 61)
+                    .frame(maxWidth: .infinity)
+            }
+            if case .cta(let config) = buttons.first {
+                CTAButton(title: config.title, action: config.action,
+                          style: buttonStyle == .hasCTAEnabled ? .bottomEnabled : .bottomDisabled)
+                .padding(.bottom, 33)
+            }
+        }
+        .padding(.top, 40)
+        .padding(.horizontal, 18)
+    }
+    
+    @ViewBuilder
+    private var doubleButtonsView: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            HStack(alignment: .top) {
+                if let profileConfig {
+                    profileView
+                }else {
+                    titleView
+                }
+                Spacer()
+                if let reportAction {
+                    Button(action: reportAction) {
+                        HStack(spacing: 0) {
+                            Image(.iconAlarm)
+                            Text("신고하기").font(.C01_M).foregroundStyle(.gray300)
+                        }
+                        .padding(.horizontal, 6)
+                        .frame(width: 78, height: 28)
+                        .background(.gray500)
+                        .clipShape(.rect(cornerRadius: 6))
+                    }
+                }
+            }
+            .frame(minHeight: 54, maxHeight: 68)
+            .padding(.top, 40)
+            HStack {
+                Spacer(minLength: 0)
+                contentView
+                Spacer(minLength: 0)
+            }
+            .frame(maxHeight: 132)
+            Spacer(minLength: 0)
+            if case .double(let left, let right) = buttons.first {
+                HStack(spacing: 19) {
+                    CTAButton(title: left.title, action: left.action, style: .mainLeft)
+                    CTAButton(title: right.title, action: right.action, style: .mainRight)
+                }.padding(.bottom, 33)
+            } else if case .doubleWithOptions(let left, let right) = buttons.first {
+                HStack(spacing: 19) {
+                    if let heartFilled = left.heartFilled, let heartCount = left.heartCount {
+                        CTAButton(title: left.title, action: left.action, heartFilled: heartFilled, heartCount: heartCount, style: .mainLeft)
+                    }else {
+                        CTAButton(title: left.title, action: left.action, style: .mainLeft)
+                    }
+                    if let coinCount = right.coinCount {
+                        CTAButton(title: right.title, action: right.action, coinCount: coinCount, style: .mainRight)
+                    }else {
+                        CTAButton(title: right.title, action: right.action, style: .mainRight)
+                    }
+                }.padding(.bottom, 33)
+            }
+        }
+        .padding(.horizontal, 18)
+    }
+    
+    @ViewBuilder
+    private var yesOrNoButtonsView: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            titleView
+                .padding(.top, 40)
+            Spacer(minLength: 0)
+            if let image {
+                HStack {
+                    Spacer()
+                    Image(image)
+                        .frame(maxHeight: 108)
+                        .padding(.bottom, 35)
+                    Spacer()
+                }
+            }
+            Spacer(minLength: 0)
+            if case .yesNo(let yes, let no) = buttons.first {
+                HStack(spacing: 10) {
+                    CTAButton(title: no.title, action: no.action, style: .selectionNo)
+                    CTAButton(title: yes.title, action: yes.action, style: .selectionYes)
+                }
+                .padding(.bottom, 33)
+            }
+        }
+        .padding(.horizontal, 18)
+    }
+    
+    @ViewBuilder
+    private var noButtonView: some View {
+        VStack(alignment: .leading) {
+            titleView
+                .padding(.top, 40)
+            if let image {
+                HStack(alignment: .center) {
+                    Spacer()
+                    Image(image)
+                    Spacer()
+                }
+                .frame(height: 220)
+            }
+            Spacer(minLength: 0)
+        }
+        .padding(.horizontal, 18)
     }
 }
