@@ -12,7 +12,7 @@ struct AskSeatedBottomSheetView: View {
     let action: () -> Void
     
     var body: some View {
-        SCBottomSheetBuilder()
+        SCBottomSheetBuilder<EmptyView>()
             .withTitle("좌석에 앉았나요?")
             .withImage(.iconCheck)
             .withCTA(title: "좌석에 앉았어요", action: action)

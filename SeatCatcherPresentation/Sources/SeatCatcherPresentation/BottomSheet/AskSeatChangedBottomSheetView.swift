@@ -12,7 +12,7 @@ struct AskSeatChangedBottomSheetView: View {
     let action: () -> Void
     
     var body : some View {
-        SCBottomSheetBuilder()
+        SCBottomSheetBuilder<EmptyView>()
             .withTitle("좌석을 넘기셨나요?")
             .withImage(.iconChangeSeat)
             .withCTA(title: "좌석을 넘겼어요", action: action)

@@ -12,7 +12,7 @@ struct RequestDeclinedBottomSheetView: View {
     let action: () -> Void
     
     var body: some View {
-        SCBottomSheetBuilder()
+        SCBottomSheetBuilder<EmptyView>()
             .withTitle("좌석 요청이 거절됐어요",
                       subtitle: "다른 좌석을 도전해봐요")
             .withImage(.iconSeatWarning)

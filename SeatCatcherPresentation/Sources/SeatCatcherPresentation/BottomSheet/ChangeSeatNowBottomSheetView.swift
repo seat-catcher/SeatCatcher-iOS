@@ -12,7 +12,7 @@ struct ChangeSeatNowBottomSheetView: View {
     let action: () -> Void
         
     var body: some View {
-        SCBottomSheetBuilder()
+        SCBottomSheetBuilder<EmptyView>()
             .withTitle("지금 자리를 바꿔주세요",
                       subtitle: "상대방이 곧 하차 예정이에요",
                       underlined: true)
