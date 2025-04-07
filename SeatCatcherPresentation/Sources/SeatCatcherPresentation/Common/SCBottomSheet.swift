@@ -28,12 +28,12 @@ struct TitleConfig {
     }
 }
 
-final class SCBottomSheetBuilder {
+final class SCBottomSheetBuilder<Content: View> {
     private var titleConfig = TitleConfig()
     private var profileConfig: ProfileConfig?
     private var reportAction: (() -> Void)?
     private var image: ImageResource?
-    private var contentView: AnyView?
+    private var contentView: Content?
     private var buttons: [ButtonType] = []
     private var isCTADisabled: Bool = false
     private var buttonStyle: SCBottomSheetButtonStyle = .none
@@ -117,8 +117,8 @@ final class SCBottomSheetBuilder {
     }
     
     @discardableResult
-    func withContent(_ content: some View) -> Self {
-        self.contentView = AnyView(content)
+    func withContent(_ content: Content) -> Self {
+        self.contentView = content
         return self
     }
     
@@ -129,7 +129,7 @@ final class SCBottomSheetBuilder {
     }
     
     @MainActor
-    func build() -> SCBottomSheet {
+    func build() -> SCBottomSheet<Content> {
         SCBottomSheet(builder: self)
     }
     
@@ -137,7 +137,7 @@ final class SCBottomSheetBuilder {
         title: TitleConfig,
         profile: ProfileConfig?,
         image: ImageResource?,
-        content: AnyView?,
+        content: Content?,
         reportAction: (() -> Void)?,
         buttons: [ButtonType],
         buttonStyle: SCBottomSheetButtonStyle
@@ -146,16 +146,16 @@ final class SCBottomSheetBuilder {
     }
 }
 
-struct SCBottomSheet: View {
+struct SCBottomSheet<Content: View>: View {
     private let titleConfig: TitleConfig
     private let profileConfig: ProfileConfig?
     private let image: ImageResource?
-    private let contentView: AnyView?
+    private let contentView: Content?
     private let reportAction: (() -> Void)?
-    private let buttons: [SCBottomSheetBuilder.ButtonType]
-    private let buttonStyle: SCBottomSheetBuilder.SCBottomSheetButtonStyle
+    private let buttons: [SCBottomSheetBuilder<Content>.ButtonType]
+    private let buttonStyle: SCBottomSheetBuilder<Content>.SCBottomSheetButtonStyle
     
-    init(builder: SCBottomSheetBuilder) {
+    init(builder: SCBottomSheetBuilder<Content>) {
         let config = builder.getConfig()
         self.titleConfig = config.title
         self.profileConfig = config.profile
