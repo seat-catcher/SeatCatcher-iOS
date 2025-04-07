@@ -68,16 +68,11 @@ final class SCBottomSheetBuilder {
     }
     
     @discardableResult
-    func withCTA(title: String, action: @escaping () -> Void = {}) -> Self {
+    func withCTA(title: String, action: @escaping () -> Void = {}, isDisabled: Bool = false) -> Self {
         let config = ButtonConfig(title: title, action: action)
         buttons = [.cta(config)]
+        self.isCTADisabled = isDisabled
         buttonStyle = isCTADisabled ? .hasCTADisabled : .hasCTAEnabled
-        return self
-    }
-    
-    @discardableResult
-    func disableCTA() -> Self {
-        isCTADisabled = true
         return self
     }
     
