@@ -24,7 +24,6 @@ public struct SelectTagView: View {
         }
         .padding(.horizontal, 20)
         .applyToolbarVisibility(.hidden, for: .navigationBar)
-        .withNavigationBar(viewModel.coordinator)
         .withBackground()
     }
 }
