@@ -47,29 +47,29 @@ final class AppCoordinator: Coordinator {
         switch sheet {
         case .home:
             HomeView()
-        case .askRequestDeclineBottomSheetView(yesButtonAction: let yesButtonAction, noButtonAction: let noButtonAction):
+        case let .askRequestDeclineBottomSheetView(yesButtonAction, noButtonAction):
             AskRequestDeclineBottomSheetView(yesButtonAction: yesButtonAction, noButtonAction: noButtonAction)
-        case .askSeatChangedBottomSheetView(action: let action):
+        case let .askSeatChangedBottomSheetView(action):
             AskSeatChangedBottomSheetView(action: action)
-        case .askSeatedBottomSheetView(action: let action):
+        case let .askSeatedBottomSheetView(action):
             AskSeatedBottomSheetView(action: action)
-        case .changeSeatNowBottomSheetView(action: let action):
+        case let .changeSeatNowBottomSheetView(action):
             ChangeSeatNowBottomSheetView(action: action)
         case .dibsBottomSheetView:
             DibsBottomSheetView()
-        case .noticeChangeSeatBottomSheetView(minutesLeft: let minutesLeft):
+        case let .noticeChangeSeatBottomSheetView(minutesLeft):
             NoticeChangeSeatBottomSheetView(minutesLeft: minutesLeft)
         case .noticeGetOffBottomSheetView:
             NoticeGetOffBottomSheetView()
-        case .receiveRequestBottomSheetView(profileConfig: let profileConfig, leftButtonAction: let leftButtonAction, rightButtonAction: let rightButtonAction, coinCount: let coinCount, reportAction: let reportAction):
+        case let .receiveRequestBottomSheetView(profileConfig, leftButtonAction, rightButtonAction, coinCount, reportAction):
             ReceiveRequestBottomSheetView(profileConfig: profileConfig, leftButtonAction: leftButtonAction, rightButtonAction: rightButtonAction, coinCount: coinCount, reportAction: reportAction)
-        case .rejectRequestBottomSheetView(action: let action):
+        case let .rejectRequestBottomSheetView(action):
             RejectRequestBottomSheetView(action: action)
-        case .requestDeclinedBottomSheetView(action: let action):
+        case let .requestDeclinedBottomSheetView(action):
             RequestDeclinedBottomSheetView(action: action)
-        case .seatInformationBottomSheetView(profileConfig: let profileConfig, station: let station, minutesLeft: let minutesLeft, leftButtonAction: let leftButtonAction, heartFilled: let heartFilled, heartCount: let heartCount, rightButtonAction: let rightButtonAction, coinCount: let coinCount, reportAction: let reportAction):
+        case let .seatInformationBottomSheetView(profileConfig, station, minutesLeft, leftButtonAction, heartFilled, heartCount, rightButtonAction, coinCount, reportAction):
             SeatInformationBottomSheetView(profileConfig: profileConfig, station: station, minutesLeft: minutesLeft, leftButtonAction: leftButtonAction, heartFilled: heartFilled, heartCount: heartCount, rightButtonAction: rightButtonAction, coinCount: coinCount, reportAction: reportAction)
-        case .sendRequestBottomSheetView(profileConfig: let profileConfig, leftButtonAction: let leftButtonAction, rightButtonAction: let rightButtonAction, coinCount: let coinCount, reportAction: let reportAction):
+        case let .sendRequestBottomSheetView(profileConfig, leftButtonAction, rightButtonAction, coinCount, reportAction):
             SendRequestBottomSheetView(profileConfig: profileConfig, leftButtonAction: leftButtonAction, rightButtonAction: rightButtonAction, coinCount: coinCount, reportAction: reportAction)
         }
     }
