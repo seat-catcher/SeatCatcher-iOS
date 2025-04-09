@@ -22,11 +22,11 @@ struct SCNavigationBar: View {
         )
         case title(
             title: String,
-            backButtonAction: () -> Void
+            backButtonAction: (() -> Void)?
         )
         case titleWithHomeButton(
             title: String,
-            backButtonAction: () -> Void,
+            backButtonAction: (() -> Void)?,
             homeButtonAction: () -> Void
         )
     }
@@ -69,10 +69,10 @@ struct SCNavigationBar: View {
             case .title(let title, let backButtonAction):
                 ZStack(alignment: .center) {
                     HStack {
-                        Button(action: {
-                            backButtonAction()
+                        Button {
+                            if let backButtonAction = backButtonAction { backButtonAction() }
                             coordinator.pop()
-                        }) {
+                        } label: {
                             Image(.iconLeftArrow)
                                 .resizable()
                                 .frame(width: 24, height: 24)
@@ -86,10 +86,10 @@ struct SCNavigationBar: View {
                 }.padding(.bottom, 10)
             case .titleWithHomeButton(let title, let backButtonAction, let homeButtonAction):
                 HStack {
-                    Button(action: {
-                        backButtonAction()
+                    Button {
+                        if let backButtonAction = backButtonAction { backButtonAction() }
                         coordinator.pop()
-                    }) {
+                    } label: {
                         Image(.iconLeftArrow)
                             .resizable()
                             .frame(width: 24, height: 24)

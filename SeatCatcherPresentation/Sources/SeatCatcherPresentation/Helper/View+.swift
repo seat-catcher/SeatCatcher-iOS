@@ -30,7 +30,19 @@ extension View {
             self.toolbar(visibility, for: bar)
         }
     }
-    
+
+    @ViewBuilder
+    func alert(_ isPresented: Bool, alert: SCAlertView) -> some View {
+        ZStack {
+            self
+            if isPresented {
+                Color(.black.opacity(0.4)).ignoresSafeArea()
+                alert
+                    .transition(.move(edge: .bottom))
+            }
+        }
+    }
+
     func loadCustomFonts() -> some View {
         Fonts.registerCustomFonts()
         return self

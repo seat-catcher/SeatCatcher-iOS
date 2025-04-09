@@ -197,7 +197,7 @@ private struct OnboardingNextButton: View {
                 viewModel.action(.nextButtonTapped)
             }
         } label: {
-            Text("다음")
+            Text(scrollID == lastScrollID ? "시작하기" : "다음")
                 .foregroundStyle(.scWhite)
                 .font(.B01_SB)
                 .padding(.vertical, 16)
