@@ -31,34 +31,6 @@ extension View {
         }
     }
     
-    @ViewBuilder
-    func bottomSheet<Content: View>(
-        isPresented: Binding<Bool>,
-        height: CGFloat,
-        content: @escaping () -> Content
-    ) -> some View {
-        ZStack {
-            self
-            if isPresented.wrappedValue {
-                Color(white: 0, opacity: 0.4)
-                    .zIndex(1)
-                    .ignoresSafeArea(.all)
-                    .opacity(isPresented.wrappedValue ? 1 : 0)
-            }
-        }
-        .animation(.easeInOut(duration: 0.25), value: isPresented.wrappedValue)
-        .sheet(isPresented: isPresented) {
-            content()
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .cornerRadius(24, corners: [.topLeft, .topRight])
-                .presentationDetents([.height(height)])
-                .ignoresSafeArea()
-                .presentationBackgroundInteraction(.enabled)
-                .presentationDragIndicator(.visible)
-                .presentationBackground(.clear)
-        }
-    }
-    
     func loadCustomFonts() -> some View {
         Fonts.registerCustomFonts()
         return self
