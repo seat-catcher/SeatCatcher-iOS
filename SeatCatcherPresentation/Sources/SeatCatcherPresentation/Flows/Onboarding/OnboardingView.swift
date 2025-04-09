@@ -26,19 +26,20 @@ public struct OnboardingView: View {
                     size: proxy.size
                 )
 
-                OnboardingMessageView(scrollID: $scrollID)
+                OnboardingMessageView(scrollID: scrollID)
 
                 Spacer()
 
                 OnboardingProgressIndicatorView(
                     viewModel: viewModel,
-                    scrollID: $scrollID
+                    scrollID: scrollID
                 )
 
-                OnboardingNextButton(viewModel: viewModel)
+                OnboardingNextButton(viewModel: viewModel, scrollID: $scrollID)
             }
         }
-        .withBackground()
+        .withBackground(.gray900)
+        .onAppear { scrollID = 0 }
     }
 }
 
@@ -52,10 +53,10 @@ private struct OnboardingTopBar: View {
                 viewModel.action(.skipButtonTapped)
             } label: {
                 Text("건너뛰기")
-                    .font(.system(size: 12, weight: .medium))
+                    .font(.C01_R)
                     .lineSpacing(2.5)
                     .baselineOffset(2)
-                    .foregroundStyle(.gray)
+                    .foregroundStyle(.gray200)
                     .underline(true, color: .gray)
             }
             .padding(EdgeInsets(top: 10, leading: 0, bottom: 22, trailing: 15))
@@ -69,15 +70,12 @@ private struct OnboardingContentsView: View {
     let size: CGSize
 
     let pageCount = 4
-    let contentsRatio: CGFloat = 400 / 375
 
     var body: some View {
         ScrollView(.horizontal) {
             LazyHStack(spacing: 0) {
-                ForEach(0..<pageCount, id: \.self) { idx in
-                    Rectangle()
-                        .fill(idx % 2 == 0 ? Color.blue : Color.red)
-                        .frame(width: size.width, height: size.width * contentsRatio)
+                ForEach(0..<pageCount, id: \.self) { index in
+                    OnboardingContentsCell(size: size, index: index)
                 }
             }
             .scrollTargetLayout()
@@ -86,11 +84,65 @@ private struct OnboardingContentsView: View {
         .scrollIndicators(.hidden)
         .scrollTargetBehavior(.paging)
         .scrollPosition(id: $scrollID)
+        .animation(.default, value: scrollID)
+    }
+}
+
+private struct OnboardingContentsCell: View {
+    let size: CGSize
+    let index: Int
+    let lastIndex = 3
+
+    let contentsRatio: CGFloat = 400 / 375
+
+    var body: some View {
+        Group {
+            switch index {
+            case 0:
+                VStack {
+                    Spacer()
+                    Image(.firstOnboarding)
+                        .resizable()
+                        .scaledToFit()
+                        .padding(.horizontal, 43)
+                }
+            case 1:
+                VStack {
+                    Spacer()
+                    Image(.secondOnboarding)
+                        .resizable()
+                        .scaledToFit()
+                        .padding(.horizontal, 43)
+                }
+            case 2:
+                VStack {
+                    Spacer()
+                    Image(.thirdOnboarding)
+                        .resizable()
+                        .scaledToFit()
+                        .padding(.horizontal, 43)
+                        .padding(.bottom, 50)
+                }
+            case 3:
+                VStack {
+                    Spacer()
+                    Image(.fourthOnboarding)
+                        .resizable()
+                        .scaledToFit()
+                        .padding(.horizontal, 64)
+                        .padding(.bottom, 50)
+                }
+            default:
+                EmptyView()
+            }
+        }
+        .frame(width: size.width, height: size.width * contentsRatio)
+        .background(index == lastIndex ? .gray900 : .gray500)
     }
 }
 
 private struct OnboardingMessageView: View {
-    @Binding var scrollID: Int?
+    let scrollID: Int?
 
     var body: some View {
         Group {
@@ -107,8 +159,8 @@ private struct OnboardingMessageView: View {
                 EmptyView()
             }
         }
-        .font(.system(size: 26, weight: .semibold))
-        .foregroundStyle(.white)
+        .font(.T01_SB)
+        .foregroundStyle(.scWhite)
         .multilineTextAlignment(.center)
         .lineSpacing(4)
         .padding(.top, 50)
@@ -117,32 +169,37 @@ private struct OnboardingMessageView: View {
 
 private struct OnboardingProgressIndicatorView: View {
     let viewModel: OnboardingViewModel
-    @Binding var scrollID: Int?
+    let scrollID: Int?
 
     var body: some View {
         HStack(spacing: 8) {
             ForEach(0..<4) {
                 Ellipse()
-                    .fill( scrollID == $0 ? .green : .gray )
+                    .fill( scrollID == $0 ? .scGreen : .gray500)
                     .opacity( scrollID == $0 ? 1 : 0.2 )
                     .frame(width: 8, height: 8)
             }
         }
-        .onAppear { scrollID = 0 }
         .padding(.bottom, 24)
     }
 }
 
 private struct OnboardingNextButton: View {
     let viewModel: OnboardingViewModel
+    let lastScrollID = 3
+    @Binding var scrollID: Int?
 
     var body: some View {
         Button {
-            viewModel.action(.nextButtonTapped)
+            if (scrollID ?? 0) < lastScrollID {
+                scrollID? += 1
+            } else {
+                viewModel.action(.nextButtonTapped)
+            }
         } label: {
             Text("다음")
-                .foregroundStyle(.white)
-                .font(.system(size: 16, weight: .bold))
+                .foregroundStyle(.scWhite)
+                .font(.B01_SB)
                 .padding(.vertical, 16)
                 .frame(maxWidth: .infinity)
                 .background(.green)

@@ -34,10 +34,10 @@ public final class OnboardingViewModel: ViewModel {
         switch action {
         case .skipButtonTapped:
             userUseCase.setOnboardingRequiredStatus(false)
-            coordinator.push(OnboardingScene.generateName)
+            coordinator.push(OnboardingScene.userInfo)
         case .nextButtonTapped:
             userUseCase.setOnboardingRequiredStatus(false)
-            coordinator.push(OnboardingScene.generateName)
+            coordinator.push(OnboardingScene.userInfo)
         }
     }
 

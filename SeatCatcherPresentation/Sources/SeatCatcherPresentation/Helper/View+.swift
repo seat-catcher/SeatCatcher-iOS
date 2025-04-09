@@ -9,9 +9,9 @@ import SwiftUI
 import SeatCatcherCore
 
 extension View {
-    func withBackground() -> some View {
+    func withBackground(_ color: Color) -> some View {
         ZStack { self }
-        .background(.black)
+        .background(color)
         .background(ignoresSafeAreaEdges: .all)
     }
     
