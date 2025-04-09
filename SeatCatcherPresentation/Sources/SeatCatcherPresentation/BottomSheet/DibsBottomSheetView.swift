@@ -7,9 +7,13 @@
 
 import SwiftUI
 
-struct DibsBottomSheetView: View {
+public struct DibsBottomSheetView: View {
+    
+    public init () {
         
-    var body: some View {
+    }
+        
+    public var body: some View {
         SCBottomSheetBuilder<EmptyView>()
             .withTitle("좌석을 찜했어요",
                       subtitle: "좌석요청을 통해 찜한 좌석에 앉아보세요")

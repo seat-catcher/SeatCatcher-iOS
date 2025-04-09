@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct SeatInformationBottomSheetView: View {
+public struct SeatInformationBottomSheetView: View {
     
     let profileConfig: ProfileConfig
     let station: String
@@ -18,8 +18,20 @@ struct SeatInformationBottomSheetView: View {
     let rightButtonAction: () -> Void
     let coinCount: Int
     let reportAction: () -> Void
+    
+    public init(profileConfig: ProfileConfig, station: String, minutesLeft: Int, leftButtonAction: @escaping () -> Void, heartFilled: Bool, heartCount: Int, rightButtonAction: @escaping () -> Void, coinCount: Int, reportAction: @escaping () -> Void) {
+        self.profileConfig = profileConfig
+        self.station = station
+        self.minutesLeft = minutesLeft
+        self.leftButtonAction = leftButtonAction
+        self.heartFilled = heartFilled
+        self.heartCount = heartCount
+        self.rightButtonAction = rightButtonAction
+        self.coinCount = coinCount
+        self.reportAction = reportAction
+    }
         
-    var body: some View {
+    public var body: some View {
         SCBottomSheetBuilder()
             .withProfile(profileConfig: profileConfig)
             .withContent(

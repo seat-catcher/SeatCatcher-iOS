@@ -7,11 +7,15 @@
 
 import SwiftUI
 
-struct RejectRequestBottomSheetView: View {
+public struct RejectRequestBottomSheetView: View {
     
     let action: () -> Void
+    
+    public init(action: @escaping () -> Void) {
+        self.action = action
+    }
         
-    var body: some View {
+    public var body: some View {
         SCBottomSheetBuilder<EmptyView>()
             .withTitle("좌석요청이 거절됐어요",
                       subtitle: "좌석요청을 수락하면 코인을 받을 수 있어요")

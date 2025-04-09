@@ -7,9 +7,13 @@
 
 import SwiftUI
 
-struct NoticeGetOffBottomSheetView: View {
+public struct NoticeGetOffBottomSheetView: View {
+    
+    public init () {
         
-    var body: some View {
+    }
+        
+    public var body: some View {
         SCBottomSheetBuilder<EmptyView>()
             .withTitle("이제 하차하실 시간이에요")
             .withImage(.iconDoorBell)

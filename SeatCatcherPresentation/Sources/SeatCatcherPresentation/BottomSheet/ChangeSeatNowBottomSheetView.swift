@@ -7,11 +7,15 @@
 
 import SwiftUI
 
-struct ChangeSeatNowBottomSheetView: View {
+public struct ChangeSeatNowBottomSheetView: View {
     
     let action: () -> Void
+    
+    public init(action: @escaping () -> Void) {
+        self.action = action
+    }
         
-    var body: some View {
+    public var body: some View {
         SCBottomSheetBuilder<EmptyView>()
             .withTitle("지금 자리를 바꿔주세요",
                       subtitle: "상대방이 곧 하차 예정이에요",

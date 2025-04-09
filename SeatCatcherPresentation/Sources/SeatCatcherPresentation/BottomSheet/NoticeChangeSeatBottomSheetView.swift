@@ -7,11 +7,15 @@
 
 import SwiftUI
 
-struct NoticeChangeSeatBottomSheetView: View {
+public struct NoticeChangeSeatBottomSheetView: View {
     
     let minutesLeft: Int
+    
+    public init(minutesLeft: Int) {
+        self.minutesLeft = minutesLeft
+    }
         
-    var body: some View {
+    public var body: some View {
         SCBottomSheetBuilder<EmptyView>()
             .withTitle("하차역에서 좌석을 넘겨주세요",
                       subtitle: "하차역에 도착하기 전까지 계속 앉을 수 있어요",

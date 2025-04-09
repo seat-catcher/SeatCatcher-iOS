@@ -7,12 +7,17 @@
 
 import SwiftUI
 
-struct AskRequestDeclineBottomSheetView: View {
+public struct AskRequestDeclineBottomSheetView: View {
     
     let yesButtonAction: () -> Void
     let noButtonAction: () -> Void
     
-    var body : some View {
+    public init(yesButtonAction: @escaping () -> Void, noButtonAction: @escaping () -> Void) {
+        self.yesButtonAction = yesButtonAction
+        self.noButtonAction = noButtonAction
+    }
+    
+    public var body : some View {
         SCBottomSheetBuilder<EmptyView>()
             .withTitle("좌석요청을 정말 거절하시겠어요?",
                        subtitle: "좌석요청을 수락하면 코인을 받아요\n하차역까지는 계속 앉아서 갈 수 있어요")

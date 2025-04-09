@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ReceiveRequestBottomSheetView: View {
+public struct ReceiveRequestBottomSheetView: View {
     
     let profileConfig: ProfileConfig
     let leftButtonAction: () -> Void
@@ -15,7 +15,15 @@ struct ReceiveRequestBottomSheetView: View {
     let coinCount: Int
     let reportAction: () -> Void
     
-    var body: some View {
+    public init(profileConfig: ProfileConfig, leftButtonAction: @escaping () -> Void, rightButtonAction: @escaping () -> Void, coinCount: Int, reportAction: @escaping () -> Void) {
+        self.profileConfig = profileConfig
+        self.leftButtonAction = leftButtonAction
+        self.rightButtonAction = rightButtonAction
+        self.coinCount = coinCount
+        self.reportAction = reportAction
+    }
+    
+    public var body: some View {
         SCBottomSheetBuilder()
             .withTitle("요청을 수락할까요?",
                       subtitle: "요청을 수락하면 코인을 받을 수 있어요",

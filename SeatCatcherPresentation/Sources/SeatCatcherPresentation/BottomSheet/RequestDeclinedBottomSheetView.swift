@@ -7,11 +7,15 @@
 
 import SwiftUI
 
-struct RequestDeclinedBottomSheetView: View {
+public struct RequestDeclinedBottomSheetView: View {
     
     let action: () -> Void
     
-    var body: some View {
+    public init(action: @escaping () -> Void) {
+        self.action = action
+    }
+    
+    public var body: some View {
         SCBottomSheetBuilder<EmptyView>()
             .withTitle("좌석 요청이 거절됐어요",
                       subtitle: "다른 좌석을 도전해봐요")

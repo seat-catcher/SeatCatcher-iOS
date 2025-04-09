@@ -7,11 +7,15 @@
 
 import SwiftUI
 
-struct AskSeatedBottomSheetView: View {
+public struct AskSeatedBottomSheetView: View {
     
     let action: () -> Void
     
-    var body: some View {
+    public init(action: @escaping () -> Void) {
+        self.action = action
+    }
+    
+    public var body: some View {
         SCBottomSheetBuilder<EmptyView>()
             .withTitle("좌석에 앉았나요?")
             .withImage(.iconCheck)
