@@ -12,19 +12,21 @@ import KakaoSDKCommon
 import KakaoSDKAuth
 import KakaoSDKUser
 
-import SeatCatcherData
-import SeatCatcherDomain
-
 @main
 struct SeatCatcherApp: App {
+    // 앱 화면 전환을 담당하는 Coordinator
     @State private var appCoordinator: AppCoordinator
     @State private var onboardingCoordinator: OnboardingCoordinator
+
+    // 유저 상태 저장을 위한 값
     @AppStorage("isSignedIn") private var isSignedIn = false
     @AppStorage("isOnboardingRequired") private var isOnboardingRequired = true
     @AppStorage("isUserInfoRequired") private var isUserInfoRequired = true
 
+    // 의존성 주입을 위한 DIContainer
     private let diContainer = DIContainerImpl()
 
+    // 유저 상태 기반으로 present할 flow를 선택하는 computed property
     private var currentFlow: AppFlow {
         if isSignedIn {
             if isOnboardingRequired { .onboarding }
@@ -35,16 +37,21 @@ struct SeatCatcherApp: App {
     }
 
     init() {
+        // Coordinator 인스턴스 생성
         let appCoordinator = AppCoordinator(diContainer: diContainer)
         let onboardingCoordinator = OnboardingCoordinator(diContainer: diContainer)
-
         _appCoordinator = State(initialValue: appCoordinator)
         _onboardingCoordinator = State(initialValue: onboardingCoordinator)
 
+        // Kakao App Key를 통해 Kakao SDK 초기화
         guard let kakaoAppKey = Bundle.main.infoDictionary?["KAKAO_APP_KEY"] as? String
         else { fatalError("Kakao Native App Key를 불러올 수 없습니다.") }
         KakaoSDK.initSDK(appKey: kakaoAppKey)
 
+        // Presentation 모듈 Resource의 폰트 등록
+        Fonts.registerCustomFonts()
+
+        // AccessToken 유효성 검사 후 invalid시 reissue
         checkLoginStatus()
     }
 
@@ -56,7 +63,9 @@ struct SeatCatcherApp: App {
                     UserDefaults.standard.set(!UserDefaults.standard.bool(forKey: "isSignedIn"), forKey: "isSignedIn")
                 }
                 Button("온보딩") {
-                    UserDefaults.standard.set(!UserDefaults.standard.bool(forKey: "isOnboardingRequired"), forKey: "isOnboardingRequired")
+                    withAnimation {
+                        UserDefaults.standard.set(!UserDefaults.standard.bool(forKey: "isOnboardingRequired"), forKey: "isOnboardingRequired")
+                    }
                 }
                 Button("정보 입력") {
                     UserDefaults.standard.set(!UserDefaults.standard.bool(forKey: "isUserInfoRequired"), forKey: "isUserInfoRequired")
@@ -80,7 +89,7 @@ struct SeatCatcherApp: App {
                     }
                 case .userInfoRequired:
                     NavigationStack(path: $onboardingCoordinator.path) {
-                        onboardingCoordinator.buildScene(.generateName)
+                        onboardingCoordinator.buildScene(.userInfo)
                             .navigationDestination(for: OnboardingScene.self) { onboardingCoordinator.buildScene($0) }
                     }
                 case .onboarding:

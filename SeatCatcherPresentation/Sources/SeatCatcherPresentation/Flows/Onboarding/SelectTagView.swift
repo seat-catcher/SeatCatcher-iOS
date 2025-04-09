@@ -24,7 +24,7 @@ public struct SelectTagView: View {
         }
         .padding(.horizontal, 20)
         .applyToolbarVisibility(.hidden, for: .navigationBar)
-        .withBackground()
+        .withBackground(.gray900)
     }
 }
 
@@ -32,7 +32,7 @@ private struct SelectTagGuideTextView: View {
     var body: some View {
         Text("지하철 탈 때\n주로 어떤 유형이세요?")
             .font(.system(size: 26, weight: .bold))
-            .foregroundStyle(.white)
+            .foregroundStyle(.scWhite)
             .lineSpacing(4)
             .padding(.bottom, 11)
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -86,7 +86,7 @@ private struct SelectTagNextButton: View {
             viewModel.action(.nextButtonTapped)
         } label: {
             Text("다음")
-                .foregroundStyle(.white)
+                .foregroundStyle(.scWhite)
                 .font(.system(size: 16, weight: .bold))
                 .padding(.vertical, 16)
                 .frame(maxWidth: .infinity)

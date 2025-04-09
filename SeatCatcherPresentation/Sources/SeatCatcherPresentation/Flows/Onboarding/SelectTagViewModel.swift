@@ -18,23 +18,20 @@ public final class SelectTagViewModel: ViewModel {
     }
 
     struct State {
+        var nickname: String?
         var currentTag: UserTag?
         var errorMessage: String?
     }
 
     private(set) var state = State()
 
-    let nickname: String
-
     private let userUseCase: UserUseCase
     let coordinator: Coordinator
 
     public init(
-        nickname: String,
         userUseCase: UserUseCase,
         coordinator: Coordinator
     ) {
-        self.nickname = nickname
         self.userUseCase = userUseCase
         self.coordinator = coordinator
     }
@@ -57,7 +54,7 @@ public final class SelectTagViewModel: ViewModel {
         Task { [weak self] in
             guard let self = self else { return }
             do {
-                if try await self.userUseCase.saveUserInfo(nickname: self.nickname, tag: tag) {
+                if try await self.userUseCase.saveUserInfo(nickname: "", tag: tag) {
                     userUseCase.setUserInfoRequiredStatus(false)
                 } else {
                     self.state.errorMessage = "유저 정보 저장에 실패했습니다."

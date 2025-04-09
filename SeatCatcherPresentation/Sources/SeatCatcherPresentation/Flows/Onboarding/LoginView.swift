@@ -24,7 +24,7 @@ public struct LoginView: View {
                 .padding(.bottom, 199)
         }
         .padding(.horizontal, 20)
-        .withBackground()
+        .withBackground(.gray900)
     }
 }
 
@@ -45,21 +45,27 @@ private struct LoginButtonGroupView: View {
             Button {
                 viewModel.action(.loginWithKakaoButtonTapped)
             } label: {
-                HStack(spacing: 6) {
+                HStack(spacing: 7) {
                     Spacer()
+
                     Image(.kakaoLogo)
+                        .renderingMode(.template)
                         .resizable()
+                        .foregroundStyle(Color(red: 0.22, green: 0.11, blue: 0.11))
                         .frame(width: 14, height: 14)
+
                     Text("카카오로 계속하기")
-                        .foregroundStyle(.black)
+                        .foregroundStyle(Color(red: 0.22, green: 0.11, blue: 0.11))
                         .font(.system(size: 20, weight: .medium))
+
                     Spacer()
                 }
                 .padding(.vertical, 12)
-                .background(.yellow)
                 .frame(height: 52)
+                .background(Color(red: 0.98, green: 0.88, blue: 0))
                 .clipShape(.rect(cornerRadius: 8))
             }
+
             SignInWithAppleButton(
                 .continue,
                 onRequest: viewModel.handleRequest,
@@ -70,3 +76,7 @@ private struct LoginButtonGroupView: View {
         }
     }
 }
+
+//#Preview {
+//    LoginView()
+//}
