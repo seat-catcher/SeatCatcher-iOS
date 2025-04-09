@@ -1,33 +1,5 @@
 import SwiftUI
 
-struct ButtonConfig {
-    let title: String
-    let action: () -> Void
-    let heartFilled: Bool?
-    let heartCount: Int?
-    let coinCount: Int?
-    
-    init(title: String = "", action: @escaping () -> Void = {}, heartFilled: Bool? = nil, heartCount: Int? = nil, coinCount: Int? = nil) {
-        self.title = title
-        self.action = action
-        self.heartFilled = heartFilled
-        self.heartCount = heartCount
-        self.coinCount = coinCount
-    }
-}
-
-struct TitleConfig {
-    let title: String
-    let subtitle: String?
-    let isSubtitleUnderlined: Bool
-    
-    init(title: String = "", subtitle: String? = nil, isSubtitleUnderlined: Bool = false) {
-        self.title = title
-        self.subtitle = subtitle
-        self.isSubtitleUnderlined = isSubtitleUnderlined
-    }
-}
-
 final class SCBottomSheetBuilder<Content: View> {
     private var titleConfig = TitleConfig()
     private var profileConfig: ProfileConfig?

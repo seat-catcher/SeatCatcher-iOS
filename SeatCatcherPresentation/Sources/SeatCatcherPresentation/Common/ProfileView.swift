@@ -33,9 +33,3 @@ struct ProfileView: View {
         }
     }
 }
-
-struct ProfileConfig {
-    let name: String
-    let profileImage: ImageResource
-    let tag: Tag
-}
