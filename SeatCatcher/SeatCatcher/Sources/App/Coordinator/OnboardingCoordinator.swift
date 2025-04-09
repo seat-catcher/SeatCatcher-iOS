@@ -42,11 +42,11 @@ final class OnboardingCoordinator: Coordinator {
             )
             OnboardingView(viewModel: onboardingViewModel)
         case .userInfo:
-            let selectTagViewModel = SelectTagViewModel(
+            let selectTagViewModel = UserInfoViewModel(
                 userUseCase: diContainer.resolveUserUseCase(),
                 coordinator: self
             )
-            SelectTagView(viewModel: selectTagViewModel)
+            UserInfoView(viewModel: selectTagViewModel)
         }
     }
 }

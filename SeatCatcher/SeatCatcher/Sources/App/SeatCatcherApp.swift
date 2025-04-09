@@ -57,21 +57,19 @@ struct SeatCatcherApp: App {
 
     var body: some Scene {
         WindowGroup {
-            #if DEBUG
-            HStack {
-                Button("로그인") {
-                    UserDefaults.standard.set(!UserDefaults.standard.bool(forKey: "isSignedIn"), forKey: "isSignedIn")
-                }
-                Button("온보딩") {
-                    withAnimation {
-                        UserDefaults.standard.set(!UserDefaults.standard.bool(forKey: "isOnboardingRequired"), forKey: "isOnboardingRequired")
-                    }
-                }
-                Button("정보 입력") {
-                    UserDefaults.standard.set(!UserDefaults.standard.bool(forKey: "isUserInfoRequired"), forKey: "isUserInfoRequired")
-                }
-            }
-            #endif
+//            #if DEBUG
+//            HStack {
+//                Button("로그인") {
+//                    UserDefaults.standard.set(!UserDefaults.standard.bool(forKey: "isSignedIn"), forKey: "isSignedIn")
+//                }
+//                Button("온보딩") {
+//                    UserDefaults.standard.set(!UserDefaults.standard.bool(forKey: "isOnboardingRequired"), forKey: "isOnboardingRequired")
+//                }
+//                Button("정보 입력") {
+//                    UserDefaults.standard.set(!UserDefaults.standard.bool(forKey: "isUserInfoRequired"), forKey: "isUserInfoRequired")
+//                }
+//            }
+//            #endif
             Group {
                 switch currentFlow {
                 case .authenticated:

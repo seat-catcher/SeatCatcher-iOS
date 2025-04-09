@@ -10,17 +10,20 @@ import SeatCatcherDomain
 import SeatCatcherCore
 
 @Observable
-public final class SelectTagViewModel: ViewModel {
+public final class UserInfoViewModel: ViewModel {
     enum Action {
-        case tagSelected(_ tag: UserTag)
+        case tagSelected(_ tag: Tag)
+        case criterionButtonTapped
+        case alertConfirmButtonTapped
         case nextButtonTapped
         case errorOccured(String)
     }
 
     struct State {
         var nickname: String?
-        var currentTag: UserTag?
+        var currentTag: Tag?
         var errorMessage: String?
+        var isAlertPresented: Bool = false
     }
 
     private(set) var state = State()
@@ -39,7 +42,15 @@ public final class SelectTagViewModel: ViewModel {
     func action(_ action: Action) {
         switch action {
         case let .tagSelected(tag):
-            self.state.currentTag = tag
+            if self.state.currentTag == tag {
+                self.state.currentTag = nil
+            } else {
+                self.state.currentTag = tag
+            }
+        case .criterionButtonTapped:
+            self.state.isAlertPresented = true
+        case .alertConfirmButtonTapped:
+            self.state.isAlertPresented = false
         case .nextButtonTapped:
             saveUserInfo()
         case let .errorOccured(description):
