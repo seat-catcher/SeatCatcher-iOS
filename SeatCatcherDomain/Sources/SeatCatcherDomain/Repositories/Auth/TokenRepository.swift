@@ -6,7 +6,7 @@
 //
 
 public protocol TokenRepository: AnyObject {
-    func reissue() async throws -> TokenVO
+    func reissue() async throws -> Token
     func getTokenValidStatus() async throws
 
     func saveAccessToken(_ token: String) throws
@@ -17,6 +17,6 @@ public protocol TokenRepository: AnyObject {
     func getRefreshToken() throws -> String?
     func deleteRefreshToken() throws
 
-    func saveTokens(_ token: TokenVO) throws
+    func saveTokens(_ token: Token) throws
     func deleteTokens() throws
 }

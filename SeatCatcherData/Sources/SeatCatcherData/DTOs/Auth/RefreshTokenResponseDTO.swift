@@ -13,9 +13,9 @@ struct RefreshTokenResponseDTO {
 }
 
 extension RefreshTokenResponseDTO: ResponseDTO {
-    typealias DomainModel = TokenVO
+    typealias DomainModel = Token
 
     static var stub: Self { .init(accessToken: "accessToken", refreshToken: "accessToken") }
 
-    var domainModel: TokenVO { .init(accessToken: accessToken, refreshToken: refreshToken) }
+    var domainModel: Token { .init(accessToken: accessToken, refreshToken: refreshToken) }
 }

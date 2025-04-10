@@ -21,12 +21,12 @@ public final class LoginRepositoryImpl: LoginRepository {
 
     public init() {}
 
-    public func appleLogin(identityToken: String) async throws -> TokenVO {
+    public func appleLogin(identityToken: String) async throws -> SeatCatcherDomain.Token {
         let responseDTO = try await networkService.postAppleLogin(identityToken)
         return responseDTO.domainModel
     }
 
-    public func kakaoLogin() async throws -> SeatCatcherDomain.TokenVO {
+    public func kakaoLogin() async throws -> SeatCatcherDomain.Token {
         let accessToken = try await getKakaoLoginAccessToken()
         let responseDTO = try await networkService.postKakaoLogin(accessToken)
         return responseDTO.domainModel

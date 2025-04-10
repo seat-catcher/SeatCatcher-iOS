@@ -14,7 +14,7 @@ public final class UserInfoViewModel: ViewModel {
     enum Action {
         case viewAppeared
         case nicknameFetched(_ nickname: String)
-        case tagSelected(_ tag: Tag)
+        case tagSelected(_ tag: UserTag)
         case criterionButtonTapped
         case alertConfirmButtonTapped
         case nextButtonTapped
@@ -23,7 +23,7 @@ public final class UserInfoViewModel: ViewModel {
 
     struct State {
         var nickname: String?
-        var currentTag: Tag?
+        var currentTag: UserTag?
         var errorMessage: String?
         var isAlertPresented: Bool = false
     }
@@ -79,7 +79,7 @@ public final class UserInfoViewModel: ViewModel {
 
     @MainActor
     private func saveUserInfo() {
-        guard let tag = self.state.currentTag?.rawValue else { return }
+        guard let tag = self.state.currentTag else { return }
 
         Task { [weak self] in
             guard let self = self else { return }

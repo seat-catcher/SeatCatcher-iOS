@@ -83,26 +83,15 @@ private struct UserInfoTextView: View {
 
 private struct SelectTagCell: View {
     let viewModel: UserInfoViewModel
-    let tag: Tag
-
-    private var imageForTag: Image {
-        switch tag {
-        case .longDistance: Image(.tagLongDistance)
-        case .tired: Image(.tagTired)
-        case .pregnant: Image(.tagPregnant)
-        case .disabled: Image(.tagDisabled)
-        case .baggage: Image(.tagBaggage)
-        case .none: Image(.tagNone)
-        }
-    }
+    let tag: UserTag
 
     var body: some View {
         VStack(spacing: 10) {
             Group {
-                imageForTag
+                Image(tag.icon)
                     .renderingMode(.template)
 
-                Text(tag.stringValue)
+                Text(tag.displayValue)
                     .font(.B02_M)
             }
             .foregroundStyle(tag == viewModel.state.currentTag ? .scGreen : .gray300)
@@ -123,7 +112,7 @@ private struct UserInfoGridView: View {
 
     var body: some View {
         LazyVGrid(columns: columns, spacing: 10) {
-            ForEach(Tag.allCases, id: \.self) {
+            ForEach(UserTag.allCases, id: \.self) {
                 SelectTagCell(viewModel: viewModel, tag: $0)
                     .frame(height: 104)
             }

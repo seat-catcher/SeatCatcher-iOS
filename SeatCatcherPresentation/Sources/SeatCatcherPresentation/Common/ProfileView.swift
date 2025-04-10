@@ -21,7 +21,7 @@ struct ProfileView: View {
                 Text(profile.name)
                     .font(.B03_M)
                     .foregroundStyle(.gray300)
-                Text(profile.tag.stringValue)
+                Text(profile.tag.displayValue)
                     .font(.B03_SB)
                     .foregroundStyle(.scGreen)
                     .padding(.horizontal, 6)
