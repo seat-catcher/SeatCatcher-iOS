@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct TokenVO: Sendable {
+public struct Token: Sendable {
     public let accessToken: String
     public let refreshToken: String
 

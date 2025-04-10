@@ -6,9 +6,10 @@
 //
 
 import SwiftUI
+import SeatCatcherDomain
 
 public struct ProfileConfig {
     let name: String
     let profileImage: ImageResource
-    let tag: Tag
+    let tag: UserTag
 }

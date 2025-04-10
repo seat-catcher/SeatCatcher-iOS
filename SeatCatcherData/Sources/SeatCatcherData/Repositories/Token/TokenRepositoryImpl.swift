@@ -21,7 +21,7 @@ public final class TokenRepositoryImpl: TokenRepository {
 
     public init() {}
 
-    public func reissue() async throws -> TokenVO {
+    public func reissue() async throws -> Token {
         guard let refreshToken = try getRefreshToken() else { throw TokenError.refreshTokenNotFoundInKeychain }
         let responseDTO = try await networkService.postRefreshToken(refreshToken)
         return responseDTO.domainModel
@@ -53,7 +53,7 @@ public final class TokenRepositoryImpl: TokenRepository {
         try KeychainService.delete(key: refreshToken)
     }
 
-    public func saveTokens(_ token: TokenVO) throws {
+    public func saveTokens(_ token: Token) throws {
         try saveAccessToken(token.accessToken)
         try saveRefreshToken(token.refreshToken)
     }
