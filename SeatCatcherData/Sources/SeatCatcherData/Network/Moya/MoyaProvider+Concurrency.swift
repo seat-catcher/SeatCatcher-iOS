@@ -23,7 +23,6 @@ extension MoyaProvider {
             self.request(target) { result in
                 switch result {
                 case let .success(response):
-                    dump(response.statusCode)
                     continuation.resume(returning: response.data)
                 case let .failure(error):
                     continuation.resume(throwing: error)

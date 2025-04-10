@@ -22,10 +22,9 @@ public final class UserInfoViewModel: ViewModel {
     }
 
     struct State {
-        var nickname: String?
-        var currentTag: UserTag?
+        var user = User(name: "", profileImage: UserImage.allCases.randomElement()!, tags: [], credit: 0)
         var errorMessage: String?
-        var isAlertPresented: Bool = false
+        var isAlertPresented = false
     }
 
     private(set) var state = State()
@@ -46,12 +45,12 @@ public final class UserInfoViewModel: ViewModel {
         case .viewAppeared:
             self.fetchNickname()
         case let .nicknameFetched(nickname):
-            self.state.nickname = nickname
+            self.state.user.name = nickname
         case let .tagSelected(tag):
-            if self.state.currentTag == tag {
-                self.state.currentTag = nil
+            if self.state.user.tags.contains(tag) {
+                self.state.user.tags.removeAll { $0 == tag }
             } else {
-                self.state.currentTag = tag
+                self.state.user.tags.append(tag)
             }
         case .criterionButtonTapped:
             self.state.isAlertPresented = true
@@ -79,16 +78,12 @@ public final class UserInfoViewModel: ViewModel {
 
     @MainActor
     private func saveUserInfo() {
-        guard let tag = self.state.currentTag else { return }
+        let user = self.state.user
 
-        Task { [weak self] in
-            guard let self = self else { return }
+        Task {
             do {
-                if try await self.userUseCase.saveUserInfo(nickname: "", tag: tag) {
-                    coordinator.push(OnboardingScene.userGreeting)
-                } else {
-                    self.action(.errorOccured("유저 정보 저장에 실패했습니다."))
-                }
+                let user = try await self.userUseCase.saveUserInfo(user: user)
+                coordinator.push(OnboardingScene.userGreeting(user))
             } catch {
                 self.action(.errorOccured(error.localizedDescription))
             }

@@ -46,7 +46,6 @@ public final class LoginViewModel: ViewModel {
                 }
             }
         case let .loginFailure(error):
-            dump(error)
             state.errorMessage = error.localizedDescription
         }
     }

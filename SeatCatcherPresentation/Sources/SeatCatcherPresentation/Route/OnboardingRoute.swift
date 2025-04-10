@@ -7,12 +7,13 @@
 
 import Foundation
 import SeatCatcherCore
+import SeatCatcherDomain
 
 public enum OnboardingScene: AppRoute {
     case login
     case onboarding
     case userInfo
-    case userGreeting
+    case userGreeting(_ user: User)
 
     public var id: String {
         switch self {

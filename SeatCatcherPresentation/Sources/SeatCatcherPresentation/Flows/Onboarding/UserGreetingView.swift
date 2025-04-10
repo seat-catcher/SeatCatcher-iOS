@@ -19,11 +19,11 @@ public struct UserGreetingView: View {
             Group {
                 Spacer().frame(height: 167)
 
-                Image(.catchy1)
+                Image(viewModel.user.profileImage.image)
 
                 Spacer().frame(height: 30)
 
-                Text("\("친절한 짐꾼")님\n반가워요")
+                Text("\(viewModel.user.name)님\n반가워요")
                     .font(.T01_SB)
                     .foregroundStyle(.scWhite)
                     .multilineTextAlignment(.center)
@@ -45,8 +45,3 @@ public struct UserGreetingView: View {
         .onAppear { viewModel.action(.fadeOut) }
     }
 }
-
-//#Preview {
-//    UserGreetingView()
-//        .loadCustomFonts()
-//}

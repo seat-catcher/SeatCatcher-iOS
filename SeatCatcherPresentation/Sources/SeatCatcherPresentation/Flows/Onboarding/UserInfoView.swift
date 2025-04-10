@@ -35,6 +35,7 @@ public struct UserInfoView: View {
                 buttonAction: { viewModel.action(.alertConfirmButtonTapped) }
             )
         )
+        .onAppear { viewModel.action(.viewAppeared) }
     }
 }
 
@@ -94,10 +95,10 @@ private struct SelectTagCell: View {
                 Text(tag.displayValue)
                     .font(.B02_M)
             }
-            .foregroundStyle(tag == viewModel.state.currentTag ? .scGreen : .gray300)
+            .foregroundStyle(viewModel.state.user.tags.contains(tag) ? .scGreen : .gray300)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(tag == viewModel.state.currentTag ? .scGreen700 : .gray500)
+        .background(viewModel.state.user.tags.contains(tag) ? .scGreen700 : .gray500)
         .clipShape(.rect(cornerRadius: 8))
         .onTapGesture { viewModel.action(.tagSelected(tag)) }
     }
@@ -128,14 +129,14 @@ private struct SelectTagNextButton: View {
             viewModel.action(.nextButtonTapped)
         } label: {
             Text("다음")
-                .foregroundStyle(viewModel.state.currentTag == nil ? .gray300 : .scWhite)
+                .foregroundStyle(viewModel.state.user.tags.isEmpty ? .gray300 : .scWhite)
                 .font(.B01_SB)
                 .padding(.vertical, 16)
                 .frame(maxWidth: .infinity)
-                .background(viewModel.state.currentTag == nil ? .gray500 : .scGreen)
+                .background(viewModel.state.user.tags.isEmpty ? .gray500 : .scGreen)
                 .clipShape(.rect(cornerRadius: 8))
         }
-        .disabled(viewModel.state.currentTag == nil)
+        .disabled(viewModel.state.user.tags.isEmpty)
 
     }
 }
