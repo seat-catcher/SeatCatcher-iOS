@@ -35,7 +35,6 @@ public struct UserInfoView: View {
                 buttonAction: { viewModel.action(.alertConfirmButtonTapped) }
             )
         )
-        .onAppear()
     }
 }
 
