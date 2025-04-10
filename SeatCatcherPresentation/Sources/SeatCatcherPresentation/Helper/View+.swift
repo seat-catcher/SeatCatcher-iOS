@@ -10,9 +10,10 @@ import SeatCatcherCore
 
 extension View {
     func withBackground(_ color: Color) -> some View {
-        ZStack { self }
-        .background(color)
-        .background(ignoresSafeAreaEdges: .all)
+        ZStack {
+            color.ignoresSafeArea()
+            self
+        }
     }
     
     func withNavigationBar(_ coordinator: Coordinator, config: SCNavigationBar.SCNavigationBarConfig) -> some View {
@@ -38,9 +39,9 @@ extension View {
             if isPresented {
                 Color(.black.opacity(0.4)).ignoresSafeArea()
                 alert
-                    .transition(.move(edge: .bottom))
             }
         }
+        .animation(.default, value: isPresented)
     }
 
     func loadCustomFonts() -> some View {

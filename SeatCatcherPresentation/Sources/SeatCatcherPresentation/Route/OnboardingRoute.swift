@@ -12,12 +12,14 @@ public enum OnboardingScene: AppRoute {
     case login
     case onboarding
     case userInfo
+    case userGreeting
 
     public var id: String {
         switch self {
         case .login: return "login"
         case .onboarding: return "onboarding"
         case .userInfo: return "userInfo"
+        case .userGreeting: return "userGreeting"
         }
     }
 

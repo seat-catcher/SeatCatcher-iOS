@@ -11,7 +11,6 @@ public protocol UserUseCase {
     func getRandomNickname() async throws -> String
     func saveUserInfo(nickname: String, tag: Int) async throws -> Bool
     func setOnboardingRequiredStatus(_ status: Bool)
-    func setUserInfoRequiredStatus(_ status: Bool)
 }
 
 public final class UserUseCaseImpl: UserUseCase {
@@ -32,10 +31,6 @@ public final class UserUseCaseImpl: UserUseCase {
     }
 
     public func setOnboardingRequiredStatus(_ status: Bool) {
-        UserDefaults.standard.set(status, forKey: "isOnboardingRequired")
-    }
-
-    public func setUserInfoRequiredStatus(_ status: Bool) {
-        UserDefaults.standard.set(status, forKey: "isUserInfoRequired")
+        userRepository.isOnboardingRequired = status
     }
 }

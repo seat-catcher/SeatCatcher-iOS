@@ -18,25 +18,28 @@ public protocol AuthUseCase {
 public final class AuthUseCaseImpl: AuthUseCase {
     private let loginRepository: LoginRepository
     private let tokenRepository: TokenRepository
+    private let userRepository: UserRepository
 
     public init(
         loginRepository: LoginRepository,
-        tokenRepository: TokenRepository
+        tokenRepository: TokenRepository,
+        userRepository: UserRepository
     ) {
         self.loginRepository = loginRepository
         self.tokenRepository = tokenRepository
+        self.userRepository = userRepository
     }
 
     public func appleLogin(identityToken token: String) async throws {
         let token = try await loginRepository.appleLogin(identityToken: token)
         try tokenRepository.saveTokens(token)
-        UserDefaults.standard.set(true, forKey: "isSignedIn")
+        userRepository.isSignedIn = true
     }
 
     public func kakaoLogin() async throws {
         let token = try await loginRepository.kakaoLogin()
         try tokenRepository.saveTokens(token)
-        UserDefaults.standard.set(true, forKey: "isSignedIn")
+        userRepository.isSignedIn = true
     }
 
     public func isAccessTokenValid() async throws {
@@ -45,6 +48,6 @@ public final class AuthUseCaseImpl: AuthUseCase {
 
     public func logout() throws {
         try tokenRepository.deleteTokens()
-        UserDefaults.standard.set(false, forKey: "isSignedIn")
+        userRepository.isSignedIn = false
     }
 }
