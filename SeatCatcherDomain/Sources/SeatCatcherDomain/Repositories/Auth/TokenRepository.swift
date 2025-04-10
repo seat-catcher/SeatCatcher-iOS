@@ -5,7 +5,7 @@
 //  Created by 박현수 on 3/24/25.
 //
 
-public protocol TokenRepository {
+public protocol TokenRepository: AnyObject {
     func reissue() async throws -> TokenVO
     func getTokenValidStatus() async throws
 

@@ -16,10 +16,14 @@ final class DIContainerImpl: DIContainer {
     func resolveAuthUseCase() -> AuthUseCase {
         let loginRepository = LoginRepositoryImpl()
         let tokenRepository = TokenRepositoryImpl()
+        let userRepository = UserRepositoryImpl()
+
         let authUseCase = AuthUseCaseImpl(
             loginRepository: loginRepository,
-            tokenRepository: tokenRepository
+            tokenRepository: tokenRepository,
+            userRepository: userRepository
         )
+        
         return authUseCase
     }
 

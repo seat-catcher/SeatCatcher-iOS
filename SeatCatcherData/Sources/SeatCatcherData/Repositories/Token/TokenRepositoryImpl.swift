@@ -7,7 +7,7 @@
 
 import SeatCatcherDomain
 
-public struct TokenRepositoryImpl: TokenRepository {
+public final class TokenRepositoryImpl: TokenRepository {
     enum TokenError: Error {
         case accessTokenNotFoundInKeychain
         case refreshTokenNotFoundInKeychain

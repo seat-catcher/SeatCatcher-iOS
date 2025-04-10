@@ -30,16 +30,15 @@ struct NetworkService {
         ) {
             // UserDefaults에서 "isTokenRefreshed" 플래그를 읽습니다.
             // 이 값은 이전에 토큰 리이슈 작업이 성공했음을 나타내며, 새 토큰을 적용해야 함을 의미합니다.
-            let isTokenRefreshed = UserDefaults.standard.bool(forKey: "isTokenRefreshed")
 
             // 만약 토큰이 새로 갱신된 상태라면, HTTP 헤더의 Authorization 값을 갱신합니다.
-            if isTokenRefreshed {
+            if UserDefaultsService.isTokenRefreshed {
                 // 새로운 토큰을 가져오기 위해 TokenRepositoryImpl 인스턴스를 생성합니다.
                 let tokenRepository = TokenRepositoryImpl()
                 // urlRequest를 복사하여 수정할 새 변수에 저장합니다.
                 var urlRequestWithReissuedToken = urlRequest
                 // 재시도 후에는 "isTokenRefreshed" 플래그를 false로 리셋합니다.
-                UserDefaults.standard.set(false, forKey: "isTokenRefreshed")
+                UserDefaultsService.isTokenRefreshed = false
 
                 do {
                     // TokenRepositoryImpl에서 액세스 토큰을 가져옵니다.
@@ -108,7 +107,7 @@ struct NetworkService {
                     // 토큰을 새로 갱신합니다.
                     let token = try await tokenRepository.reissue()
                     try tokenRepository.saveTokens(token)
-                    UserDefaults.standard.set(true, forKey: "isTokenRefreshed")
+                    UserDefaultsService.isTokenRefreshed = true
                     dump("HTTP Request Failed | 토큰 갱신 성공, 재시도")
                     // 토큰 갱신에 성공하면 completion 클로저에 .retry를 전달하여 요청 재시도를 알립니다.
                     completion(.retry)
@@ -125,7 +124,7 @@ struct NetworkService {
 
         private func logout(tokenRepository: TokenRepository) {
             try? tokenRepository.deleteTokens()
-            UserDefaults.standard.set(false, forKey: "isSignedIn")
+            UserDefaultsService.isSignedIn = false
         }
     }
 

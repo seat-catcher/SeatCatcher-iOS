@@ -21,7 +21,6 @@ struct SeatCatcherApp: App {
     // 유저 상태 저장을 위한 값
     @AppStorage("isSignedIn") private var isSignedIn = false
     @AppStorage("isOnboardingRequired") private var isOnboardingRequired = true
-    @AppStorage("isUserInfoRequired") private var isUserInfoRequired = true
 
     // 의존성 주입을 위한 DIContainer
     private let diContainer = DIContainerImpl()
@@ -30,7 +29,6 @@ struct SeatCatcherApp: App {
     private var currentFlow: AppFlow {
         if isSignedIn {
             if isOnboardingRequired { .onboarding }
-            else if isUserInfoRequired { .userInfoRequired }
             else { .authenticated }
         }
         else { .unauthenticated }
@@ -57,19 +55,16 @@ struct SeatCatcherApp: App {
 
     var body: some Scene {
         WindowGroup {
-//            #if DEBUG
-//            HStack {
-//                Button("로그인") {
-//                    UserDefaults.standard.set(!UserDefaults.standard.bool(forKey: "isSignedIn"), forKey: "isSignedIn")
-//                }
-//                Button("온보딩") {
-//                    UserDefaults.standard.set(!UserDefaults.standard.bool(forKey: "isOnboardingRequired"), forKey: "isOnboardingRequired")
-//                }
-//                Button("정보 입력") {
-//                    UserDefaults.standard.set(!UserDefaults.standard.bool(forKey: "isUserInfoRequired"), forKey: "isUserInfoRequired")
-//                }
-//            }
-//            #endif
+            #if DEBUG
+            HStack {
+                Button("로그인") {
+                    UserDefaults.standard.set(!UserDefaults.standard.bool(forKey: "isSignedIn"), forKey: "isSignedIn")
+                }
+                Button("온보딩") {
+                    UserDefaults.standard.set(!UserDefaults.standard.bool(forKey: "isOnboardingRequired"), forKey: "isOnboardingRequired")
+                }
+            }
+            #endif
             Group {
                 switch currentFlow {
                 case .authenticated:
@@ -84,11 +79,6 @@ struct SeatCatcherApp: App {
                             .fullScreenCover(item: $appCoordinator.appFullScreenCover, onDismiss: appCoordinator.fullScreenCoverOnDismiss) {
                                 appCoordinator.buildFullScreenCover($0)
                             }
-                    }
-                case .userInfoRequired:
-                    NavigationStack(path: $onboardingCoordinator.path) {
-                        onboardingCoordinator.buildScene(.userInfo)
-                            .navigationDestination(for: OnboardingScene.self) { onboardingCoordinator.buildScene($0) }
                     }
                 case .onboarding:
                     NavigationStack(path: $onboardingCoordinator.path) {
@@ -135,5 +125,5 @@ extension SeatCatcherApp {
 
 
 enum AppFlow {
-    case authenticated, userInfoRequired, onboarding, unauthenticated
+    case authenticated, onboarding, unauthenticated
 }

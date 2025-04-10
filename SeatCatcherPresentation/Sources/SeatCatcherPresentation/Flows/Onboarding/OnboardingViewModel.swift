@@ -16,9 +16,7 @@ public final class OnboardingViewModel: ViewModel {
         case nextButtonTapped
     }
 
-    struct State {
-        var scrollID: Int?
-    }
+    struct State {}
 
     private(set) var state = State()
 
@@ -33,12 +31,9 @@ public final class OnboardingViewModel: ViewModel {
     func action(_ action: Action) {
         switch action {
         case .skipButtonTapped:
-            userUseCase.setOnboardingRequiredStatus(false)
             coordinator.push(OnboardingScene.userInfo)
         case .nextButtonTapped:
-            userUseCase.setOnboardingRequiredStatus(false)
             coordinator.push(OnboardingScene.userInfo)
         }
     }
-
 }

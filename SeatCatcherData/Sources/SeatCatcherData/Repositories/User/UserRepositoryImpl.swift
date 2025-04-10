@@ -8,6 +8,16 @@
 import SeatCatcherDomain
 
 public final class UserRepositoryImpl: UserRepository {
+    public var isSignedIn: Bool {
+        get { UserDefaultsService.isSignedIn }
+        set { UserDefaultsService.isSignedIn = newValue }
+    }
+
+    public var isOnboardingRequired: Bool {
+        get { UserDefaultsService.isOnboardingRequired }
+        set { UserDefaultsService.isOnboardingRequired = newValue }
+    }
+
     public init() {}
 
     public func fetchRandomNickname() async throws -> String {

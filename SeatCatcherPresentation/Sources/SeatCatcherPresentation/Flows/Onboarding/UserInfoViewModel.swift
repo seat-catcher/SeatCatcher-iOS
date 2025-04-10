@@ -12,6 +12,8 @@ import SeatCatcherCore
 @Observable
 public final class UserInfoViewModel: ViewModel {
     enum Action {
+        case viewAppeared
+        case nicknameFetched(_ nickname: String)
         case tagSelected(_ tag: Tag)
         case criterionButtonTapped
         case alertConfirmButtonTapped
@@ -41,6 +43,10 @@ public final class UserInfoViewModel: ViewModel {
 
     func action(_ action: Action) {
         switch action {
+        case .viewAppeared:
+            self.fetchNickname()
+        case let .nicknameFetched(nickname):
+            self.state.nickname = nickname
         case let .tagSelected(tag):
             if self.state.currentTag == tag {
                 self.state.currentTag = nil
@@ -59,6 +65,19 @@ public final class UserInfoViewModel: ViewModel {
     }
 
     @MainActor
+    private func fetchNickname() {
+        Task {
+            var nickname = "친절한 짐꾼"
+            do {
+                nickname = try await userUseCase.getRandomNickname()
+                action(.nicknameFetched(nickname))
+            } catch {
+                action(.errorOccured(error.localizedDescription))
+            }
+        }
+    }
+
+    @MainActor
     private func saveUserInfo() {
         guard let tag = self.state.currentTag?.rawValue else { return }
 
@@ -66,9 +85,9 @@ public final class UserInfoViewModel: ViewModel {
             guard let self = self else { return }
             do {
                 if try await self.userUseCase.saveUserInfo(nickname: "", tag: tag) {
-                    userUseCase.setUserInfoRequiredStatus(false)
+                    coordinator.push(OnboardingScene.userGreeting)
                 } else {
-                    self.state.errorMessage = "유저 정보 저장에 실패했습니다."
+                    self.action(.errorOccured("유저 정보 저장에 실패했습니다."))
                 }
             } catch {
                 self.action(.errorOccured(error.localizedDescription))

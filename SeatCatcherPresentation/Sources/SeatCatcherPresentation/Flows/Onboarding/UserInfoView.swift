@@ -35,6 +35,7 @@ public struct UserInfoView: View {
                 buttonAction: { viewModel.action(.alertConfirmButtonTapped) }
             )
         )
+        .onAppear()
     }
 }
 
@@ -66,7 +67,7 @@ private struct UserInfoTextView: View {
             .frame(maxWidth: .infinity, alignment: .leading)
 
         Button {
-            withAnimation { viewModel.action(.criterionButtonTapped) }
+            viewModel.action(.criterionButtonTapped)
         } label: {
             HStack(alignment: .center, spacing: 0) {
                 Image(.dangerCircle)
