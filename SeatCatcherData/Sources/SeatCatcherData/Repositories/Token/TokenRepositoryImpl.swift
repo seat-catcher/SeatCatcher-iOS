@@ -23,13 +23,13 @@ public final class TokenRepositoryImpl: TokenRepository {
 
     public func reissue() async throws -> Token {
         guard let refreshToken = try getRefreshToken() else { throw TokenError.refreshTokenNotFoundInKeychain }
-        let responseDTO = try await networkService.postRefreshToken(refreshToken)
+        let responseDTO = try await networkService.postRefreshToken()
         return responseDTO.domainModel
     }
     
     public func getTokenValidStatus() async throws {
         guard let accessToken = try getAccessToken() else { throw TokenError.accessTokenNotFoundInKeychain }
-        try await networkService.getAccessTokenValidStatus(accessToken)
+        try await networkService.getAccessTokenValidStatus()
     }
 
     // MARK: - AccessToken

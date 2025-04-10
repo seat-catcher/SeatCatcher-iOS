@@ -18,6 +18,8 @@ public final class UserRepositoryImpl: UserRepository {
         set { UserDefaultsService.isOnboardingRequired = newValue }
     }
 
+    private let networkService = NetworkService()
+
     public init() {}
 
     public func fetchRandomNickname() async throws -> String {
@@ -26,9 +28,8 @@ public final class UserRepositoryImpl: UserRepository {
         return dto.domainModel
     }
 
-    public func saveUserInfo(nickname: String, tag: UserTag) async throws -> Bool {
-        let dto = SaveUserInfoResponseDTO.stub
-        try await Task.sleep(for: .seconds(0.2))
+    public func patchUser(user: User) async throws -> User {
+        let dto = try await networkService.patchUser(user)
         return dto.domainModel
     }
 }

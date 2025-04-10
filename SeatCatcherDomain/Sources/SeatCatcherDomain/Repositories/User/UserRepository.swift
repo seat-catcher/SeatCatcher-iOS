@@ -10,5 +10,5 @@ public protocol UserRepository: AnyObject {
     var isOnboardingRequired: Bool { get set }
 
     func fetchRandomNickname() async throws -> String
-    func saveUserInfo(nickname: String, tag: UserTag) async throws -> Bool
+    func patchUser(user: User) async throws -> User
 }

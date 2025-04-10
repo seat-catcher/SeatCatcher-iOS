@@ -14,6 +14,9 @@ enum SeatCatcherAPI {
     case postSignInWithApple(_ requestDTO: AppleLoginRequestDTO)
     case postSignInWithKakao(_ requestDTO: KakaoLoginRequestDTO)
     case postRefreshToken(_ requestDTO: RefreshTokenRequestDTO)
+
+    case getUser(accessToken: String)
+    case patchUser(_ requestDTO: PatchUserRequestDTO, accessToken: String)
 }
 
 extension SeatCatcherAPI: TargetType {
@@ -34,6 +37,10 @@ extension SeatCatcherAPI: TargetType {
             return "/user/authenticate/kakao"
         case .postRefreshToken:
             return "/token/refresh"
+        case .getUser:
+            return "/user/me"
+        case .patchUser:
+            return "/user/me"
         }
     }
     
@@ -47,6 +54,10 @@ extension SeatCatcherAPI: TargetType {
             return .post
         case .postRefreshToken:
             return .post
+        case .getUser:
+            return .get
+        case .patchUser:
+            return .patch
         }
     }
     
@@ -59,6 +70,10 @@ extension SeatCatcherAPI: TargetType {
         case let .postSignInWithKakao(requestDTO):
             return .requestJSONEncodable(requestDTO)
         case let .postRefreshToken(requestDTO):
+            return .requestJSONEncodable(requestDTO)
+        case .getUser:
+            return .requestPlain
+        case let .patchUser(requestDTO, _):
             return .requestJSONEncodable(requestDTO)
         }
     }
@@ -76,6 +91,12 @@ extension SeatCatcherAPI: TargetType {
             return base
         case .postRefreshToken:
             return base
+        case let .getUser(accessToken):
+            let auth = ["Authorization": "Bearer \(accessToken)"]
+            return base.merging(auth) { _, new in new }
+        case let .patchUser(_, accessToken):
+            let auth = ["Authorization": "Bearer \(accessToken)"]
+            return base.merging(auth) { _, new in new }
         }
     }
 

@@ -132,7 +132,9 @@ struct NetworkService {
         case plaintextDecodingError
     }
 
-    private let provider = MoyaProvider<SeatCatcherAPI>(session: Session(interceptor: AuthInterceptor()))
+    private let provider = MoyaProvider<SeatCatcherAPI>(session: Session(interceptor: AuthInterceptor()), plugins: [NetworkLoggerPlugin()])
+    private var accessToken: String { (try? KeychainService.get(key: "accessToken")) ?? "" }
+    private var refreshToken: String { (try? KeychainService.get(key: "refreshToken")) ?? "" }
 
     func postAppleLogin(_ token: String) async throws -> AppleLoginResponseDTO {
         let requestDTO = AppleLoginRequestDTO(identityToken: token)
@@ -148,14 +150,31 @@ struct NetworkService {
         return responseDTO
     }
 
-    func postRefreshToken(_ refreshToken: String) async throws -> RefreshTokenResponseDTO {
+    func postRefreshToken() async throws -> RefreshTokenResponseDTO {
         let requestDTO = RefreshTokenRequestDTO(refreshToken: refreshToken)
         let response = try await provider.request(.postRefreshToken(requestDTO))
         let responseDTO = try JSONDecoder().decode(RefreshTokenResponseDTO.self, from: response)
         return responseDTO
     }
 
-    func getAccessTokenValidStatus(_ accessToken: String) async throws {
+    func getAccessTokenValidStatus() async throws {
         try await provider.request(.getAccessTokenValidStatus(accessToken))
+    }
+
+    func getUser() async throws -> GetUserResponseDTO {
+        let response = try await provider.request(.getUser(accessToken: accessToken))
+        let responseDTO = try JSONDecoder().decode(GetUserResponseDTO.self, from: response)
+        return responseDTO
+    }
+
+    func patchUser(_ user: User) async throws -> PostUserResponseDTO {
+        let requestDTO = PatchUserRequestDTO(
+            name: user.name,
+            profileImageNum: user.profileImage.rawValue,
+            tags: user.tags.compactMap { $0.rawValue },
+            credit: user.credit)
+        let response = try await provider.request(.patchUser(requestDTO, accessToken: accessToken))
+        let responseDTO = try JSONDecoder().decode(PostUserResponseDTO.self, from: response)
+        return responseDTO
     }
 }
