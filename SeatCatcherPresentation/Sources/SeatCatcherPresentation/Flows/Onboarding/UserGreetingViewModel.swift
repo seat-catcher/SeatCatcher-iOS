@@ -48,9 +48,4 @@ public final class UserGreetingViewModel: ViewModel {
             userUseCase.setOnboardingRequiredStatus(false)
         }
     }
-
-
-    func delay() async {
-        try? await Task.sleep(for: .seconds(1))
-    }
 }
