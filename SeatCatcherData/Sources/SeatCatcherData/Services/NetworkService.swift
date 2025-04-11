@@ -167,14 +167,14 @@ struct NetworkService {
         return responseDTO
     }
 
-    func patchUser(_ user: User) async throws -> PostUserResponseDTO {
+    func patchUser(_ user: User) async throws -> PatchUserResponseDTO {
         let requestDTO = PatchUserRequestDTO(
             name: user.name,
             profileImageNum: user.profileImage.rawValue,
             tags: user.tags.compactMap { $0.rawValue },
             credit: user.credit)
         let response = try await provider.request(.patchUser(requestDTO, accessToken: accessToken))
-        let responseDTO = try JSONDecoder().decode(PostUserResponseDTO.self, from: response)
+        let responseDTO = try JSONDecoder().decode(PatchUserResponseDTO.self, from: response)
         return responseDTO
     }
 }

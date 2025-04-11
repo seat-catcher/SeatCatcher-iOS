@@ -1,5 +1,5 @@
 //
-//  PostUserResponseDTO.swift
+//  PatchUserResponseDTO.swift
 //  SeatCatcherData
 //
 //  Created by 박현수 on 3/29/25.
@@ -7,14 +7,14 @@
 
 import SeatCatcherDomain
 
-struct PostUserResponseDTO {
+struct PatchUserResponseDTO {
     let name: String
     let profileImageNum: String
     let tags: [String]
     let credit: Int
 }
 
-extension PostUserResponseDTO: ResponseDTO {
+extension PatchUserResponseDTO: ResponseDTO {
     typealias DomainModel = User
 
     static var stub: Self { .init(name: "Stub", profileImageNum: "Image_1", tags: ["USERTAG_NULL"], credit: 0) }
