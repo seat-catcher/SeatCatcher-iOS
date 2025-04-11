@@ -13,7 +13,6 @@ import SeatCatcherCore
 public final class UserInfoViewModel: ViewModel {
     enum Action {
         case viewAppeared
-        case nicknameFetched(_ nickname: String)
         case tagSelected(_ tag: UserTag)
         case criterionButtonTapped
         case alertConfirmButtonTapped
@@ -43,9 +42,8 @@ public final class UserInfoViewModel: ViewModel {
     func action(_ action: Action) {
         switch action {
         case .viewAppeared:
-            self.fetchNickname()
-        case let .nicknameFetched(nickname):
-            self.state.user.name = nickname
+            self.state.user.name = userUseCase.getRandomNickname()
+            self.state.user.profileImage = userUseCase.getRandomUserImage()
         case let .tagSelected(tag):
             if self.state.user.tags.contains(tag) {
                 self.state.user.tags.removeAll { $0 == tag }
@@ -60,19 +58,6 @@ public final class UserInfoViewModel: ViewModel {
             saveUserInfo()
         case let .errorOccured(description):
             self.state.errorMessage = description
-        }
-    }
-
-    @MainActor
-    private func fetchNickname() {
-        Task {
-            var nickname = "친절한 짐꾼"
-            do {
-                nickname = try await userUseCase.getRandomNickname()
-                action(.nicknameFetched(nickname))
-            } catch {
-                action(.errorOccured(error.localizedDescription))
-            }
         }
     }
 
