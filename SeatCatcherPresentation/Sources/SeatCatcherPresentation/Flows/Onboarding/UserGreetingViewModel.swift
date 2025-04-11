@@ -38,7 +38,7 @@ public final class UserGreetingViewModel: ViewModel {
         case .fadeOut:
             Task {
                 // fadeout 전 딜레이
-                try? await Task.sleep(for: .seconds(1))
+                try? await Task.sleep(for: .seconds(1.5))
                 // fadeout (애니메이션 duration 0.5)
                 self.state.isPresented = false
                 // 딜레이 (애니메이션 duration 시간 확보)
