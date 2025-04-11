@@ -9,6 +9,7 @@ public protocol UserRepository: AnyObject {
     var isSignedIn: Bool { get set }
     var isOnboardingRequired: Bool { get set }
 
-    func fetchRandomNickname() async throws -> String
+    func getRandomNickname() -> String
+    func getRandomUserImage() -> UserImage
     func patchUser(user: User) async throws -> User
 }

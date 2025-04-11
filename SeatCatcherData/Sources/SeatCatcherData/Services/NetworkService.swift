@@ -132,7 +132,7 @@ struct NetworkService {
         case plaintextDecodingError
     }
 
-    private let provider = MoyaProvider<SeatCatcherAPI>(session: Session(interceptor: AuthInterceptor()), plugins: [NetworkLoggerPlugin()])
+    private let provider = MoyaProvider<SeatCatcherAPI>(session: Session(interceptor: AuthInterceptor()))
     private var accessToken: String { (try? KeychainService.get(key: "accessToken")) ?? "" }
     private var refreshToken: String { (try? KeychainService.get(key: "refreshToken")) ?? "" }
 

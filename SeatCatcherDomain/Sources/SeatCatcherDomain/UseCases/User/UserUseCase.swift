@@ -8,7 +8,8 @@
 import Foundation
 
 public protocol UserUseCase {
-    func getRandomNickname() async throws -> String
+    func getRandomNickname() -> String
+    func getRandomUserImage() -> UserImage
     func saveUserInfo(user: User) async throws -> User
     func setOnboardingRequiredStatus(_ status: Bool)
 }
@@ -20,8 +21,13 @@ public final class UserUseCaseImpl: UserUseCase {
         self.userRepository = userRepository
     }
 
-    public func getRandomNickname() async throws -> String {
-        let nickname = try await userRepository.fetchRandomNickname()
+    public func getRandomNickname() -> String {
+        let nickname = userRepository.getRandomNickname()
+        return nickname
+    }
+
+    public func getRandomUserImage() -> UserImage {
+        let nickname = userRepository.getRandomUserImage()
         return nickname
     }
 
