@@ -13,7 +13,7 @@ import KakaoSDKAuth
 import KakaoSDKUser
 import SeatCatcherDomain
 
-import SeatCatcherData
+//import SeatCatcherData
 
 @main
 struct SeatCatcherApp: App {
@@ -63,7 +63,8 @@ struct SeatCatcherApp: App {
         Fonts.registerCustomFonts()
 
         // AccessToken 유효성 검사 후 invalid시 reissue
-        checkLoginStatus()
+        // authenticated 상태일 시 유저 정보 fetch
+        initialAuthandUserSetUp()
     }
 
     var body: some Scene {
@@ -110,21 +111,37 @@ extension SeatCatcherApp {
         }
     }
 
-    private func checkLoginStatus() {
+    private func initialAuthandUserSetUp() {
         let authUseCase = diContainer.resolveAuthUseCase()
+        let userUseCase = diContainer.resolveUserUseCase()
+
         Task {
+            await checkLoginStatus(authUseCase: authUseCase)
+            await setUserStore(userUseCase: userUseCase)
+        }
+    }
+
+    private func checkLoginStatus(authUseCase: AuthUseCase) async {
+        do {
+            try await authUseCase.isAccessTokenValid()
+        } catch {
             do {
-                try await authUseCase.isAccessTokenValid()
+                try authUseCase.logout()
             } catch {
-                do {
-                    try authUseCase.logout()
-                } catch {
-                    fatalError("로그아웃 실패")
-                }
+                fatalError("로그아웃 실패")
             }
         }
     }
-    
+
+    private func setUserStore(userUseCase: UserUseCase) async {
+        guard currentFlow == .authenticated else { return }
+        do {
+            let user = try await userUseCase.getUserInfo()
+            self.userStore.user = user
+        } catch {
+            fatalError("유저 정보 fetch 실패")
+        }
+    }
 }
 
 

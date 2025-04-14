@@ -11,5 +11,6 @@ public protocol UserRepository: AnyObject {
 
     func getRandomNickname() -> String
     func getRandomUserImage() -> UserImage
+    func getUser() async throws -> User
     func patchUser(user: User) async throws -> User
 }
