@@ -19,5 +19,5 @@ struct NicknameDataSource {
         "좁은 통로", "느려진 속도", "끊어진 무선망"
     ]
 
-    static var randomNickname: String { preservedNicknames.randomElement()! }
+    static var randomNickname: String { preservedNicknames.randomElement() ?? "" }
 }

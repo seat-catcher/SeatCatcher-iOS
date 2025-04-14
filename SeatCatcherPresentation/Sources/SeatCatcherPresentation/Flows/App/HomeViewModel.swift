@@ -32,6 +32,6 @@ public final class HomeViewModel: ViewModel {
     }
 
     func changeUserImage() {
-        userStore.user.profileImage = UserImage.allCases.randomElement()!
+        userStore.user.profileImage = UserImage.allCases.randomElement() ?? .catchy1
     }
 }

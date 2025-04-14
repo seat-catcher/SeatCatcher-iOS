@@ -10,6 +10,7 @@ import Foundation
 public protocol UserUseCase {
     func getRandomNickname() -> String
     func getRandomUserImage() -> UserImage
+    func getUserInfo() async throws -> User
     func saveUserInfo(user: User) async throws -> User
     func setOnboardingRequiredStatus(_ status: Bool)
 }
@@ -29,6 +30,11 @@ public final class UserUseCaseImpl: UserUseCase {
     public func getRandomUserImage() -> UserImage {
         let nickname = userRepository.getRandomUserImage()
         return nickname
+    }
+
+    public func getUserInfo() async throws -> User {
+        let result = try await userRepository.getUser()
+        return result
     }
 
     public func saveUserInfo(user: User) async throws -> User {
