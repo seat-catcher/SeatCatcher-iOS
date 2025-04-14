@@ -125,22 +125,15 @@ extension SeatCatcherApp {
         do {
             try await authUseCase.isAccessTokenValid()
         } catch {
-            do {
-                try authUseCase.logout()
-            } catch {
-                fatalError("로그아웃 실패")
-            }
+            try? authUseCase.logout()
         }
     }
 
     private func setUserStore(userUseCase: UserUseCase) async {
-        guard currentFlow == .authenticated else { return }
-        do {
-            let user = try await userUseCase.getUserInfo()
-            self.userStore.user = user
-        } catch {
-            fatalError("유저 정보 fetch 실패")
-        }
+        guard currentFlow == .authenticated,
+        let user = try? await userUseCase.getUserInfo() else { return }
+
+        self.userStore.user = user
     }
 }
 
