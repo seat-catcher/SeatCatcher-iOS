@@ -38,15 +38,15 @@ final class AppCoordinator: Coordinator {
     func buildScene(_ scene: AppScene) -> some View {
         switch scene {
         case .home:
-            HomeView()
+            let userStore = diContainer.resolveUserStore()
+            let homeViewModel = HomeViewModel(userStore: userStore)
+            HomeView(viewModel: homeViewModel)
         }
     }
 
     @ViewBuilder
     func buildSheet(_ sheet: AppSheet) -> some View {
         switch sheet {
-        case .home:
-            HomeView()
         case let .askRequestDeclineBottomSheetView(yesButtonAction, noButtonAction):
             AskRequestDeclineBottomSheetView(yesButtonAction: yesButtonAction, noButtonAction: noButtonAction)
         case let .askSeatChangedBottomSheetView(action):
@@ -78,7 +78,7 @@ final class AppCoordinator: Coordinator {
     func buildFullScreenCover(_ fullScreenCover: AppFullScreenCover) -> some View {
         switch fullScreenCover {
         case .home:
-            HomeView()
+            Text("Home")
         }
     }
     

@@ -11,8 +11,13 @@ import SeatCatcherDomain
 import SeatCatcherCore
 import SeatCatcherData
 
-@Observable
 final class DIContainerImpl: DIContainer {
+    let userStore: UserStore
+
+    init(userStore: UserStore) {
+        self.userStore = userStore
+    }
+
     func resolveAuthUseCase() -> AuthUseCase {
         let loginRepository = LoginRepositoryImpl()
         let tokenRepository = TokenRepositoryImpl()
@@ -31,5 +36,9 @@ final class DIContainerImpl: DIContainer {
         let userRepository = UserRepositoryImpl()
         let userUseCase = UserUseCaseImpl(userRepository: userRepository)
         return userUseCase
+    }
+
+    func resolveUserStore() -> UserStore {
+        return userStore
     }
 }

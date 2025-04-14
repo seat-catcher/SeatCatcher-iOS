@@ -7,8 +7,10 @@
 
 import Foundation
 import SeatCatcherDomain
+import SeatCatcherCore
 
 public protocol DIContainer {
     func resolveAuthUseCase() -> AuthUseCase
     func resolveUserUseCase() -> UserUseCase
+    func resolveUserStore() -> UserStore
 }

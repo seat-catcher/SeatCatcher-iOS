@@ -26,8 +26,6 @@ public enum AppScene: AppRoute {
 }
 
 public enum AppSheet: AppRoute {
-    
-    case home
     case askRequestDeclineBottomSheetView(
         yesButtonAction: () -> Void,
         noButtonAction: () -> Void
@@ -81,7 +79,6 @@ public enum AppSheet: AppRoute {
     
     public var id: String {
         switch self {
-        case .home: return "home"
         case .askRequestDeclineBottomSheetView:
             return "askRequestDeclineBottomSheetView"
         case .askSeatChangedBottomSheetView:

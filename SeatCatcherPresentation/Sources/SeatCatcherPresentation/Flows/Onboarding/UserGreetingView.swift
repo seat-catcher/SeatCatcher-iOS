@@ -6,9 +6,11 @@
 //
 
 import SwiftUI
+import SeatCatcherCore
 
 public struct UserGreetingView: View {
     @State private var viewModel: UserGreetingViewModel
+    @Environment(UserStore.self) private var userStore
 
     public init(viewModel: UserGreetingViewModel) {
         self._viewModel = State(initialValue: viewModel)
@@ -19,11 +21,11 @@ public struct UserGreetingView: View {
             Group {
                 Spacer().frame(height: 167)
 
-                Image(viewModel.user.profileImage.image)
+                Image(userStore.user.profileImage.image)
 
                 Spacer().frame(height: 30)
 
-                Text("\(viewModel.user.name)님\n반가워요")
+                Text("\(userStore.user.name)님\n반가워요")
                     .font(.T01_SB)
                     .foregroundStyle(.scWhite)
                     .multilineTextAlignment(.center)

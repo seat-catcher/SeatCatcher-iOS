@@ -19,4 +19,11 @@ public struct User: Sendable {
         self.tags = tags
         self.credit = credit
     }
+
+    public init() {
+        self.name = ""
+        self.profileImage = .catchy1
+        self.tags = []
+        self.credit = 0
+    }
 }

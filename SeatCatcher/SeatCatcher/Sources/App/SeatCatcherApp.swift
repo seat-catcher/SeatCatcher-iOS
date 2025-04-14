@@ -11,6 +11,9 @@ import SeatCatcherPresentation
 import KakaoSDKCommon
 import KakaoSDKAuth
 import KakaoSDKUser
+import SeatCatcherDomain
+
+import SeatCatcherData
 
 @main
 struct SeatCatcherApp: App {
@@ -23,7 +26,10 @@ struct SeatCatcherApp: App {
     @AppStorage("isOnboardingRequired") private var isOnboardingRequired = true
 
     // 의존성 주입을 위한 DIContainer
-    private let diContainer = DIContainerImpl()
+    private let diContainer: DIContainerImpl
+
+    // 유저 상태 저장을 위한 Store
+    @State private var userStore: UserStore
 
     // 유저 상태 기반으로 present할 flow를 선택하는 computed property
     private var currentFlow: AppFlow {
@@ -35,6 +41,13 @@ struct SeatCatcherApp: App {
     }
 
     init() {
+        // UserStore 인스턴스 생성
+        let userStore = UserStore(user: User())
+        self._userStore = State(initialValue: userStore)
+
+        // DIContainer 인스턴스 생성
+        self.diContainer = DIContainerImpl(userStore: userStore)
+
         // Coordinator 인스턴스 생성
         let appCoordinator = AppCoordinator(diContainer: diContainer)
         let onboardingCoordinator = OnboardingCoordinator(diContainer: diContainer)
@@ -83,6 +96,7 @@ struct SeatCatcherApp: App {
                 }
             }
             .onOpenURL { handleURL($0) }
+            .environment(userStore)
         }
     }
 }
