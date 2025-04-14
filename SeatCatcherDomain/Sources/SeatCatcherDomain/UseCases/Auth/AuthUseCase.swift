@@ -47,7 +47,7 @@ public final class AuthUseCaseImpl: AuthUseCase {
     }
 
     public func logout() throws {
-        try tokenRepository.deleteTokens()
         userRepository.isSignedIn = false
+        try tokenRepository.deleteTokens()
     }
 }
