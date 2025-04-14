@@ -13,7 +13,7 @@ public enum OnboardingScene: AppRoute {
     case login
     case onboarding
     case userInfo
-    case userGreeting(_ user: User)
+    case userGreeting
 
     public var id: String {
         switch self {

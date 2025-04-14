@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SeatCatcherDomain
+import SeatCatcherCore
 
 public struct UserInfoView: View {
     @State private var viewModel: UserInfoViewModel
@@ -83,6 +84,7 @@ private struct UserInfoTextView: View {
 }
 
 private struct SelectTagCell: View {
+    @Environment(UserStore.self) private var userStore
     let viewModel: UserInfoViewModel
     let tag: UserTag
 
@@ -95,10 +97,10 @@ private struct SelectTagCell: View {
                 Text(tag.displayValue)
                     .font(.B02_M)
             }
-            .foregroundStyle(viewModel.state.user.tags.contains(tag) ? .scGreen : .gray300)
+            .foregroundStyle(userStore.user.tags.contains(tag) ? .scGreen : .gray300)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(viewModel.state.user.tags.contains(tag) ? .scGreen700 : .gray500)
+        .background(userStore.user.tags.contains(tag) ? .scGreen700 : .gray500)
         .clipShape(.rect(cornerRadius: 8))
         .onTapGesture { viewModel.action(.tagSelected(tag)) }
     }
@@ -122,6 +124,7 @@ private struct UserInfoGridView: View {
 }
 
 private struct SelectTagNextButton: View {
+    @Environment(UserStore.self) private var userStore
     let viewModel: UserInfoViewModel
 
     var body: some View {
@@ -129,14 +132,14 @@ private struct SelectTagNextButton: View {
             viewModel.action(.nextButtonTapped)
         } label: {
             Text("다음")
-                .foregroundStyle(viewModel.state.user.tags.isEmpty ? .gray300 : .scWhite)
+                .foregroundStyle(userStore.user.tags.isEmpty ? .gray300 : .scWhite)
                 .font(.B01_SB)
                 .padding(.vertical, 16)
                 .frame(maxWidth: .infinity)
-                .background(viewModel.state.user.tags.isEmpty ? .gray500 : .scGreen)
+                .background(userStore.user.tags.isEmpty ? .gray500 : .scGreen)
                 .clipShape(.rect(cornerRadius: 8))
         }
-        .disabled(viewModel.state.user.tags.isEmpty)
+        .disabled(userStore.user.tags.isEmpty)
 
     }
 }

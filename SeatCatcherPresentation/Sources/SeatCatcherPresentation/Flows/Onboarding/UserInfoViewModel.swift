@@ -21,7 +21,6 @@ public final class UserInfoViewModel: ViewModel {
     }
 
     struct State {
-        var user = User(name: "", profileImage: UserImage.allCases.randomElement()!, tags: [], credit: 0)
         var errorMessage: String?
         var isAlertPresented = false
     }
@@ -29,12 +28,15 @@ public final class UserInfoViewModel: ViewModel {
     private(set) var state = State()
 
     private let userUseCase: UserUseCase
+    private let userStore: UserStore
     let coordinator: Coordinator
 
     public init(
+        userStore: UserStore,
         userUseCase: UserUseCase,
         coordinator: Coordinator
     ) {
+        self.userStore = userStore
         self.userUseCase = userUseCase
         self.coordinator = coordinator
     }
@@ -42,13 +44,13 @@ public final class UserInfoViewModel: ViewModel {
     func action(_ action: Action) {
         switch action {
         case .viewAppeared:
-            self.state.user.name = userUseCase.getRandomNickname()
-            self.state.user.profileImage = userUseCase.getRandomUserImage()
+            self.userStore.user.name = userUseCase.getRandomNickname()
+            self.userStore.user.profileImage = userUseCase.getRandomUserImage()
         case let .tagSelected(tag):
-            if self.state.user.tags.contains(tag) {
-                self.state.user.tags.removeAll { $0 == tag }
+            if self.userStore.user.tags.contains(tag) {
+                self.userStore.user.tags.removeAll { $0 == tag }
             } else {
-                self.state.user.tags.append(tag)
+                self.userStore.user.tags.append(tag)
             }
         case .criterionButtonTapped:
             self.state.isAlertPresented = true
@@ -63,12 +65,11 @@ public final class UserInfoViewModel: ViewModel {
 
     @MainActor
     private func saveUserInfo() {
-        let user = self.state.user
-
         Task {
             do {
-                let user = try await self.userUseCase.saveUserInfo(user: user)
-                coordinator.push(OnboardingScene.userGreeting(user))
+                let user = try await self.userUseCase.saveUserInfo(user: userStore.user)
+                userStore.user = user
+                coordinator.push(OnboardingScene.userGreeting)
             } catch {
                 self.action(.errorOccured(error.localizedDescription))
             }

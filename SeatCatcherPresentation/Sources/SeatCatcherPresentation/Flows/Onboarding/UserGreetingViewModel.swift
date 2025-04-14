@@ -20,15 +20,15 @@ public final class UserGreetingViewModel: ViewModel {
         case fadedOut
     }
 
-    let user: User
+    let userStore: UserStore
 
     let userUseCase: UserUseCase
     let coordinator: Coordinator
 
     private(set) var state = State()
 
-    public init(user: User, userUseCase: UserUseCase, coordinator: Coordinator) {
-        self.user = user
+    public init(userStore: UserStore, userUseCase: UserUseCase, coordinator: Coordinator) {
+        self.userStore = userStore
         self.userUseCase = userUseCase
         self.coordinator = coordinator
     }
