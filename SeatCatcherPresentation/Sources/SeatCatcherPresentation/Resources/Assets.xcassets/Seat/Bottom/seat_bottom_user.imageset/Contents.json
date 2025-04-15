@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "seat_bottom_user.svg",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
