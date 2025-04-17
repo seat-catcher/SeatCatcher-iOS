@@ -11,7 +11,6 @@ import SeatCatcherDomain
 import SeatCatcherCore
 import SeatCatcherData
 
-/// 전역 의존성 주입 도구입니다.
 final class DIContainerImpl {
     // MARK: - Store Instances
     private let appStore = AppStore(user: User())
@@ -21,23 +20,48 @@ final class DIContainerImpl {
     private lazy var tokenRepository = TokenRepositoryImpl()
     private lazy var userRepository = UserRepositoryImpl()
 
-    // MARK: - UseCase Instances
-    private lazy var authUseCase = AuthUseCaseImpl(
+    // MARK: - Auth UseCase Instances
+    private lazy var appleLoginUseCase = AppleLoginUseCaseImpl(
         loginRepository: loginRepository,
         tokenRepository: tokenRepository,
         userRepository: userRepository
     )
-    private lazy var userUseCase = UserUseCaseImpl(
+    private lazy var kakaoLoginUseCase = KakaoLoginUseCaseImpl(
+        loginRepository: loginRepository,
+        tokenRepository: tokenRepository,
         userRepository: userRepository
     )
+    private lazy var validateTokenUseCase = ValidateTokenUseCaseImpl(
+        tokenRepository: tokenRepository
+    )
+    private lazy var logoutUseCase = LogoutUseCaseImpl(
+        tokenRepository: tokenRepository,
+        userRepository: userRepository
+    )
+
+    // MARK: - User UseCase Instances
+    private lazy var getRandomNicknameUseCase = GetRandomNicknameUseCaseImpl(userRepository: userRepository)
+    private lazy var getRandomUserImageUseCase = GetRandomUserImageUseCaseImpl(userRepository: userRepository)
+    private lazy var getUserInfoUseCase = GetUserInfoUseCaseImpl(userRepository: userRepository)
+    private lazy var patchUserInfoUseCase = PatchUserInfoUseCaseImpl(userRepository: userRepository)
+    private lazy var setOnboardingStatusUseCase = SetOnboardingStatusUseCaseImpl(userRepository: userRepository)
 }
 
-/// DIContainer 프로토콜 Resolve 메소드들의 구현입니다.
+// MARK: - DIContainer 프로토콜 구현
 extension DIContainerImpl: DIContainer {
-    // MARK: - UseCase Resolvers
-    func resolveAuthUseCase() -> AuthUseCase { return authUseCase }
-    func resolveUserUseCase() -> UserUseCase { return userUseCase }
+    // MARK: - Auth UseCases
+    func resolveAppleLoginUseCase() -> AppleLoginUseCase { return appleLoginUseCase }
+    func resolveKakaoLoginUseCase() -> KakaoLoginUseCase { return kakaoLoginUseCase }
+    func resolveValidateTokenUseCase() -> ValidateTokenUseCase { return validateTokenUseCase }
+    func resolveLogoutUseCase() -> LogoutUseCase { return logoutUseCase }
 
-    // MARK: - Store Resolvers
+    // MARK: - User UseCases
+    func resolveGetRandomNicknameUseCase() -> GetRandomNicknameUseCase { return getRandomNicknameUseCase }
+    func resolveGetRandomUserImageUseCase() -> GetRandomUserImageUseCase { return getRandomUserImageUseCase }
+    func resolveGetUserInfoUseCase() -> GetUserInfoUseCase { return getUserInfoUseCase }
+    func resolvePatchUserInfoUseCase() -> PatchUserInfoUseCase { return patchUserInfoUseCase }
+    func resolveSetOnboardingStatusUseCase() -> SetOnboardingStatusUseCase { return setOnboardingStatusUseCase }
+
+    // MARK: - Store
     func resolveAppStore() -> AppStore { return appStore }
 }

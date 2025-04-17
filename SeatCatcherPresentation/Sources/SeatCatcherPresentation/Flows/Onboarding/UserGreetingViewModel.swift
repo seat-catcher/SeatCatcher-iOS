@@ -21,15 +21,18 @@ public final class UserGreetingViewModel: ViewModel {
     }
 
     let appStore: AppStore
-
-    let userUseCase: UserUseCase
+    let setOnboardingStatusUseCase: SetOnboardingStatusUseCase
     let coordinator: Coordinator
 
     private(set) var state = State()
 
-    public init(appStore: AppStore, userUseCase: UserUseCase, coordinator: Coordinator) {
+    public init(
+        appStore: AppStore,
+        setOnboardingStatusUseCase: SetOnboardingStatusUseCase,
+        coordinator: Coordinator
+    ) {
         self.appStore = appStore
-        self.userUseCase = userUseCase
+        self.setOnboardingStatusUseCase = setOnboardingStatusUseCase
         self.coordinator = coordinator
     }
 
@@ -48,7 +51,7 @@ public final class UserGreetingViewModel: ViewModel {
             }
         case .fadedOut:
             // onboarding required status false로 설정하여 메인 앱 플로우로 전환
-            userUseCase.setOnboardingRequiredStatus(false)
+            setOnboardingStatusUseCase.execute(false)
         }
     }
 }

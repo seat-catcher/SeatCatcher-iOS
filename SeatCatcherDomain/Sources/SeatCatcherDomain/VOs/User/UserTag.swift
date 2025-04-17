@@ -7,11 +7,13 @@
 
 import Foundation
 
-public enum UserTag: String, CaseIterable, Sendable {
+public enum UserTag: String, Identifiable, CaseIterable, Sendable {
     case longDistance = "USERTAG_LONGDISTANCE"
     case tired = "USERTAG_LOWHEALTH"
     case pregnant = "USERTAG_PREGNANT"
     case disabled = "USERTAG_DISABLED"
     case baggage = "USERTAG_CARRIER"
     case none = "USERTAG_NULL"
+
+    public var id: Self { self }
 }

@@ -42,7 +42,7 @@ public struct OnboardingView: View {
                 )
             }
         }
-        .withNavigationBar(viewModel.coordinator, config: .skip(skipButtonAction: { scrollID = 3 }))
+        .withNavigationBar(viewModel.coordinator, config: .skip(skipButtonAction: { viewModel.action(.skipButtonTapped) }))
         .withBackground(.gray900)
         .onAppear { scrollID = 0 }
     }

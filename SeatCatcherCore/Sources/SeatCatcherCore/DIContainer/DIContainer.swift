@@ -10,7 +10,19 @@ import SeatCatcherDomain
 import SeatCatcherCore
 
 public protocol DIContainer {
-    func resolveAuthUseCase() -> AuthUseCase
-    func resolveUserUseCase() -> UserUseCase
+    // MARK: - Auth UseCases
+    func resolveAppleLoginUseCase() -> AppleLoginUseCase
+    func resolveKakaoLoginUseCase() -> KakaoLoginUseCase
+    func resolveValidateTokenUseCase() -> ValidateTokenUseCase
+    func resolveLogoutUseCase() -> LogoutUseCase
+
+    // MARK: - User UseCases
+    func resolveGetRandomNicknameUseCase() -> GetRandomNicknameUseCase
+    func resolveGetRandomUserImageUseCase() -> GetRandomUserImageUseCase
+    func resolveGetUserInfoUseCase() -> GetUserInfoUseCase
+    func resolvePatchUserInfoUseCase() -> PatchUserInfoUseCase
+    func resolveSetOnboardingStatusUseCase() -> SetOnboardingStatusUseCase
+
+    // MARK: - Store
     func resolveAppStore() -> AppStore
 }
