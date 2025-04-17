@@ -9,7 +9,6 @@ import SwiftUI
 import SeatCatcherCore
 
 public struct HomeView: View {
-    @Environment(UserStore.self) private var userStore
     @State private var viewModel: HomeViewModel
 
     public init(viewModel: HomeViewModel) {
@@ -17,11 +16,21 @@ public struct HomeView: View {
     }
 
     public var body: some View {
-        Text(userStore.user.name)
-        Image(userStore.user.profileImage.image)
-        Button("change") {
-            viewModel.changeUserImage()
+        VStack(spacing: 0) {
+            UserInfoCardView()
         }
+        .withBackground(.gray900)
+        .withNavigationBar(
+            viewModel.coordinator,
+            config: .logoWithNotification(notificationButtonAction: {})
+        )
+    }
+}
+
+private struct UserInfoCardView: View {
+    @Environment(AppStore.self) private var appStore
+    var body: some View {
+        Text(appStore.user.name)
     }
 }
 

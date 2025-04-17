@@ -12,33 +12,31 @@ import SeatCatcherCore
 import SeatCatcherData
 
 final class DIContainerImpl: DIContainer {
-    let userStore: UserStore
+    private let appStore = AppStore(user: User())
 
-    init(userStore: UserStore) {
-        self.userStore = userStore
-    }
+    private lazy var loginRepository = LoginRepositoryImpl()
+    private lazy var tokenRepository = TokenRepositoryImpl()
+    private lazy var userRepository = UserRepositoryImpl()
+
+    private lazy var authUseCase = AuthUseCaseImpl(
+        loginRepository: loginRepository,
+        tokenRepository: tokenRepository,
+        userRepository: userRepository
+    )
+
+    private lazy var userUseCase = UserUseCaseImpl(
+        userRepository: userRepository
+    )
 
     func resolveAuthUseCase() -> AuthUseCase {
-        let loginRepository = LoginRepositoryImpl()
-        let tokenRepository = TokenRepositoryImpl()
-        let userRepository = UserRepositoryImpl()
-
-        let authUseCase = AuthUseCaseImpl(
-            loginRepository: loginRepository,
-            tokenRepository: tokenRepository,
-            userRepository: userRepository
-        )
-        
         return authUseCase
     }
 
     func resolveUserUseCase() -> UserUseCase {
-        let userRepository = UserRepositoryImpl()
-        let userUseCase = UserUseCaseImpl(userRepository: userRepository)
         return userUseCase
     }
 
-    func resolveUserStore() -> UserStore {
-        return userStore
+    func resolveAppStore() -> AppStore {
+        return appStore
     }
 }

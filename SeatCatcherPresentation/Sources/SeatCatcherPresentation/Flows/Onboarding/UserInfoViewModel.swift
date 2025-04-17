@@ -28,15 +28,15 @@ public final class UserInfoViewModel: ViewModel {
     private(set) var state = State()
 
     private let userUseCase: UserUseCase
-    private let userStore: UserStore
+    private let appStore: AppStore
     let coordinator: Coordinator
 
     public init(
-        userStore: UserStore,
+        appStore: AppStore,
         userUseCase: UserUseCase,
         coordinator: Coordinator
     ) {
-        self.userStore = userStore
+        self.appStore = appStore
         self.userUseCase = userUseCase
         self.coordinator = coordinator
     }
@@ -44,13 +44,13 @@ public final class UserInfoViewModel: ViewModel {
     func action(_ action: Action) {
         switch action {
         case .viewAppeared:
-            self.userStore.user.name = userUseCase.getRandomNickname()
-            self.userStore.user.profileImage = userUseCase.getRandomUserImage()
+            self.appStore.user.name = userUseCase.getRandomNickname()
+            self.appStore.user.profileImage = userUseCase.getRandomUserImage()
         case let .tagSelected(tag):
-            if self.userStore.user.tags.contains(tag) {
-                self.userStore.user.tags.removeAll { $0 == tag }
+            if self.appStore.user.tags.contains(tag) {
+                self.appStore.user.tags.removeAll { $0 == tag }
             } else {
-                self.userStore.user.tags.append(tag)
+                self.appStore.user.tags.append(tag)
             }
         case .criterionButtonTapped:
             self.state.isAlertPresented = true
@@ -67,8 +67,8 @@ public final class UserInfoViewModel: ViewModel {
     private func saveUserInfo() {
         Task {
             do {
-                let user = try await self.userUseCase.saveUserInfo(user: userStore.user)
-                userStore.user = user
+                let user = try await self.userUseCase.saveUserInfo(user: appStore.user)
+                appStore.user = user
                 coordinator.push(OnboardingScene.userGreeting)
             } catch {
                 self.action(.errorOccured(error.localizedDescription))

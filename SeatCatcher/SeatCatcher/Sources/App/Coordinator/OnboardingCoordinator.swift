@@ -43,14 +43,14 @@ final class OnboardingCoordinator: Coordinator {
             OnboardingView(viewModel: onboardingViewModel)
         case .userInfo:
             let userInfoViewModel = UserInfoViewModel(
-                userStore: diContainer.resolveUserStore(),
+                appStore: diContainer.resolveAppStore(),
                 userUseCase: diContainer.resolveUserUseCase(),
                 coordinator: self
             )
             UserInfoView(viewModel: userInfoViewModel)
         case .userGreeting:
             let userGreetingViewModel = UserGreetingViewModel(
-                userStore: diContainer.resolveUserStore(),
+                appStore: diContainer.resolveAppStore(),
                 userUseCase: diContainer.resolveUserUseCase(),
                 coordinator: self
             )
