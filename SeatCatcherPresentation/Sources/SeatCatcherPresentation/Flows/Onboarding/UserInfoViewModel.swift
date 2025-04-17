@@ -27,25 +27,31 @@ public final class UserInfoViewModel: ViewModel {
 
     private(set) var state = State()
 
-    private let userUseCase: UserUseCase
     private let appStore: AppStore
+    private let getRandomNicknameUseCase: GetRandomNicknameUseCase
+    private let getRandomUserImageUseCase: GetRandomUserImageUseCase
+    private let patchUserInfoUseCase: PatchUserInfoUseCase
     let coordinator: Coordinator
 
     public init(
         appStore: AppStore,
-        userUseCase: UserUseCase,
+        getRandomNicknameuseCase: GetRandomNicknameUseCase,
+        getRandomUserImageUseCase: GetRandomUserImageUseCase,
+        patchUserInfoUseCase: PatchUserInfoUseCase,
         coordinator: Coordinator
     ) {
         self.appStore = appStore
-        self.userUseCase = userUseCase
+        self.getRandomNicknameUseCase = getRandomNicknameuseCase
+        self.getRandomUserImageUseCase = getRandomUserImageUseCase
+        self.patchUserInfoUseCase = patchUserInfoUseCase
         self.coordinator = coordinator
     }
 
     func action(_ action: Action) {
         switch action {
         case .viewAppeared:
-            self.appStore.user.name = userUseCase.getRandomNickname()
-            self.appStore.user.profileImage = userUseCase.getRandomUserImage()
+            self.appStore.user.name = getRandomNicknameUseCase.execute()
+            self.appStore.user.profileImage = getRandomUserImageUseCase.execute()
         case let .tagSelected(tag):
             if self.appStore.user.tags.contains(tag) {
                 self.appStore.user.tags.removeAll { $0 == tag }
@@ -67,7 +73,7 @@ public final class UserInfoViewModel: ViewModel {
     private func saveUserInfo() {
         Task {
             do {
-                let user = try await self.userUseCase.saveUserInfo(user: appStore.user)
+                let user = try await patchUserInfoUseCase.execute(appStore.user)
                 appStore.user = user
                 coordinator.push(OnboardingScene.userGreeting)
             } catch {

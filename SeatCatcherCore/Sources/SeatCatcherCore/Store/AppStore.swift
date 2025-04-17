@@ -13,4 +13,8 @@ public final class AppStore {
     public var user: User
 
     public init(user: User) { self.user = user }
+
+    public func setUser(_ user: User) {
+        self.user = user
+    }
 }

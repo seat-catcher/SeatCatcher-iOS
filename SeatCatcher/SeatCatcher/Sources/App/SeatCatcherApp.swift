@@ -58,7 +58,7 @@ struct SeatCatcherApp: App {
         else { fatalError("Kakao Native App Key를 불러올 수 없습니다.") }
         KakaoSDK.initSDK(appKey: kakaoAppKey)
 
-//         Presentation 모듈 Resource의 폰트 등록
+        // Presentation 모듈 Resource의 폰트 등록
         Fonts.registerCustomFonts()
 
         // AccessToken 유효성 검사 후 invalid시 reissue
@@ -111,28 +111,31 @@ extension SeatCatcherApp {
     }
 
     private func initialAuthandUserSetUp() {
-        let authUseCase = diContainer.resolveAuthUseCase()
-        let userUseCase = diContainer.resolveUserUseCase()
+        let validateTokenUseCase = diContainer.resolveValidateTokenUseCase()
+        let logoutUseCase = diContainer.resolveLogoutUseCase()
+        let getUserInfoUseCase = diContainer.resolveGetUserInfoUseCase()
 
         Task {
-            await checkLoginStatus(authUseCase: authUseCase)
-            await setAppStore(userUseCase: userUseCase)
+            await checkLoginStatus(
+                validateTokenUseCase: validateTokenUseCase,
+                logoutUseCase: logoutUseCase
+            )
+            await setAppStore(getUserInfoUseCase: getUserInfoUseCase)
         }
     }
 
-    private func checkLoginStatus(authUseCase: AuthUseCase) async {
-        do {
-            try await authUseCase.isAccessTokenValid()
-        } catch {
-            try? authUseCase.logout()
-        }
+    private func checkLoginStatus(
+        validateTokenUseCase: ValidateTokenUseCase,
+        logoutUseCase: LogoutUseCase
+    ) async {
+        do { try await validateTokenUseCase.execute() }
+        catch { try? logoutUseCase.execute() }
     }
 
-    private func setAppStore(userUseCase: UserUseCase) async {
+    private func setAppStore(getUserInfoUseCase: GetUserInfoUseCase) async {
         guard currentFlow == .authenticated,
-        let user = try? await userUseCase.getUserInfo() else { return }
-
-        self.appStore.user = user
+        let user = try? await getUserInfoUseCase.execute() else { return }
+        self.appStore.setUser(user)
     }
 }
 
