@@ -7,7 +7,10 @@
 
 import Foundation
 
-public struct Seat: Sendable {
+public struct Seat: Sendable, Identifiable {
+    
+    public let id: UUID = UUID()
+    
     public var minutesLeft: Int
     public var isAvailable: Bool
     public var isSelected: Bool
