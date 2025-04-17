@@ -6,14 +6,14 @@
 //
 
 import SwiftUI
+
 import SeatCatcherCore
 import SeatCatcherPresentation
+import SeatCatcherDomain
+
 import KakaoSDKCommon
 import KakaoSDKAuth
 import KakaoSDKUser
-import SeatCatcherDomain
-
-//import SeatCatcherData
 
 @main
 struct SeatCatcherApp: App {
@@ -29,7 +29,7 @@ struct SeatCatcherApp: App {
     private let diContainer: DIContainerImpl
 
     // 유저 상태 저장을 위한 Store
-    @State private var userStore: UserStore
+    @State private var appStore: AppStore
 
     // 유저 상태 기반으로 present할 flow를 선택하는 computed property
     private var currentFlow: AppFlow {
@@ -41,12 +41,11 @@ struct SeatCatcherApp: App {
     }
 
     init() {
-        // UserStore 인스턴스 생성
-        let userStore = UserStore(user: User())
-        self._userStore = State(initialValue: userStore)
-
         // DIContainer 인스턴스 생성
-        self.diContainer = DIContainerImpl(userStore: userStore)
+        self.diContainer = DIContainerImpl()
+
+        // AppStore @State 프로퍼티 초기화
+        self._appStore = State(initialValue: diContainer.resolveAppStore())
 
         // Coordinator 인스턴스 생성
         let appCoordinator = AppCoordinator(diContainer: diContainer)
@@ -59,7 +58,7 @@ struct SeatCatcherApp: App {
         else { fatalError("Kakao Native App Key를 불러올 수 없습니다.") }
         KakaoSDK.initSDK(appKey: kakaoAppKey)
 
-        // Presentation 모듈 Resource의 폰트 등록
+//         Presentation 모듈 Resource의 폰트 등록
         Fonts.registerCustomFonts()
 
         // AccessToken 유효성 검사 후 invalid시 reissue
@@ -97,7 +96,7 @@ struct SeatCatcherApp: App {
                 }
             }
             .onOpenURL { handleURL($0) }
-            .environment(userStore)
+            .environment(appStore)
         }
     }
 }
@@ -117,7 +116,7 @@ extension SeatCatcherApp {
 
         Task {
             await checkLoginStatus(authUseCase: authUseCase)
-            await setUserStore(userUseCase: userUseCase)
+            await setAppStore(userUseCase: userUseCase)
         }
     }
 
@@ -129,11 +128,11 @@ extension SeatCatcherApp {
         }
     }
 
-    private func setUserStore(userUseCase: UserUseCase) async {
+    private func setAppStore(userUseCase: UserUseCase) async {
         guard currentFlow == .authenticated,
         let user = try? await userUseCase.getUserInfo() else { return }
 
-        self.userStore.user = user
+        self.appStore.user = user
     }
 }
 
