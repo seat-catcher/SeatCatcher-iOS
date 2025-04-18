@@ -53,10 +53,20 @@ public final class UserInfoViewModel: ViewModel {
             self.appStore.user.name = getRandomNicknameUseCase.execute()
             self.appStore.user.profileImage = getRandomUserImageUseCase.execute()
         case let .tagSelected(tag):
-            if self.appStore.user.tags.contains(tag) {
-                self.appStore.user.tags.removeAll { $0 == tag }
+            if tag == .none {
+                if self.appStore.user.tags.contains(.none) {
+                    self.appStore.user.tags.removeAll()
+                } else {
+                    self.appStore.user.tags.removeAll()
+                    self.appStore.user.tags.append(.none)
+                }
             } else {
-                self.appStore.user.tags.append(tag)
+                if self.appStore.user.tags.contains(tag) {
+                    self.appStore.user.tags.removeAll { $0 == tag }
+                } else {
+                    self.appStore.user.tags.removeAll { $0 == .none }
+                    self.appStore.user.tags.append(tag)
+                }
             }
         case .criterionButtonTapped:
             self.state.isAlertPresented = true
