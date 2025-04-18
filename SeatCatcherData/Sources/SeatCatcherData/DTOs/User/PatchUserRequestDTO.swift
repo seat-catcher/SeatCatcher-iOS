@@ -10,4 +10,5 @@ struct PatchUserRequestDTO: RequestDTO {
     let profileImageNum: String
     let tags: [String]
     let credit: Int
+    let hasOnBoarded: Bool
 }

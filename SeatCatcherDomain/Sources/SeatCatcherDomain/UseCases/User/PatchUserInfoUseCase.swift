@@ -17,6 +17,7 @@ public final class PatchUserInfoUseCaseImpl: PatchUserInfoUseCase {
     }
 
     public func execute(_ user: User) async throws -> User {
-        return try await userRepository.patchUser(user: user)
+        let user = try await userRepository.patchUser(user: user)
+        return user
     }
 }

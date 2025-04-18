@@ -50,10 +50,10 @@ final class OnboardingCoordinator: Coordinator {
                 coordinator: self
             )
             UserInfoView(viewModel: userInfoViewModel)
-        case .userGreeting:
+        case let .userGreeting(user):
             let userGreetingViewModel = UserGreetingViewModel(
+                user: user,
                 appStore: diContainer.resolveAppStore(),
-                setOnboardingStatusUseCase: diContainer.resolveSetOnboardingStatusUseCase(),
                 coordinator: self
             )
             UserGreetingView(viewModel: userGreetingViewModel)

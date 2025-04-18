@@ -13,7 +13,7 @@ import SeatCatcherData
 
 final class DIContainerImpl {
     // MARK: - Store Instances
-    private let appStore = AppStore(user: User())
+    private let appStore = AppStore(user: User(hasOnBoarded: true))
 
     // MARK: - Repository Instances
     private lazy var loginRepository = LoginRepositoryImpl()
@@ -44,7 +44,6 @@ final class DIContainerImpl {
     private lazy var getRandomUserImageUseCase = GetRandomUserImageUseCaseImpl(userRepository: userRepository)
     private lazy var getUserInfoUseCase = GetUserInfoUseCaseImpl(userRepository: userRepository)
     private lazy var patchUserInfoUseCase = PatchUserInfoUseCaseImpl(userRepository: userRepository)
-    private lazy var setOnboardingStatusUseCase = SetOnboardingStatusUseCaseImpl(userRepository: userRepository)
 }
 
 // MARK: - DIContainer 프로토콜 구현
@@ -60,7 +59,6 @@ extension DIContainerImpl: DIContainer {
     func resolveGetRandomUserImageUseCase() -> GetRandomUserImageUseCase { return getRandomUserImageUseCase }
     func resolveGetUserInfoUseCase() -> GetUserInfoUseCase { return getUserInfoUseCase }
     func resolvePatchUserInfoUseCase() -> PatchUserInfoUseCase { return patchUserInfoUseCase }
-    func resolveSetOnboardingStatusUseCase() -> SetOnboardingStatusUseCase { return setOnboardingStatusUseCase }
 
     // MARK: - Store
     func resolveAppStore() -> AppStore { return appStore }

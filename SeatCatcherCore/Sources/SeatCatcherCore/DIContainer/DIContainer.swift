@@ -21,7 +21,6 @@ public protocol DIContainer {
     func resolveGetRandomUserImageUseCase() -> GetRandomUserImageUseCase
     func resolveGetUserInfoUseCase() -> GetUserInfoUseCase
     func resolvePatchUserInfoUseCase() -> PatchUserInfoUseCase
-    func resolveSetOnboardingStatusUseCase() -> SetOnboardingStatusUseCase
 
     // MARK: - Store
     func resolveAppStore() -> AppStore
