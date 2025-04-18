@@ -33,27 +33,39 @@ public struct HomeView: View {
 private struct UserInfoCardView: View {
     @Environment(AppStore.self) private var appStore
     var body: some View {
-        HStack(alignment: .center, spacing: 12) {
-            Image(appStore.user.profileImage.image)
-                .resizable()
-                .frame(width: 68, height: 68)
-            VStack(alignment: .leading, spacing: 8) {
-                Text("\(appStore.user.name)")
-                    .font(.B01_SB)
-                    .foregroundStyle(.white)
-                ScrollView(.horizontal) {
-                    HStack(spacing: 6) {
-                        ForEach(appStore.user.tags) {
-                            UserInfoBadgeView(badgeType: .tag($0))
+        Button {
+
+        } label: {
+            HStack(alignment: .center, spacing: 12) {
+                Image(appStore.user.profileImage.image)
+                    .resizable()
+                    .frame(width: 68, height: 68)
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("\(appStore.user.name)")
+                        .font(.B01_SB)
+                        .foregroundStyle(.white)
+                    ScrollView(.horizontal) {
+                        HStack(spacing: 6) {
+                            ForEach(appStore.user.tags) {
+                                UserInfoBadgeView(badgeType: .tag($0))
+                            }
+                            UserInfoBadgeView(badgeType: .credit(appStore.user.credit))
                         }
-                        UserInfoBadgeView(badgeType: .credit(appStore.user.credit))
                     }
+                    .scrollIndicators(.hidden)
+
                 }
-                .scrollIndicators(.hidden)
+                VStack {
+                    Image(.iconRightArrow)
+                    Spacer()
+                }
+                .frame(height: 68)
             }
-            Button("dump") { dump(appStore.user) }
+            .padding(12)
+            .background(.gray850)
+            .clipShape(.rect(cornerRadius: 12))
+            .padding(.top, 18)
         }
-        .padding(12)
     }
 }
 
@@ -84,7 +96,8 @@ private struct UserInfoBadgeView: View {
                         .font(.B02_SB)
                         .foregroundStyle(.scGreen)
                 }
-                .padding(.horizontal, 6)
+                .padding(.leading, 6)
+                .padding(.trailing, 10)
             }
         }
         .foregroundStyle(.scGreen)
@@ -93,7 +106,3 @@ private struct UserInfoBadgeView: View {
         .clipShape(.rect(cornerRadius: 6))
     }
 }
-
-//#Preview {
-//    HomeView()
-//}

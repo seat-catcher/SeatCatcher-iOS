@@ -13,11 +13,6 @@ public final class UserRepositoryImpl: UserRepository {
         set { UserDefaultsService.isSignedIn = newValue }
     }
 
-    public var isOnboardingRequired: Bool {
-        get { UserDefaultsService.isOnboardingRequired }
-        set { UserDefaultsService.isOnboardingRequired = newValue }
-    }
-
     private let networkService = NetworkService()
 
     public init() {}

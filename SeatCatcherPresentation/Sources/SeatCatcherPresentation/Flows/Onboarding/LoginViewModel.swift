@@ -49,9 +49,9 @@ public final class LoginViewModel: ViewModel {
             Task {
                 do {
                     try await kakaoLoginUseCase.execute()
-                } catch {
-                    self.action(.loginFailure(error))
-                }
+                    let user = try await getUserInfoUseCase.execute()
+                    appStore.setUser(user)
+                } catch { self.action(.loginFailure(error)) }
             }
         case let .loginFailure(error):
             state.errorMessage = error.localizedDescription
@@ -78,10 +78,9 @@ public final class LoginViewModel: ViewModel {
             Task {
                 do {
                     try await appleLoginUseCase.execute(identityToken: identityToken.base64EncodedString())
-                    appStore.setUser(try await getUserInfoUseCase.execute())
-                } catch {
-                    self.action(.loginFailure(error))
-                }
+                    let user = try await getUserInfoUseCase.execute()
+                    appStore.setUser(user)
+                } catch { self.action(.loginFailure(error)) }
             }
 
         // 로컬에서 identityToken 받아오기 실패

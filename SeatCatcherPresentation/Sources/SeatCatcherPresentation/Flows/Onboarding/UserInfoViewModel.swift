@@ -73,9 +73,12 @@ public final class UserInfoViewModel: ViewModel {
     private func saveUserInfo() {
         Task {
             do {
-                let user = try await patchUserInfoUseCase.execute(appStore.user)
-                appStore.user = user
-                coordinator.push(OnboardingScene.userGreeting)
+                // AppStore의 User hasOnBoarded 값을 true로 바꾸면 즉시 플로우가 전환되므로,
+                // 새로운 인스턴스를 복사하여 hasOnBoarded에 true 대입 후 UseCase에 넘깁니다.
+                var requestUser = appStore.user
+                requestUser.hasOnBoarded = true
+                let user = try await patchUserInfoUseCase.execute(requestUser)
+                coordinator.push(OnboardingScene.userGreeting(user))
             } catch {
                 self.action(.errorOccured(error.localizedDescription))
             }

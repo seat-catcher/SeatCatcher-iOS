@@ -13,10 +13,6 @@ struct UserDefaultsService: Sendable {
         get { UserDefaults.standard.bool(forKey: "isSignedIn") }
         set { UserDefaults.standard.set(newValue, forKey: "isSignedIn") }
     }
-    static var isOnboardingRequired: Bool {
-        get { UserDefaults.standard.bool(forKey: "isOnboardingRequired") }
-        set { UserDefaults.standard.set(newValue, forKey: "isOnboardingRequired") }
-    }
     static var isTokenRefreshed: Bool {
         get { UserDefaults.standard.bool(forKey: "isTokenRefreshed") }
         set { UserDefaults.standard.set(newValue, forKey: "isTokenRefreshed") }

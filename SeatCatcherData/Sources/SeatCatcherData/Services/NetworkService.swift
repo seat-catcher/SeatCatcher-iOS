@@ -172,7 +172,9 @@ struct NetworkService {
             name: user.name,
             profileImageNum: user.profileImage.rawValue,
             tags: user.tags.compactMap { $0.rawValue },
-            credit: user.credit)
+            credit: user.credit,
+            hasOnBoarded: user.hasOnBoarded
+        )
         let response = try await provider.request(.patchUser(requestDTO, accessToken: accessToken))
         let responseDTO = try JSONDecoder().decode(PatchUserResponseDTO.self, from: response)
         return responseDTO

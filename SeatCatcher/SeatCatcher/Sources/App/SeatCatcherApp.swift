@@ -15,6 +15,8 @@ import KakaoSDKCommon
 import KakaoSDKAuth
 import KakaoSDKUser
 
+import SeatCatcherData
+
 @main
 struct SeatCatcherApp: App {
     // 앱 화면 전환을 담당하는 Coordinator
@@ -23,7 +25,6 @@ struct SeatCatcherApp: App {
 
     // 유저 상태 저장을 위한 값
     @AppStorage("isSignedIn") private var isSignedIn = false
-    @AppStorage("isOnboardingRequired") private var isOnboardingRequired = true
 
     // 의존성 주입을 위한 DIContainer
     private let diContainer: DIContainerImpl
@@ -34,8 +35,8 @@ struct SeatCatcherApp: App {
     // 유저 상태 기반으로 present할 flow를 선택하는 computed property
     private var currentFlow: AppFlow {
         if isSignedIn {
-            if isOnboardingRequired { .onboarding }
-            else { .authenticated }
+            if appStore.user.hasOnBoarded { .authenticated }
+            else { .onboarding }
         }
         else { .unauthenticated }
     }
@@ -133,12 +134,11 @@ extension SeatCatcherApp {
     }
 
     private func setAppStore(getUserInfoUseCase: GetUserInfoUseCase) async {
-        guard currentFlow == .authenticated,
+        guard currentFlow != .unauthenticated,
         let user = try? await getUserInfoUseCase.execute() else { return }
         self.appStore.setUser(user)
     }
 }
-
 
 enum AppFlow {
     case authenticated, onboarding, unauthenticated
