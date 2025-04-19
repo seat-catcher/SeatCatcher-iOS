@@ -15,8 +15,6 @@ import KakaoSDKCommon
 import KakaoSDKAuth
 import KakaoSDKUser
 
-import SeatCatcherData
-
 @main
 struct SeatCatcherApp: App {
     // 앱 화면 전환을 담당하는 Coordinator
