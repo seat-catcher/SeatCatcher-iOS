@@ -7,7 +7,7 @@
 
 import SwiftUICore
 
-enum SCFontName: String, CaseIterable {
+public enum SCFontName: String, CaseIterable {
     case bold = "Pretendard-Bold"
     case semibold = "Pretendard-SemiBold"
     case medium = "Pretendard-Medium"
@@ -103,6 +103,12 @@ extension View {
         self
             .font(style.font)
             .lineSpacing(style.lineSpacing)
+    }
+
+    func customPretendardFont(_ weight: SCFontName, size: CGFloat, lineSpacing: CGFloat = 0) -> some View {
+        self
+            .font(.custom(weight.rawValue, size: size))
+            .lineSpacing(lineSpacing)
     }
 }
 
