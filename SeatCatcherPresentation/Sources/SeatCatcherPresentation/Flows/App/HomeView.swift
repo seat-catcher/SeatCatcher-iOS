@@ -26,6 +26,7 @@ public struct HomeView: View {
                     arrivalTime: "10:30",
                     incomingTime: "13:15",
                     departureStation: "보라매",
+                    departureStationLine: 7,
                     arrivalStation: "숭실대입구",
                     direction: "어린이대공원",
                     finalDestination: "건대입구"
@@ -65,7 +66,6 @@ private struct UserInfoCardView: View {
                                     UserInfoBadge(.tag($0))
                                 }
                             }
-                            .fixedSize()
                         }
                         .scrollIndicators(.hidden)
                         UserInfoBadge(.credit(appStore.user.credit))
@@ -122,9 +122,9 @@ private struct PathCardContentView: View {
             case .inTransit:
                 Text("")
             case let .pathExists(travelTime, departureTime, arrivalTime, incomingTime,
-                                 departureStation, arrivalStation, direction, finalDestination):
+                                 departureStation, departureStationLine, arrivalStation, direction, finalDestination):
                 PathCardPathExistsView(travelTime, departureTime, arrivalTime, incomingTime,
-                                       departureStation, arrivalStation, direction, finalDestination)
+                                       departureStation, departureStationLine, arrivalStation, direction, finalDestination)
             case .pathNotExists:
                 PathCardPathNotExistsView()
             }
@@ -203,17 +203,19 @@ private struct PathCardPathExistsView: View {
     let arrivalTime: String
     let incomingTime: String
     let departureStation: String
+    let departureStationLine: Int
     let arrivalStation: String
     let direction: String
     let finalDestination: String
 
     init(_ travelTime: Int, _ departureTime: String, _ arrivalTime: String, _ incomingTime: String,
-         _ departureStation: String, _ arrivalStation: String, _ direction: String, _ finalDestination: String) {
+         _ departureStation: String, _ departureStationLine: Int, _ arrivalStation: String, _ direction: String, _ finalDestination: String) {
         self.travelTime = travelTime
         self.departureTime = departureTime
         self.arrivalTime = arrivalTime
         self.incomingTime = incomingTime
         self.departureStation = departureStation
+        self.departureStationLine = departureStationLine
         self.arrivalStation = arrivalStation
         self.direction = direction
         self.finalDestination = finalDestination
@@ -249,6 +251,8 @@ private struct PathCardPathExistsView: View {
                 .font(.B03_M)
                 .foregroundStyle(.gray400)
                 .padding(.trailing, 10)
+            LineNumberCircle(.init(rawValue: departureStationLine) ?? .two)
+                .padding(.trailing, 4)
             Text("\(departureStation)역")
                 .font(.B03_M)
                 .foregroundStyle(.scWhite)
@@ -261,7 +265,7 @@ private struct PathCardPathExistsView: View {
                 .padding(EdgeInsets(top: -3, leading: 5.2, bottom: -2, trailing: 46))
             Group {
                 Text("\(incomingTime)")
-                    .customPretendardFont(.semibold, size: 12, lineSpacing: 4)
+                    .font(.C01_SB)
                     .foregroundStyle(.scGreen)
                     .padding(.trailing, 4)
 
@@ -326,9 +330,10 @@ fileprivate enum UserStatus {
         arrivalTime: String,
         incomingTime: String,
         departureStation: String,
+        departureStationLine: Int,
         arrivalStation: String,
         direction: String,
-        finalDestination: String
+        finalDestination: String,
     )
     case pathNotExists
 

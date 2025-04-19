@@ -54,7 +54,7 @@ struct LineNumberCircle: View {
             Circle()
                 .foregroundStyle(lineNumber.color)
             Text("\(lineNumber.rawValue)")
-                .customPretendardFont(.bold, size: 10)
+                .font(.LINE)
                 .foregroundStyle(.scWhite)
         }
         .frame(width: 16, height: 16)
