@@ -10,10 +10,12 @@ import SeatCatcherCore
 
 public enum AppScene: AppRoute {
     case home
+    case notifications
 
     public var id: String {
         switch self {
         case .home: return "home"
+        case .notifications: return "notifications"
         }
     }
 

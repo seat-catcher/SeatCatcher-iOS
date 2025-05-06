@@ -40,7 +40,9 @@ public struct HomeView: View {
         .withBackground(.gray900)
         .withNavigationBar(
             viewModel.coordinator,
-            config: .logoWithNotification(notificationButtonAction: {})
+            config: .logoWithNotification(notificationButtonAction: {
+                viewModel.coordinator.push(AppScene.notifications)
+            })
         )
     }
 }
