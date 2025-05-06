@@ -46,7 +46,7 @@ final class StompClientService {
         // 콘솔 로그 출력 활성화
         swiftStomp.enableLogging = true
 
-        // SwiftStomp 의 Publisher 들을 ViewModel 등과 연결
+        // SwiftStomp의 Publisher들을 StompClientService 내부 Publisher들에 Bind
         bindSwiftStomp()
     }
 
