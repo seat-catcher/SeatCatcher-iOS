@@ -44,6 +44,11 @@ final class AppCoordinator: Coordinator {
                 coordinator: self
             )
             HomeView(viewModel: homeViewModel)
+        case .notifications:
+            let notificationsViewModel = NotificationsViewModel(
+                coordinator: self
+            )
+            NotificationsView(viewModel: notificationsViewModel)
         }
     }
 
