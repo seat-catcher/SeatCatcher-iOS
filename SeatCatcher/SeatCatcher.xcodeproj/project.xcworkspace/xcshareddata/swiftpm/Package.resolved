@@ -1,5 +1,5 @@
 {
-  "originHash" : "2c368c44b0f7eedbeaefacba54112fe94668d250da34995d53bbdcff9500af19",
+  "originHash" : "f4aa3bd617e5b2ef86e534bc51bdd70abde835351aea1fb2476cd33e8d11c44d",
   "pins" : [
     {
       "identity" : "alamofire",
@@ -15,8 +15,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/kakao/kakao-ios-sdk",
       "state" : {
-        "revision" : "bfe2fe42f730ccfe59e85f6e9eda2f4578e9a307",
-        "version" : "2.24.0"
+        "revision" : "2c780b70d4197be3f72deee2fd82ea3e3b767007",
+        "version" : "2.24.1"
       }
     },
     {
@@ -26,6 +26,15 @@
       "state" : {
         "revision" : "c263811c1f3dbf002be9bd83107f7cdc38992b26",
         "version" : "15.0.3"
+      }
+    },
+    {
+      "identity" : "reachability.swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ashleymills/Reachability.swift",
+      "state" : {
+        "revision" : "21d1dc412cfecbe6e34f1f4c4eb88d3f912654a6",
+        "version" : "5.2.4"
       }
     },
     {
@@ -44,6 +53,15 @@
       "state" : {
         "revision" : "5dd1907d64f0d36f158f61a466bab75067224893",
         "version" : "6.9.0"
+      }
+    },
+    {
+      "identity" : "swiftstomp",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Romixery/SwiftStomp.git",
+      "state" : {
+        "revision" : "f25926d2ab67ec0391de9a706cf71dfb08d36bbc",
+        "version" : "1.2.1"
       }
     }
   ],

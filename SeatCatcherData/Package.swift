@@ -16,7 +16,8 @@ let package = Package(
     dependencies: [
         .package(name: "SeatCatcherDomain", path: "../SeatCatcherDomain"),
         .package(url: "https://github.com/Moya/Moya.git", .upToNextMajor(from: "15.0.3")),
-        .package(url: "https://github.com/kakao/kakao-ios-sdk", .upToNextMajor(from: "2.24.0"))
+        .package(url: "https://github.com/kakao/kakao-ios-sdk", .upToNextMajor(from: "2.24.0")),
+        .package(url: "https://github.com/Romixery/SwiftStomp.git", .upToNextMajor(from: "1.2.1"))
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -28,7 +29,8 @@ let package = Package(
                 "Moya",
                 .product(name: "KakaoSDKCommon", package: "kakao-ios-sdk"),
                 .product(name: "KakaoSDKAuth", package: "kakao-ios-sdk"),
-                .product(name: "KakaoSDKUser", package: "kakao-ios-sdk")
+                .product(name: "KakaoSDKUser", package: "kakao-ios-sdk"),
+                "SwiftStomp"
             ]
         )
     ]

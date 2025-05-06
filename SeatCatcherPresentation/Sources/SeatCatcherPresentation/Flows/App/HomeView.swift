@@ -47,6 +47,8 @@ public struct HomeView: View {
 
 private struct UserInfoCardView: View {
     @Environment(AppStore.self) private var appStore
+    @State private var tagScrollViewWidth: CGFloat = .zero
+
     var body: some View {
         Button {
 
@@ -60,15 +62,19 @@ private struct UserInfoCardView: View {
                         .font(.B01_SB)
                         .foregroundStyle(.white)
                     HStack(spacing: 6) {
-                        ScrollView(.horizontal) {
-                            LazyHStack(spacing: 6) {
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack(spacing: 6) {
                                 ForEach(appStore.user.tags) {
                                     UserInfoBadge(.tag($0))
                                 }
                             }
+                            .background(
+                                GeometryReader { Color.clear.onChange(of: $0.size) { tagScrollViewWidth = $1.width } }
+                            )
                         }
-                        .scrollIndicators(.hidden)
+                        .frame(maxWidth: tagScrollViewWidth)
                         UserInfoBadge(.credit(appStore.user.credit))
+                        Spacer()
                     }
                 }
                 VStack {
