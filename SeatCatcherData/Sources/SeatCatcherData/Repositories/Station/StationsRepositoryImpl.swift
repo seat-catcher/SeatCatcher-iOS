@@ -7,7 +7,7 @@
 
 import SeatCatcherDomain
 
-public final class StationsRepositoryImpl: StationsRespotiory {
+public final class StationsRepositoryImpl: StationsRepository {
     private let networkService = NetworkService()
 
     public init() {}
