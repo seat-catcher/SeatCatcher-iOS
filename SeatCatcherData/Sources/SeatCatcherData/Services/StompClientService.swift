@@ -97,19 +97,22 @@ final class StompClientService {
 
     /// WebSocket + STOMP 서버로 연결 요청
     func connect() {
-        // 이미 연결되어 있다면 중복 연결 방지
-        guard !swiftStomp.isConnected else { return }
+        swiftStomp.autoReconnect = true // disconnect 후 connect시 자동 재연결 다시 true로 설정
+        guard !swiftStomp.isConnected else { return } // 이미 연결되어 있다면 중복 연결 방지
         swiftStomp.connect() // 내부적으로 WebSocketTask 생성 → CONNECT 프레임 전송
     }
 
     /// STOMP DISCONNECT 보내고 WebSocket 연결 종료
     func disconnect() {
+        activeTopics.removeAll() // 네트워크 유실에 의한 disconnect가 아닐 경우, 재연결 시 이전 토픽 재구독을 막기 위해 removeAll
+        swiftStomp.autoReconnect = false // 재연결되지 않도록 False로 설정
         swiftStomp.disconnect() // DISCONNECT 프레임 전송 후 소켓 종료
         connectionSubject.send(false) // 강제 연결 상태 false 발행
     }
 
     /// 특정 토픽(예: "/train/{trainId}") 구독 요청
     func subscribe(topic: String) {
+        guard !activeTopics.contains(topic) else { return } // 중복 구독 방지
         activeTopics.insert(topic) // 구독 목록에 추가
         swiftStomp.subscribe(to: topic) // SUBSCRIBE 프레임 전송
     }
