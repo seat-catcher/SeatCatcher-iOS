@@ -19,6 +19,7 @@ final class DIContainerImpl {
     private lazy var loginRepository = LoginRepositoryImpl()
     private lazy var tokenRepository = TokenRepositoryImpl()
     private lazy var userRepository = UserRepositoryImpl()
+    private lazy var stationsRepository = StationsRepositoryImpl()
 
     // MARK: - Auth UseCase Instances
     private lazy var appleLoginUseCase = AppleLoginUseCaseImpl(
@@ -44,6 +45,10 @@ final class DIContainerImpl {
     private lazy var getRandomUserImageUseCase = GetRandomUserImageUseCaseImpl(userRepository: userRepository)
     private lazy var getUserInfoUseCase = GetUserInfoUseCaseImpl(userRepository: userRepository)
     private lazy var patchUserInfoUseCase = PatchUserInfoUseCaseImpl(userRepository: userRepository)
+
+    // MARK: - Stations UseCase Instances
+    private lazy var searchDepartureStationsUseCase = SearchDepartureStationsUseCaseImpl(stationsRepository: stationsRepository)
+    private lazy var searchArrivalStationsUseCase = SearchArrivalStationsUseCaseImpl(stationsRepository: stationsRepository)
 }
 
 // MARK: - DIContainer 프로토콜 구현
@@ -59,6 +64,10 @@ extension DIContainerImpl: DIContainer {
     func resolveGetRandomUserImageUseCase() -> GetRandomUserImageUseCase { return getRandomUserImageUseCase }
     func resolveGetUserInfoUseCase() -> GetUserInfoUseCase { return getUserInfoUseCase }
     func resolvePatchUserInfoUseCase() -> PatchUserInfoUseCase { return patchUserInfoUseCase }
+
+    // MARK: - Station UseCases
+    func resolveSearchDepartureStationsUseCase() -> SearchDepartureStationsUseCase { return searchDepartureStationsUseCase }
+    func resolveSearchArrivalStationsUseCase() -> SearchArrivalStationsUseCase { return searchArrivalStationsUseCase }
 
     // MARK: - Store
     func resolveAppStore() -> AppStore { return appStore }

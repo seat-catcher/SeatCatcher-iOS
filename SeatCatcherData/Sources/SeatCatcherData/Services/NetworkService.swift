@@ -179,4 +179,13 @@ struct NetworkService {
         let responseDTO = try JSONDecoder().decode(PatchUserResponseDTO.self, from: response)
         return responseDTO
     }
+
+    func getStations(keyword: String, line: Int) async throws  -> [GetStationsResponseDTO] {
+        let requestDTO = GetStationsRequestDTO(keyword: keyword, line: String(line))
+        let response = try await provider.request(.getStations(requestDTO: requestDTO, accessToken: accessToken))
+        // 검색 결과가 없을 경우 response body X, data가 없으므로 빈 배열 리턴
+        guard !response.isEmpty else { return [] }
+        let responseDTO = try JSONDecoder().decode([GetStationsResponseDTO].self, from: response)
+        return responseDTO
+    }
 }
