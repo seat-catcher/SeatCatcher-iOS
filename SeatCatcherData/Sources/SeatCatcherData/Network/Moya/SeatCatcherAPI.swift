@@ -17,6 +17,8 @@ enum SeatCatcherAPI {
 
     case getUser(accessToken: String)
     case patchUser(_ requestDTO: PatchUserRequestDTO, accessToken: String)
+
+    case getStations(requestDTO: GetStationsRequestDTO, accessToken: String)
 }
 
 extension SeatCatcherAPI: TargetType {
@@ -41,6 +43,8 @@ extension SeatCatcherAPI: TargetType {
             return "/user/me"
         case .patchUser:
             return "/user/me"
+        case .getStations:
+            return "/stations"
         }
     }
     
@@ -58,6 +62,8 @@ extension SeatCatcherAPI: TargetType {
             return .get
         case .patchUser:
             return .patch
+        case .getStations:
+            return .get
         }
     }
     
@@ -75,6 +81,13 @@ extension SeatCatcherAPI: TargetType {
             return .requestPlain
         case let .patchUser(requestDTO, _):
             return .requestJSONEncodable(requestDTO)
+        case let .getStations(requestDTO, _):
+            let parameters: [String: Any] = [
+                "keyword": requestDTO.keyword,
+                "line": requestDTO.line,
+                "order": requestDTO.order
+            ]
+            return .requestParameters(parameters: parameters, encoding: URLEncoding.default)
         }
     }
 
@@ -95,6 +108,9 @@ extension SeatCatcherAPI: TargetType {
             let auth = ["Authorization": "Bearer \(accessToken)"]
             return base.merging(auth) { _, new in new }
         case let .patchUser(_, accessToken):
+            let auth = ["Authorization": "Bearer \(accessToken)"]
+            return base.merging(auth) { _, new in new }
+        case let .getStations(_, accessToken):
             let auth = ["Authorization": "Bearer \(accessToken)"]
             return base.merging(auth) { _, new in new }
         }

@@ -8,7 +8,7 @@
 import Foundation
 import Security
 
-public struct KeychainService {
+struct KeychainService {
     private static let service = "com.SeatCatcher.SeatCatcher"
 
     enum KeyChainError: Error {
