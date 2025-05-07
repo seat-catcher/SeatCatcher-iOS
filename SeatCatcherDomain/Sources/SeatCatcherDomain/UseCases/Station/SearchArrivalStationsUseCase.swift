@@ -10,9 +10,9 @@ public protocol SearchArrivalStationsUseCase {
 }
 
 public final class SearchArrivalStationsUseCaseImpl: SearchArrivalStationsUseCase {
-    private let stationsRepository: StationsRespotiory
+    private let stationsRepository: StationsRepository
 
-    public init(stationsRepository: StationsRespotiory) {
+    public init(stationsRepository: StationsRepository) {
         self.stationsRepository = stationsRepository
     }
 
