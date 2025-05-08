@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "icon_swap_stations.svg",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
