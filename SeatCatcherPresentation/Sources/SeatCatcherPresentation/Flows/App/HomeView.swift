@@ -31,7 +31,7 @@ public struct HomeView: View {
                     direction: "어린이대공원",
                     finalDestination: "건대입구"
                 ))
-                ActionPanelView()
+                ActionPanelView(viewModel: viewModel)
                 Spacer()
             }
         }
@@ -113,10 +113,12 @@ private struct PathCardView: View {
 }
 
 private struct ActionPanelView: View {
+    let viewModel: HomeViewModel
+
     var body: some View {
         HStack(spacing: 11) {
             HomeCreditStoreButton()
-            HomeCatchSeatButton()
+            HomeCatchSeatButton(viewModel: viewModel)
         }
     }
 }
@@ -177,8 +179,12 @@ private struct HomeCreditStoreButton: View {
 }
 
 private struct HomeCatchSeatButton: View {
+    let viewModel: HomeViewModel
+
     var body: some View {
-        Button {} label: {
+        Button {
+            viewModel.action(.catchSeatButtonTapped)
+        } label: {
             VStack {
                 HStack {
                     Text("좌석찾기")

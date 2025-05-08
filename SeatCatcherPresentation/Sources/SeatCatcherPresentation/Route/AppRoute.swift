@@ -11,11 +11,15 @@ import SeatCatcherCore
 public enum AppScene: AppRoute {
     case home
     case notifications
+    case selectPath
+    case searchStations(viewModel: SelectPathViewModel)
 
     public var id: String {
         switch self {
         case .home: return "home"
         case .notifications: return "notifications"
+        case .selectPath: return "selectPath"
+        case .searchStations: return "searchStations"
         }
     }
 

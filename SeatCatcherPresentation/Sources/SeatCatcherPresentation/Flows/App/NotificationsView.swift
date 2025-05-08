@@ -22,7 +22,6 @@ public struct NotificationsView: View {
                 }
             }
         }
-        .applyToolbarVisibility(.hidden, for: .navigationBar)
         .withBackground(.gray900)
         .withNavigationBar(viewModel.coordinator, config: .title(title: "알림"))
     }
