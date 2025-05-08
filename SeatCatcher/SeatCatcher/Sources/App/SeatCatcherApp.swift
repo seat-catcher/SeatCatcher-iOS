@@ -85,7 +85,8 @@ struct SeatCatcherApp: App {
                 case .onboarding:
                     NavigationStack(path: $onboardingCoordinator.path) {
                         onboardingCoordinator.buildScene(.onboarding)
-g                    }
+                            .navigationDestination(for: OnboardingScene.self) { onboardingCoordinator.buildScene($0) }
+                    }
                 case .unauthenticated:
                     NavigationStack(path: $onboardingCoordinator.path) {
                         onboardingCoordinator.buildScene(.login)
