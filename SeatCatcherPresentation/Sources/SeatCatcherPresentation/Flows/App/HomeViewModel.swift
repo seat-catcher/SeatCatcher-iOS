@@ -12,7 +12,7 @@ import SeatCatcherDomain
 @Observable
 public final class HomeViewModel: ViewModel {
     enum Action {
-
+        case catchSeatButtonTapped
     }
 
     struct State {
@@ -30,6 +30,9 @@ public final class HomeViewModel: ViewModel {
     private(set) var state = State()
 
     func action(_ action: Action) {
-
+        switch action {
+        case .catchSeatButtonTapped:
+            coordinator.push(AppScene.selectPath)
+        }
     }
 }

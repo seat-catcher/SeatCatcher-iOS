@@ -29,13 +29,13 @@ struct SCNavigationBar: View {
             homeButtonAction: (() -> Void)? = nil
         )
         case stationSelection(
-            backButtonAction: (() -> Void)?,
+            backButtonAction: (() -> Void)? = nil,
             swapStationsButtonAction: () -> Void,
             selectDepartureButtonAction: () -> Void,
             selectArrivalButtonAction: () -> Void
         )
         case search(
-            backButtonAction: (() -> Void)?,
+            backButtonAction: (() -> Void)? = nil,
             placeholder: String,
             text: Binding<String>
         )
@@ -48,7 +48,6 @@ struct SCNavigationBar: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            Spacer()
             Group {
                 switch config {
                 case .skip(let action):
@@ -178,15 +177,17 @@ struct SCNavigationBar: View {
                     HStack(alignment: .top, spacing: 8) {
                         Button {
                             backButtonAction?()
+                            coordinator.pop()
                         } label: {
                             Image(.iconLeftArrow)
                                 .resizable()
                                 .frame(width: 24, height: 24)
                                 .padding(.top, 3)
                         }
-                        TextField(placeholder, text: text)
+
+                        TextField(placeholder, text: text, prompt: Text(placeholder).font(.B02_M).foregroundStyle(.gray300))
                             .font(.B02_M)
-                            .foregroundStyle(.gray300)
+                            .foregroundStyle(.gray100)
                             .padding(.vertical, 10)
                             .padding(.horizontal, 12)
                             .background(.gray850)
@@ -196,9 +197,6 @@ struct SCNavigationBar: View {
                 }
             }
             .padding(.horizontal, 18)
-
-            Spacer()
-
             Rectangle()
                 .frame(height: 1)
                 .foregroundStyle(.gray700)

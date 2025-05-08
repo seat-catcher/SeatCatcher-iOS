@@ -15,12 +15,14 @@ extension View {
             self
         }
     }
-    
+
+    /// Custom 네비게이션 바를 적용하고, 기존 네비게이션 바를 감춥니다.
     func withNavigationBar(_ coordinator: Coordinator, config: SCNavigationBar.SCNavigationBarConfig) -> some View {
         VStack(spacing: 0) {
             SCNavigationBar(coordinator, config: config)
             self
         }
+        .applyToolbarVisibility(.hidden, for: .navigationBar)
     }
 
     @ViewBuilder
