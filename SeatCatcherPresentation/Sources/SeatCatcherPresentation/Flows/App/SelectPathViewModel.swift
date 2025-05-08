@@ -15,6 +15,7 @@ public final class SelectPathViewModel: ViewModel {
         var searchMode: SearchStationsMode = .departure
         var departure: Station?
         var arrival: Station?
+        var searchResults: [Station] = []
         var searchText: String = ""
     }
 
@@ -30,15 +31,26 @@ public final class SelectPathViewModel: ViewModel {
     }
 
     private(set) var state = State()
+
+    private let searchDepartureStationsUseCase: SearchDepartureStationsUseCase
+    private let searchArrivalStationsUseCase: SearchArrivalStationsUseCase
+
     let coordinator: Coordinator
 
-    public init(coordinator: Coordinator) {
+    public init(
+        searchDepartureStationsUseCase: SearchDepartureStationsUseCase,
+        searchArrivalStationsUseCase: SearchArrivalStationsUseCase,
+        coordinator: Coordinator
+    ) {
+        self.searchDepartureStationsUseCase = searchDepartureStationsUseCase
+        self.searchArrivalStationsUseCase = searchArrivalStationsUseCase
         self.coordinator = coordinator
     }
 
     func action(_ action: Action) {
         switch action {
         case .swapButtonTapped:
+            guard state.departure != nil, state.arrival != nil else { return }
             let temp = state.arrival
             state.arrival = state.departure
             state.departure = temp
@@ -46,13 +58,23 @@ public final class SelectPathViewModel: ViewModel {
             state.searchMode = .departure
             coordinator.push(AppScene.searchStations(viewModel: self))
         case .arrivalButtonTapped:
+            guard state.departure != nil else { return }
             state.searchMode = .arrival
             coordinator.push(AppScene.searchStations(viewModel: self))
         case .searchTextChanged(let text):
             guard state.searchText != text else { return } // SwiftUI TextField Binding Setter 중복 호출 버그로 인해 방지 로직 추가
             state.searchText = text
-            dump(text)
-            break
+            Task { [searchDepartureStationsUseCase, searchArrivalStationsUseCase] in
+                switch state.searchMode {
+                case .departure:
+                    let searchResults = try await searchDepartureStationsUseCase.execute(keyword: text)
+                    self.state.searchResults = searchResults
+                case .arrival:
+                    guard let line = state.departure?.line else { return }
+                    let searchResults = try await searchArrivalStationsUseCase.execute(keyword: text, line: line)
+                    self.state.searchResults = searchResults
+                }
+            }
         }
     }
 }

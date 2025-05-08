@@ -34,13 +34,27 @@ struct StationNodeView: View {
 
 struct LineNumberCircle: View {
     enum LineNumber: Int {
-        case two = 2
-        case seven = 7
+        case one = 1
+        case two
+        case three
+        case four
+        case five
+        case six
+        case seven
+        case eight
+        case nine
 
         var color: Color {
             switch self {
+            case .one: .line1
             case .two: .line2
+            case .three: .line3
+            case .four: .line4
+            case .five: .line5
+            case .six: .line6
             case .seven: .line7
+            case .eight: .line8
+            case .nine: .line9
             }
         }
     }
@@ -48,6 +62,7 @@ struct LineNumberCircle: View {
     let lineNumber: LineNumber
 
     init(_ lineNumber: LineNumber) { self.lineNumber = lineNumber }
+    init(_ lineNumber: Int) { self.lineNumber = .init(rawValue: lineNumber) ?? .two }
 
     var body: some View {
         ZStack {
