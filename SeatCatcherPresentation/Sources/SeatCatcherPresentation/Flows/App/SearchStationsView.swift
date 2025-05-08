@@ -17,20 +17,8 @@ public struct SearchStationsView: View {
 
     public var body: some View {
         VStack(spacing: 0) {
-            Text((viewModel.state.searchText.isEmpty) ? "최근 검색" : "")
-                .font(.B03_M)
-                .foregroundStyle(.gray300)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(18)
-                .padding(.bottom, viewModel.state.searchText.isEmpty ? 0 : -18)
-
-            ScrollView {
-                LazyVStack(spacing: 0) {
-                    ForEach(viewModel.state.searchResults) {
-                        SearchResultCell(station: $0)
-                    }
-                }
-            }
+            GuidingText(viewModel: viewModel)
+            SearchResultsList(viewModel: viewModel)
         }
         .withBackground(.gray900)
         .withNavigationBar(
@@ -46,21 +34,53 @@ public struct SearchStationsView: View {
     }
 }
 
+private struct GuidingText: View {
+    let viewModel: SelectPathViewModel
+
+    var body: some View {
+        Text((viewModel.state.searchText.isEmpty) ? "최근 검색" : "")
+            .font(.B03_M)
+            .foregroundStyle(.gray300)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(18)
+            .padding(.bottom, viewModel.state.searchText.isEmpty ? 0 : -18)
+    }
+}
+
+private struct SearchResultsList: View {
+    let viewModel: SelectPathViewModel
+
+    var body: some View {
+        ScrollView {
+            LazyVStack(spacing: 0) {
+                ForEach(viewModel.state.searchResults) {
+                    SearchResultCell(viewModel: viewModel, station: $0)
+                }
+            }
+        }
+    }
+}
+
 private struct SearchResultCell: View {
+    let viewModel: SelectPathViewModel
     let station: Station
 
     var body: some View {
         VStack(spacing: 0) {
-            HStack(spacing: 4) {
-                LineNumberCircle(station.line)
-                Text(station.name)
-                    .font(.B02_M)
-                    .foregroundStyle(.gray100)
-                    .lineLimit(1)
-                Spacer()
+            Button {
+                viewModel.action(.searchResultTapped(station: station))
+            } label: {
+                HStack(spacing: 4) {
+                    LineNumberCircle(station.line)
+                    Text(station.name)
+                        .font(.B02_M)
+                        .foregroundStyle(.gray100)
+                        .lineLimit(1)
+                    Spacer()
+                }
+                .frame(maxWidth: .infinity)
+                .padding(18)
             }
-            .frame(maxWidth: .infinity)
-            .padding(18)
             Rectangle().fill(.gray800).frame(height: 1)
         }
     }

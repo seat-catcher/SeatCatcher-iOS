@@ -29,6 +29,8 @@ struct SCNavigationBar: View {
             homeButtonAction: (() -> Void)? = nil
         )
         case stationSelection(
+            departureName: String?,
+            arrivalName: String?,
             backButtonAction: (() -> Void)? = nil,
             swapStationsButtonAction: () -> Void,
             selectDepartureButtonAction: () -> Void,
@@ -119,6 +121,8 @@ struct SCNavigationBar: View {
                     .frame(height: 46)
 
                 case let .stationSelection(
+                    departureName,
+                    arrivalName,
                     backButtonAction,
                     swapStationsButtonAction,
                     selectDepartureButtonAction,
@@ -144,9 +148,9 @@ struct SCNavigationBar: View {
                                 Button(action: selectDepartureButtonAction) {
                                     HStack(spacing: 10) {
                                         StationNodeView(.departure)
-                                        Text("승차역 입력")
+                                        Text(departureName == nil ? "승차역 입력" : "\(departureName ?? "")역")
                                             .font(.B02_M)
-                                            .foregroundStyle(.gray300)
+                                            .foregroundStyle(departureName == nil ? .gray300 : .gray100)
                                             .frame(maxWidth: .infinity, alignment: .leading)
                                     }
                                 }
@@ -159,9 +163,9 @@ struct SCNavigationBar: View {
                                 Button(action: selectArrivalButtonAction) {
                                     HStack(spacing: 10) {
                                         StationNodeView(.arrival)
-                                        Text("하차역 입력")
+                                        Text(arrivalName == nil ? "하차역 입력" : "\(arrivalName ?? "")역")
                                             .font(.B02_M)
-                                            .foregroundStyle(.gray300)
+                                            .foregroundStyle(arrivalName == nil ? .gray300 : .gray100)
                                             .frame(maxWidth: .infinity, alignment: .leading)
                                     }
                                 }

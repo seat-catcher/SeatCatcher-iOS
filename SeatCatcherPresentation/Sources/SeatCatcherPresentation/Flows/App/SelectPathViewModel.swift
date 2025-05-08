@@ -24,6 +24,8 @@ public final class SelectPathViewModel: ViewModel {
         case departureButtonTapped
         case arrivalButtonTapped
         case searchTextChanged(text: String)
+        case backButtonTapped
+        case searchResultTapped(station: Station)
     }
 
     enum SearchStationsMode {
@@ -64,7 +66,8 @@ public final class SelectPathViewModel: ViewModel {
         case .searchTextChanged(let text):
             guard state.searchText != text else { return } // SwiftUI TextField Binding Setter 중복 호출 버그로 인해 방지 로직 추가
             state.searchText = text
-            Task { [searchDepartureStationsUseCase, searchArrivalStationsUseCase] in
+            guard !text.isEmpty else { return } // keyword 쿼리 파라미터 빈 문자열로 호출 방지
+            Task { [searchDepartureStationsUseCase, searchArrivalStationsUseCase] in // self 전체 메인액터 격리 방지
                 switch state.searchMode {
                 case .departure:
                     let searchResults = try await searchDepartureStationsUseCase.execute(keyword: text)
@@ -75,6 +78,18 @@ public final class SelectPathViewModel: ViewModel {
                     self.state.searchResults = searchResults
                 }
             }
+        case .backButtonTapped:
+            state.searchText = ""
+            state.searchResults = []
+        case .searchResultTapped(let station):
+            switch state.searchMode {
+            case .departure:
+                state.departure = station
+            case .arrival:
+                state.arrival = station
+            }
+            self.action(.backButtonTapped)
+            coordinator.pop()
         }
     }
 }
