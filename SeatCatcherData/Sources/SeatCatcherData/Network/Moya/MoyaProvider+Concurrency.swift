@@ -25,6 +25,7 @@ extension MoyaProvider {
                 case let .success(response):
                     continuation.resume(returning: response.data)
                 case let .failure(error):
+                    dump(error.response?.statusCode)
                     continuation.resume(throwing: error)
                 }
             }

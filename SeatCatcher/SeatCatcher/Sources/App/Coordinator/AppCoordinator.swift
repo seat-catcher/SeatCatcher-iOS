@@ -51,6 +51,8 @@ final class AppCoordinator: Coordinator {
             NotificationsView(viewModel: notificationsViewModel)
         case .selectPath:
             let selectPathViewModel = SelectPathViewModel(
+                searchDepartureStationsUseCase: diContainer.resolveSearchDepartureStationsUseCase(),
+                searchArrivalStationsUseCase: diContainer.resolveSearchArrivalStationsUseCase(),
                 coordinator: self
             )
             SelectPathView(viewModel: selectPathViewModel)
