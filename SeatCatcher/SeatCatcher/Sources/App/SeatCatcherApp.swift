@@ -68,50 +68,33 @@ struct SeatCatcherApp: App {
     var body: some Scene {
         WindowGroup {
             Group {
-                NavigationStack(path: $appCoordinator.path) {
-                    appCoordinator.buildScene(.home)
-                        .navigationDestination(for: AppScene.self) {
-                            appCoordinator.buildScene($0)
-                        }
-                        .sheet(item: $appCoordinator.appSheet, onDismiss: appCoordinator.sheetOnDismiss) {
-                            appCoordinator.buildSheet($0)
-                        }
-                        .fullScreenCover(item: $appCoordinator.appFullScreenCover, onDismiss: appCoordinator.fullScreenCoverOnDismiss) {
-                            appCoordinator.buildFullScreenCover($0)
-                        }
+                switch currentFlow {
+                case .authenticated:
+                    NavigationStack(path: $appCoordinator.path) {
+                        appCoordinator.buildScene(.home)
+                            .navigationDestination(for: AppScene.self) {
+                                appCoordinator.buildScene($0)
+                            }
+                            .sheet(item: $appCoordinator.appSheet, onDismiss: appCoordinator.sheetOnDismiss) {
+                                appCoordinator.buildSheet($0)
+                            }
+                            .fullScreenCover(item: $appCoordinator.appFullScreenCover, onDismiss: appCoordinator.fullScreenCoverOnDismiss) {
+                                appCoordinator.buildFullScreenCover($0)
+                            }
+                    }
+                case .onboarding:
+                    NavigationStack(path: $onboardingCoordinator.path) {
+                        onboardingCoordinator.buildScene(.onboarding)
+g                    }
+                case .unauthenticated:
+                    NavigationStack(path: $onboardingCoordinator.path) {
+                        onboardingCoordinator.buildScene(.login)
+                            .navigationDestination(for: OnboardingScene.self) { onboardingCoordinator.buildScene($0) }
+                    }
                 }
-                .onOpenURL { handleURL($0) }
-                .environment(appStore)
-
-                //                switch currentFlow {
-                //                case .authenticated:
-                //                    NavigationStack(path: $appCoordinator.path) {
-                //                        appCoordinator.buildScene(.home)
-                //                            .navigationDestination(for: AppScene.self) {
-                //                                appCoordinator.buildScene($0)
-                //                            }
-                //                            .sheet(item: $appCoordinator.appSheet, onDismiss: appCoordinator.sheetOnDismiss) {
-                //                                appCoordinator.buildSheet($0)
-                //                            }
-                //                            .fullScreenCover(item: $appCoordinator.appFullScreenCover, onDismiss: appCoordinator.fullScreenCoverOnDismiss) {
-                //                                appCoordinator.buildFullScreenCover($0)
-                //                            }
-                //                    }
-                //                case .onboarding:
-                //                    NavigationStack(path: $onboardingCoordinator.path) {
-                //                        onboardingCoordinator.buildScene(.onboarding)
-                //                            .navigationDestination(for: OnboardingScene.self) { onboardingCoordinator.buildScene($0) }
-                //                    }
-                //                case .unauthenticated:
-                //                    NavigationStack(path: $onboardingCoordinator.path) {
-                //                        onboardingCoordinator.buildScene(.login)
-                //                            .navigationDestination(for: OnboardingScene.self) { onboardingCoordinator.buildScene($0) }
-                //                    }
-                //                }
-                //            }
-                //            .onOpenURL { handleURL($0) }
-                //            .environment(appStore)
             }
+            .onOpenURL { handleURL($0) }
+            .environment(appStore)
         }
     }
 }
