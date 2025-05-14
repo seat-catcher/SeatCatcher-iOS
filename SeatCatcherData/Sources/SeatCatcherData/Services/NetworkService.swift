@@ -10,7 +10,7 @@ import Alamofire
 import Moya
 import SeatCatcherDomain
 
-struct NetworkService {
+public struct NetworkService {
     enum TokenError: Error {
         case accessTokenIsNil
     }
@@ -34,7 +34,7 @@ struct NetworkService {
             // 만약 토큰이 새로 갱신된 상태라면, HTTP 헤더의 Authorization 값을 갱신합니다.
             if UserDefaultsService.isTokenRefreshed {
                 // 새로운 토큰을 가져오기 위해 TokenRepositoryImpl 인스턴스를 생성합니다.
-                let tokenRepository = TokenRepositoryImpl()
+                let tokenRepository = TokenRepositoryImpl(networkService: NetworkService())
                 // urlRequest를 복사하여 수정할 새 변수에 저장합니다.
                 var urlRequestWithReissuedToken = urlRequest
                 // 재시도 후에는 "isTokenRefreshed" 플래그를 false로 리셋합니다.
@@ -90,7 +90,7 @@ struct NetworkService {
                 dump("HTTP Request Failed | 리프레시 토큰 만료, 로그아웃")
 
                 // 키체인에 저장된 토큰을 삭제하고 로그아웃합니다.
-                let tokenRepository = TokenRepositoryImpl()
+                let tokenRepository = TokenRepositoryImpl(networkService: NetworkService())
                 logout(tokenRepository: tokenRepository)
                 return
             }
@@ -98,7 +98,7 @@ struct NetworkService {
             // 토큰 리이슈를 위해 TokenRepositoryImpl의 인스턴스를 생성합니다.
             // 내부에 Stored Property로 저장할 경우 RequestInterceptor의 Sendable을 충족하지 못하므로,
             // 블록 내부 지역 변수로 선언합니다.
-            let tokenRepository = TokenRepositoryImpl()
+            let tokenRepository = TokenRepositoryImpl(networkService: NetworkService())
 
             // 비동기 Task를 생성하여 토큰 리이슈 작업을 실행합니다.
             _Concurrency.Task {
@@ -135,6 +135,8 @@ struct NetworkService {
     private let provider = MoyaProvider<SeatCatcherAPI>(session: Session(interceptor: AuthInterceptor()))
     private var accessToken: String { (try? KeychainService.get(key: "accessToken")) ?? "" }
     private var refreshToken: String { (try? KeychainService.get(key: "refreshToken")) ?? "" }
+
+    public init() {}
 
     func postAppleLogin(_ token: String) async throws -> AppleLoginResponseDTO {
         let requestDTO = AppleLoginRequestDTO(identityToken: token)
@@ -187,5 +189,10 @@ struct NetworkService {
         guard !response.isEmpty else { return [] }
         let responseDTO = try JSONDecoder().decode([GetStationsResponseDTO].self, from: response)
         return responseDTO
+    }
+
+    func postPathHistories(departureStationId: Int, arrivalStationId: Int) async throws {
+        let requestDTO = PostPathHistoriesRequestDTO(startStationId: departureStationId, endStationId: arrivalStationId)
+        try await provider.request(.postPathHistories(requestDTO: requestDTO, accessToken: accessToken))
     }
 }

@@ -13,9 +13,11 @@ public final class UserRepositoryImpl: UserRepository {
         set { UserDefaultsService.isSignedIn = newValue }
     }
 
-    private let networkService = NetworkService()
+    private let networkService: NetworkService
 
-    public init() {}
+    public init(networkService: NetworkService) {
+        self.networkService = networkService
+    }
 
     public func getRandomNickname() -> String {
         return NicknameDataSource.randomNickname

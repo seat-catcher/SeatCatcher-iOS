@@ -17,9 +17,11 @@ public final class TokenRepositoryImpl: TokenRepository {
     private let accessToken = "accessToken"
     private let refreshToken = "refreshToken"
 
-    private let networkService = NetworkService()
+    private let networkService: NetworkService
 
-    public init() {}
+    public init(networkService: NetworkService) {
+        self.networkService = networkService
+    }
 
     public func reissue() async throws -> Token {
         guard let refreshToken = try getRefreshToken() else { throw TokenError.refreshTokenNotFoundInKeychain }

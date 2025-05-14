@@ -8,7 +8,7 @@
 import Foundation
 import Moya
 
-enum SeatCatcherAPI {
+enum SeatCatcherAPI: Sendable {
     case getAccessTokenValidStatus(_ accessToken: String)
 
     case postSignInWithApple(_ requestDTO: AppleLoginRequestDTO)
@@ -19,6 +19,8 @@ enum SeatCatcherAPI {
     case patchUser(_ requestDTO: PatchUserRequestDTO, accessToken: String)
 
     case getStations(requestDTO: GetStationsRequestDTO, accessToken: String)
+
+    case postPathHistories(requestDTO: PostPathHistoriesRequestDTO, accessToken: String)
 }
 
 extension SeatCatcherAPI: TargetType {
@@ -45,6 +47,8 @@ extension SeatCatcherAPI: TargetType {
             return "/user/me"
         case .getStations:
             return "/stations"
+        case .postPathHistories:
+            return "/path-histories"
         }
     }
     
@@ -64,6 +68,8 @@ extension SeatCatcherAPI: TargetType {
             return .patch
         case .getStations:
             return .get
+        case .postPathHistories:
+            return .post
         }
     }
     
@@ -88,6 +94,8 @@ extension SeatCatcherAPI: TargetType {
                 "order": requestDTO.order
             ]
             return .requestParameters(parameters: parameters, encoding: URLEncoding.default)
+        case let .postPathHistories(requestDTO, _):
+            return .requestJSONEncodable(requestDTO)
         }
     }
 
@@ -111,6 +119,9 @@ extension SeatCatcherAPI: TargetType {
             let auth = ["Authorization": "Bearer \(accessToken)"]
             return base.merging(auth) { _, new in new }
         case let .getStations(_, accessToken):
+            let auth = ["Authorization": "Bearer \(accessToken)"]
+            return base.merging(auth) { _, new in new }
+        case let .postPathHistories(_, accessToken):
             let auth = ["Authorization": "Bearer \(accessToken)"]
             return base.merging(auth) { _, new in new }
         }
