@@ -23,6 +23,7 @@ final class DIContainerImpl {
     private lazy var tokenRepository = TokenRepositoryImpl(networkService: networkService)
     private lazy var userRepository = UserRepositoryImpl(networkService: networkService)
     private lazy var stationsRepository = StationsRepositoryImpl(networkService: networkService)
+    private lazy var pathHistoriesRepository = PathHistoriesRepositoryImpl(networkService: networkService)
 
     // MARK: - Auth UseCase Instances
     private lazy var appleLoginUseCase = AppleLoginUseCaseImpl(
@@ -50,8 +51,10 @@ final class DIContainerImpl {
     private lazy var patchUserInfoUseCase = PatchUserInfoUseCaseImpl(userRepository: userRepository)
 
     // MARK: - Stations UseCase Instances
-    private lazy var searchDepartureStationsUseCase = SearchDepartureStationsUseCaseImpl(stationsRepository: stationsRepository)
-    private lazy var searchArrivalStationsUseCase = SearchArrivalStationsUseCaseImpl(stationsRepository: stationsRepository)
+    private lazy var searchStationsUseCase = SearchStationsUseCaseImpl(stationsRepository: stationsRepository)
+
+    // MARK: - PathHistories UseCase Instances
+    private lazy var postPathHistoriesUseCase = PostPathHistoriesImpl(pathHistoriesRespotiry: pathHistoriesRepository)
 }
 
 // MARK: - DIContainer 프로토콜 구현
@@ -69,8 +72,10 @@ extension DIContainerImpl: DIContainer {
     func resolvePatchUserInfoUseCase() -> PatchUserInfoUseCase { return patchUserInfoUseCase }
 
     // MARK: - Station UseCases
-    func resolveSearchDepartureStationsUseCase() -> SearchDepartureStationsUseCase { return searchDepartureStationsUseCase }
-    func resolveSearchArrivalStationsUseCase() -> SearchArrivalStationsUseCase { return searchArrivalStationsUseCase }
+    func resolveSearchStationsUseCase() -> SearchStationsUseCase { return searchStationsUseCase }
+
+    // MARK: - PathHistories UseCases
+    func resolvePostPathHistoriesUseCase() -> PostPathHistoriesUseCase { return postPathHistoriesUseCase }
 
     // MARK: - Store
     func resolveAppStore() -> AppStore { return appStore }

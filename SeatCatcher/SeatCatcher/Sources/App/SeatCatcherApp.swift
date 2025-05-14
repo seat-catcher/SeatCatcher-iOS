@@ -32,10 +32,7 @@ struct SeatCatcherApp: App {
 
     // 유저 상태 기반으로 present할 flow를 선택하는 computed property
     private var currentFlow: AppFlow {
-        if isSignedIn {
-            if appStore.user.hasOnBoarded { .authenticated }
-            else { .onboarding }
-        }
+        if isSignedIn { appStore.user.hasOnBoarded ? .authenticated : .onboarding }
         else { .unauthenticated }
     }
 
