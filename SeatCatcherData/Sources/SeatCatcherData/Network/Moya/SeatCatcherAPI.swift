@@ -19,7 +19,9 @@ enum SeatCatcherAPI: Sendable {
     case patchUser(_ requestDTO: PatchUserRequestDTO, accessToken: String)
 
     case getStations(requestDTO: GetStationsRequestDTO, accessToken: String)
+    case getStationInfo(stationId: Int, accessToken: String)
 
+    case getPathHistories(cursor: Int?, accessToken: String)
     case postPathHistories(requestDTO: PostPathHistoriesRequestDTO, accessToken: String)
 }
 
@@ -47,6 +49,10 @@ extension SeatCatcherAPI: TargetType {
             return "/user/me"
         case .getStations:
             return "/stations"
+        case let .getStationInfo(stationId, _):
+            return "/stations/\(stationId)"
+        case .getPathHistories:
+            return "/path-histories"
         case .postPathHistories:
             return "/path-histories"
         }
@@ -67,6 +73,10 @@ extension SeatCatcherAPI: TargetType {
         case .patchUser:
             return .patch
         case .getStations:
+            return .get
+        case .getStationInfo:
+            return .get
+        case .getPathHistories:
             return .get
         case .postPathHistories:
             return .post
@@ -94,6 +104,12 @@ extension SeatCatcherAPI: TargetType {
                 "order": requestDTO.order
             ]
             return .requestParameters(parameters: parameters, encoding: URLEncoding.default)
+        case .getStationInfo:
+            return .requestPlain
+        case let .getPathHistories(cursor, _):
+            var parameters: [String: Any] = [ "size": 10 ]
+            if let cursor = cursor { parameters.merge(["cursor": cursor]) { _, new in new } }
+            return .requestParameters(parameters: parameters, encoding: URLEncoding.default)
         case let .postPathHistories(requestDTO, _):
             return .requestJSONEncodable(requestDTO)
         }
@@ -119,6 +135,12 @@ extension SeatCatcherAPI: TargetType {
             let auth = ["Authorization": "Bearer \(accessToken)"]
             return base.merging(auth) { _, new in new }
         case let .getStations(_, accessToken):
+            let auth = ["Authorization": "Bearer \(accessToken)"]
+            return base.merging(auth) { _, new in new }
+        case let .getStationInfo(_, accessToken):
+            let auth = ["Authorization": "Bearer \(accessToken)"]
+            return base.merging(auth) { _, new in new }
+        case let .getPathHistories(_, accessToken):
             let auth = ["Authorization": "Bearer \(accessToken)"]
             return base.merging(auth) { _, new in new }
         case let .postPathHistories(_, accessToken):

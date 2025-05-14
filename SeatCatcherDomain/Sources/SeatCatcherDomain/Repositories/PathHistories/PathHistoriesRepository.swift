@@ -6,5 +6,6 @@
 //
 
 public protocol PathHistoriesRepository {
+    func getPathHistories(cursor: Int?) async throws -> [PathHistory]
     func postPathHistories(departureStationId: Int, arrivalStationId: Int) async throws
 }
