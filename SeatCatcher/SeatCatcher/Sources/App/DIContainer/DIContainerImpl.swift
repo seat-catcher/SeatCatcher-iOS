@@ -15,11 +15,14 @@ final class DIContainerImpl {
     // MARK: - Store Instances
     private let appStore = AppStore(user: User(hasOnBoarded: true))
 
+    // MARK: - Service Instances
+    private let networkService = NetworkService()
+
     // MARK: - Repository Instances
-    private lazy var loginRepository = LoginRepositoryImpl()
-    private lazy var tokenRepository = TokenRepositoryImpl()
-    private lazy var userRepository = UserRepositoryImpl()
-    private lazy var stationsRepository = StationsRepositoryImpl()
+    private lazy var loginRepository = LoginRepositoryImpl(networkService: networkService)
+    private lazy var tokenRepository = TokenRepositoryImpl(networkService: networkService)
+    private lazy var userRepository = UserRepositoryImpl(networkService: networkService)
+    private lazy var stationsRepository = StationsRepositoryImpl(networkService: networkService)
 
     // MARK: - Auth UseCase Instances
     private lazy var appleLoginUseCase = AppleLoginUseCaseImpl(

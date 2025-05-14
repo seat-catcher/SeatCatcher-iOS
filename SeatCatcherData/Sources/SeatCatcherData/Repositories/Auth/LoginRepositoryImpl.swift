@@ -17,9 +17,11 @@ public final class LoginRepositoryImpl: LoginRepository {
         case loginNotAvailable
     }
 
-    private let networkService = NetworkService()
+    private let networkService: NetworkService
 
-    public init() {}
+    public init(networkService: NetworkService) {
+        self.networkService = networkService
+    }
 
     public func appleLogin(identityToken: String) async throws -> SeatCatcherDomain.Token {
         let responseDTO = try await networkService.postAppleLogin(identityToken)

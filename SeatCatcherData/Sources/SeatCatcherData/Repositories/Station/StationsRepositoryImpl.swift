@@ -8,9 +8,11 @@
 import SeatCatcherDomain
 
 public final class StationsRepositoryImpl: StationsRepository {
-    private let networkService = NetworkService()
+    private let networkService: NetworkService
 
-    public init() {}
+    public init(networkService: NetworkService) {
+        self.networkService = networkService
+    }
 
     public func getStations(keyword: String, line: Int) async throws -> [Station] {
         let responseDTO = try await networkService.getStations(keyword: keyword, line: line)

@@ -79,6 +79,8 @@ public final class SelectPathViewModel: ViewModel {
                 }
             }
         case .backButtonTapped:
+            if state.searchMode == .departure { state.departure = nil }
+            state.arrival = nil
             state.searchText = ""
             state.searchResults = []
         case .searchResultTapped(let station):
