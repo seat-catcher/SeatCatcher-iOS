@@ -1,15 +1,15 @@
 //
-//  SearchArrivalStationsUseCase.swift
+//  SearchStationsUseCase.swift
 //  SeatCatcherDomain
 //
 //  Created by 박현수 on 5/7/25.
 //
 
-public protocol SearchArrivalStationsUseCase {
+public protocol SearchStationsUseCase {
     func execute(keyword: String, line: Int) async throws -> [Station]
 }
 
-public final class SearchArrivalStationsUseCaseImpl: SearchArrivalStationsUseCase {
+public final class SearchStationsUseCaseImpl: SearchStationsUseCase {
     private let stationsRepository: StationsRepository
 
     public init(stationsRepository: StationsRepository) {

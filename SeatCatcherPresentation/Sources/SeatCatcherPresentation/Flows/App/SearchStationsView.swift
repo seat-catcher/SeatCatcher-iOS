@@ -24,6 +24,7 @@ public struct SearchStationsView: View {
         .withNavigationBar(
             viewModel.coordinator,
             config: .search(
+                backButtonAction: { viewModel.action(.searchViewBackButtonTapped) },
                 placeholder: "여기서 \(viewModel.state.searchMode == .departure ? "승차역" : "하차역") 검색하기",
                 text: Binding<String>(
                     get: { viewModel.state.searchText },

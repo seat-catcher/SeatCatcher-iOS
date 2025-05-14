@@ -23,8 +23,10 @@ public protocol DIContainer {
     func resolvePatchUserInfoUseCase() -> PatchUserInfoUseCase
 
     // MARK: - Station UseCases
-    func resolveSearchDepartureStationsUseCase() -> SearchDepartureStationsUseCase
-    func resolveSearchArrivalStationsUseCase() -> SearchArrivalStationsUseCase
+    func resolveSearchStationsUseCase() -> SearchStationsUseCase
+
+    // MARK: - PathHistories UseCases
+    func resolvePostPathHistoriesUseCase() -> PostPathHistoriesUseCase
 
     // MARK: - Store
     func resolveAppStore() -> AppStore

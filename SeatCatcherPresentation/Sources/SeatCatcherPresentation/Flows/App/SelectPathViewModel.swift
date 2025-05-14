@@ -24,7 +24,7 @@ public final class SelectPathViewModel: ViewModel {
         case departureButtonTapped
         case arrivalButtonTapped
         case searchTextChanged(text: String)
-        case backButtonTapped
+        case searchViewBackButtonTapped
         case searchResultTapped(station: Station)
     }
 
@@ -34,18 +34,19 @@ public final class SelectPathViewModel: ViewModel {
 
     private(set) var state = State()
 
-    private let searchDepartureStationsUseCase: SearchDepartureStationsUseCase
-    private let searchArrivalStationsUseCase: SearchArrivalStationsUseCase
+    private let searchStationsUseCase: SearchStationsUseCase
 
     let coordinator: Coordinator
 
+    let line: Int
+
     public init(
-        searchDepartureStationsUseCase: SearchDepartureStationsUseCase,
-        searchArrivalStationsUseCase: SearchArrivalStationsUseCase,
+        line: Int,
+        searchStationsUseCase: SearchStationsUseCase,
         coordinator: Coordinator
     ) {
-        self.searchDepartureStationsUseCase = searchDepartureStationsUseCase
-        self.searchArrivalStationsUseCase = searchArrivalStationsUseCase
+        self.line = line
+        self.searchStationsUseCase = searchStationsUseCase
         self.coordinator = coordinator
     }
 
@@ -67,20 +68,11 @@ public final class SelectPathViewModel: ViewModel {
             guard state.searchText != text else { return } // SwiftUI TextField Binding Setter 중복 호출 버그로 인해 방지 로직 추가
             state.searchText = text
             guard !text.isEmpty else { return } // keyword 쿼리 파라미터 빈 문자열로 호출 방지
-            Task { [searchDepartureStationsUseCase, searchArrivalStationsUseCase] in // self 전체 메인액터 격리 방지
-                switch state.searchMode {
-                case .departure:
-                    let searchResults = try await searchDepartureStationsUseCase.execute(keyword: text)
-                    self.state.searchResults = searchResults
-                case .arrival:
-                    guard let line = state.departure?.line else { return }
-                    let searchResults = try await searchArrivalStationsUseCase.execute(keyword: text, line: line)
-                    self.state.searchResults = searchResults
-                }
+            Task { [searchStationsUseCase] in // self 전체 메인액터 격리 방지
+                let searchResults = try await searchStationsUseCase.execute(keyword: text, line: line)
+                self.state.searchResults = searchResults
             }
-        case .backButtonTapped:
-            if state.searchMode == .departure { state.departure = nil }
-            state.arrival = nil
+        case .searchViewBackButtonTapped:
             state.searchText = ""
             state.searchResults = []
         case .searchResultTapped(let station):
@@ -90,7 +82,7 @@ public final class SelectPathViewModel: ViewModel {
             case .arrival:
                 state.arrival = station
             }
-            self.action(.backButtonTapped)
+            self.action(.searchViewBackButtonTapped)
             coordinator.pop()
         }
     }

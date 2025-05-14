@@ -26,7 +26,6 @@ public struct SelectPathView: View {
             config: .stationSelection(
                 departureName: viewModel.state.departure?.name,
                 arrivalName: viewModel.state.arrival?.name,
-                backButtonAction: { viewModel.action(.backButtonTapped) },
                 swapStationsButtonAction: { viewModel.action(.swapButtonTapped) },
                 selectDepartureButtonAction: { viewModel.action(.departureButtonTapped) },
                 selectArrivalButtonAction: { viewModel.action(.arrivalButtonTapped) }

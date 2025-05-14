@@ -10,9 +10,16 @@ public protocol PostPathHistoriesUseCase {
 }
 
 public final class PostPathHistoriesImpl: PostPathHistoriesUseCase {
-    public init() {}
+    private let pathHistoriesRepository: PathHistoriesRepository
+
+    public init(pathHistoriesRespotiry: PathHistoriesRepository) {
+        self.pathHistoriesRepository = pathHistoriesRespotiry
+    }
 
     public func execute(departureStationId: Int, arrivalStationId: Int) async throws {
-        
+        try await pathHistoriesRepository.postPathHistories(
+            departureStationId: departureStationId,
+            arrivalStationId: arrivalStationId
+        )
     }
 }

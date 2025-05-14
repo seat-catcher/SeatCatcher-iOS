@@ -15,9 +15,7 @@ public final class HomeViewModel: ViewModel {
         case catchSeatButtonTapped
     }
 
-    struct State {
-
-    }
+    struct State {}
 
     let store: AppStore
     let coordinator: Coordinator
@@ -32,7 +30,7 @@ public final class HomeViewModel: ViewModel {
     func action(_ action: Action) {
         switch action {
         case .catchSeatButtonTapped:
-            coordinator.push(AppScene.selectPath)
+            coordinator.push(AppScene.selectLine)
         }
     }
 }
