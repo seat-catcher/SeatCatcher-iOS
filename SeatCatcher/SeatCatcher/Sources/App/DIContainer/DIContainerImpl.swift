@@ -54,6 +54,10 @@ final class DIContainerImpl {
     private lazy var searchStationsUseCase = SearchStationsUseCaseImpl(stationsRepository: stationsRepository)
 
     // MARK: - PathHistories UseCase Instances
+    private lazy var getPathHistoriesUseCase = GetPathHistoriesUseCaseImpl(
+        pathHistoriesRepository: pathHistoriesRepository,
+        stationsRepository: stationsRepository
+    )
     private lazy var postPathHistoriesUseCase = PostPathHistoriesImpl(pathHistoriesRespotiry: pathHistoriesRepository)
 }
 
@@ -75,6 +79,7 @@ extension DIContainerImpl: DIContainer {
     func resolveSearchStationsUseCase() -> SearchStationsUseCase { return searchStationsUseCase }
 
     // MARK: - PathHistories UseCases
+    func resolveGetPathHistoriesUseCase() ->  GetPathHistoriesUseCase { return getPathHistoriesUseCase }
     func resolvePostPathHistoriesUseCase() -> PostPathHistoriesUseCase { return postPathHistoriesUseCase }
 
     // MARK: - Store

@@ -57,6 +57,7 @@ final class AppCoordinator: Coordinator {
         case .selectPath(let line):
             let selectPathViewModel = SelectPathViewModel(
                 line: line,
+                getPathHistoriesUseCase: diContainer.resolveGetPathHistoriesUseCase(),
                 searchStationsUseCase: diContainer.resolveSearchStationsUseCase(),
                 coordinator: self
             )

@@ -7,4 +7,5 @@
 
 public protocol StationsRepository {
     func getStations(keyword: String, line: Int) async throws -> [Station]
+    func getStationInfo(stationId: Int) async throws -> Station
 }

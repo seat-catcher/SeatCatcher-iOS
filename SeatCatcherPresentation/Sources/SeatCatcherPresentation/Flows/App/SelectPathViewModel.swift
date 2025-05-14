@@ -12,6 +12,7 @@ import SeatCatcherDomain
 @Observable
 public final class SelectPathViewModel: ViewModel {
     struct State {
+        var histories: [PathHistory] = []
         var searchMode: SearchStationsMode = .departure
         var departure: Station?
         var arrival: Station?
@@ -20,9 +21,14 @@ public final class SelectPathViewModel: ViewModel {
     }
 
     enum Action {
+        // SelectPathView
+        case viewAppeared
         case swapButtonTapped
         case departureButtonTapped
         case arrivalButtonTapped
+        case historyTapped(history: PathHistory)
+
+        // SearchStationsView
         case searchTextChanged(text: String)
         case searchViewBackButtonTapped
         case searchResultTapped(station: Station)
@@ -34,6 +40,7 @@ public final class SelectPathViewModel: ViewModel {
 
     private(set) var state = State()
 
+    private let getPathHistoriesUseCase: GetPathHistoriesUseCase
     private let searchStationsUseCase: SearchStationsUseCase
 
     let coordinator: Coordinator
@@ -42,16 +49,24 @@ public final class SelectPathViewModel: ViewModel {
 
     public init(
         line: Int,
+        getPathHistoriesUseCase: GetPathHistoriesUseCase,
         searchStationsUseCase: SearchStationsUseCase,
         coordinator: Coordinator
     ) {
         self.line = line
+        self.getPathHistoriesUseCase = getPathHistoriesUseCase
         self.searchStationsUseCase = searchStationsUseCase
         self.coordinator = coordinator
     }
 
     func action(_ action: Action) {
         switch action {
+        // SelectPathView
+        case .viewAppeared:
+            Task { [getPathHistoriesUseCase] in
+                let histories = try await getPathHistoriesUseCase.execute(cursor: nil)
+                self.state.histories = histories
+            }
         case .swapButtonTapped:
             guard state.departure != nil, state.arrival != nil else { return }
             let temp = state.arrival
@@ -64,6 +79,11 @@ public final class SelectPathViewModel: ViewModel {
             guard state.departure != nil else { return }
             state.searchMode = .arrival
             coordinator.push(AppScene.searchStations(viewModel: self))
+        case .historyTapped(let history):
+            state.departure = Station(id: history.departureStationId, name: history.departureStationName, line: history.line ?? 2)
+            state.arrival = Station(id: history.arrivalStationId, name: history.arrivalStationName, line: history.line ?? 2)
+
+        // SearchStationsView
         case .searchTextChanged(let text):
             guard state.searchText != text else { return } // SwiftUI TextField Binding Setter 중복 호출 버그로 인해 방지 로직 추가
             state.searchText = text

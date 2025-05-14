@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SeatCatcherDomain
 
 public struct SelectPathView: View {
     @State private var viewModel: SelectPathViewModel
@@ -16,8 +17,8 @@ public struct SelectPathView: View {
 
     public var body: some View {
         ScrollView {
-            ForEach(0..<10, id: \.self) {
-                Text("\($0)")
+            ForEach(viewModel.state.histories) {
+                PathHistoryCell(viewModel: viewModel, history: $0)
             }
         }
         .withBackground(.gray900)
@@ -31,6 +32,47 @@ public struct SelectPathView: View {
                 selectArrivalButtonAction: { viewModel.action(.arrivalButtonTapped) }
             )
         )
+        .onAppear { viewModel.action(.viewAppeared) }
+    }
+}
+
+private struct PathHistoryCell: View {
+    let viewModel: SelectPathViewModel
+    let history: PathHistory
+
+    var body: some View {
+        Button {
+            viewModel.action(.historyTapped(history: history))
+        } label: {
+            VStack(spacing: 0) {
+                VStack(spacing: 12) {
+                    HStack(spacing: 0) {
+                        StationNodeView(.departure)
+                            .padding(.trailing, 10)
+                        LineNumberCircle(history.line ?? 7)
+                            .padding(.trailing, 4)
+                        Text("\(history.departureStationName)역")
+                            .font(.B02_M)
+                            .foregroundStyle(.gray300)
+                        Spacer()
+                        Text(history.createdDate)
+                            .font(.B03_M)
+                            .foregroundStyle(.gray400)
+                    }
+                    HStack(spacing: 0) {
+                        StationNodeView(.arrival)
+                            .padding(.trailing, 10)
+                        Text("\(history.arrivalStationName)역")
+                            .font(.B02_M)
+                            .foregroundStyle(.gray100)
+                        Spacer()
+                    }
+                }
+                .padding(18)
+
+                Rectangle().fill(.gray800).frame(height: 1)
+            }
+        }
     }
 }
 

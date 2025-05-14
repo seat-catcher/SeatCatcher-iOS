@@ -18,4 +18,9 @@ public final class StationsRepositoryImpl: StationsRepository {
         let responseDTO = try await networkService.getStations(keyword: keyword, line: line)
         return responseDTO.map { $0.domainModel }
     }
+
+    public func getStationInfo(stationId: Int) async throws -> Station {
+        let responseDTO = try await networkService.getStationInfo(stationId: stationId)
+        return responseDTO.domainModel
+    }
 }

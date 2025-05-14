@@ -182,12 +182,24 @@ public struct NetworkService {
         return responseDTO
     }
 
-    func getStations(keyword: String, line: Int) async throws  -> [GetStationsResponseDTO] {
+    func getStations(keyword: String, line: Int) async throws -> [GetStationsResponseDTO] {
         let requestDTO = GetStationsRequestDTO(keyword: keyword, line: String(line))
         let response = try await provider.request(.getStations(requestDTO: requestDTO, accessToken: accessToken))
         // 검색 결과가 없을 경우 response body X, data가 없으므로 빈 배열 리턴
         guard !response.isEmpty else { return [] }
         let responseDTO = try JSONDecoder().decode([GetStationsResponseDTO].self, from: response)
+        return responseDTO
+    }
+
+    func getStationInfo(stationId: Int) async throws -> GetStationInfoResponseDTO {
+        let response = try await provider.request(.getStationInfo(stationId: stationId, accessToken: accessToken))
+        let responseDTO = try JSONDecoder().decode(GetStationInfoResponseDTO.self, from: response)
+        return responseDTO
+    }
+
+    func getPathHistories(cursor: Int?) async throws -> GetPathHistoriesResponseDTO {
+        let response = try await provider.request(.getPathHistories(cursor: cursor, accessToken: accessToken))
+        let responseDTO = try JSONDecoder().decode(GetPathHistoriesResponseDTO.self, from: response)
         return responseDTO
     }
 
