@@ -11,31 +11,31 @@ public struct Seat: Sendable, Identifiable {
     
     public let id: UUID = UUID()
     
-    public var minutesLeft: Int
-    public var isAvailable: Bool
-    public var isSelected: Bool
-    public var isSeated: Bool
-    public var hasDibsOn: Bool
-    public var seatDirection: SeatDirection
+    public var minutesLeft: Int // 하차까지 남은 시간(분)
+    public var isAvailable: Bool // 앉을 수 있는 자리인지 여부
+    public var isVisible: Bool // 화면에 띄울지 여부
+    public var isSeated: Bool // 내가 앉아있는지 여부
+    public var isBlocked: Bool // 잠겨있는지 여부
+    public var seatDirection: SeatDirection // UI 기준 좌석 방향
 
     public init(
-        minutesLeft: Int = 0,
-        isAvailable: Bool = true,
-        isSelected: Bool = false,
-        isSeated: Bool = false,
-        hasDibsOn: Bool = false,
+        minutesLeft: Int,
+        isAvailable: Bool,
+        isVisible: Bool,
+        isSeated: Bool,
+        isBlocked: Bool,
         seatDirection: SeatDirection
     ) {
         self.minutesLeft = minutesLeft
         self.isAvailable = isAvailable
-        self.isSelected = isSelected
+        self.isVisible = isVisible
         self.isSeated = isSeated
-        self.hasDibsOn = hasDibsOn
+        self.isBlocked = isBlocked
         self.seatDirection = seatDirection
     }
 }
 
 public enum SeatDirection: Sendable {
-    case top
-    case bottom
+    case top // UI 기준 상단 좌석
+    case bottom // UI 기준 하단 좌석
 }
