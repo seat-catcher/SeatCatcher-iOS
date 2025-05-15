@@ -8,15 +8,15 @@
 import SeatCatcherDomain
 import SwiftUI
 
-extension Seat {
+internal extension Seat {
     
-    var image: ImageResource {
+    func image(isSelected: Bool) -> ImageResource {
         // 좌석 방향
         let directionPrefix = seatDirection == .top ? "seat_top" : "seat_bottom"
         
-        // 찜
-        if hasDibsOn {
-            return ImageResource(name: "\(directionPrefix)_dibs", bundle: .module)
+        // 잠금
+        if isBlocked {
+            return ImageResource(name: "\(directionPrefix)_blocked", bundle: .module)
         }
         // 빈 자리
         if isAvailable {
