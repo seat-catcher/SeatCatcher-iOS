@@ -7,7 +7,7 @@
 
 import Foundation
 
-public protocol UnlockSeatUseCase {
+public protocol UnlockSeatUseCase: Sendable {
     func execute(_ seat: Seat) -> Seat
 }
 

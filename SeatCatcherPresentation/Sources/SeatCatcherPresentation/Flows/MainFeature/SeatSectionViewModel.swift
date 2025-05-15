@@ -9,57 +9,67 @@ import Foundation
 import SeatCatcherCore
 import SeatCatcherDomain
 
+@MainActor
 @Observable
 public final class SeatSectionViewModel: ViewModel {
     
-    private let getSeatInSectionUseCase: GetSeatInSectionUseCase
-    private let unlockSeatUseCase: UnlockSeatUseCase
-    
-    enum Action {
+    public enum Action {
         case willAppear
         case willSelectSeat(Seat)
         case willUnlockAllSeats
     }
     
-    struct State {
+    public struct State {
         var selectedSeat: Seat?
         var topSeats: [Seat]
         var bottomSeats: [Seat]
     }
     
+    private let model: SeatSectionModel
     private let userStore: UserStore
+    private(set) var state: State
     
-    public init(
+    init(
         userStore: UserStore,
-        getSeatInSectionUseCase: GetSeatInSectionUseCase,
-        unlockSeatUseCase: UnlockSeatUseCase
+        model: SeatSectionModel
     ) {
         self.userStore = userStore
-        self.getSeatInSectionUseCase = getSeatInSectionUseCase
-        self.unlockSeatUseCase = unlockSeatUseCase
+        self.model = model
+        self.state = State(topSeats: [], bottomSeats: [])
     }
     
-    private(set) var state = State(topSeats: [], bottomSeats: [])
-    
-    func action(_ action: Action) {
+    public func action(_ action: Action) {
         switch action {
-        // MARK: 좌석 정보 불러오기
         case .willAppear:
-            let seats = self.getSeatInSectionUseCase.execute()
-            self.state = State(topSeats: seats.top, bottomSeats: seats.bottom)
-        // MARK: 좌석 선택
+            Task {
+                do {
+                    let seatSection = try await model.fetchSeats()
+                    state = State(
+                        selectedSeat: state.selectedSeat,
+                        topSeats: seatSection.topSeats,
+                        bottomSeats: seatSection.bottomSeats
+                    )
+                } catch {
+                    print(error.localizedDescription)
+                }
+            }
         case .willSelectSeat(let seat):
-            // 동일 좌석 재탭: 선택 해제
             if state.selectedSeat?.id == seat.id {
                 state.selectedSeat = nil
             } else {
-                // 새 좌석 선택
                 state.selectedSeat = seat
             }
-        // MARK: 좌석 잠금 해제
+            
         case .willUnlockAllSeats:
-            state.topSeats = state.topSeats.map { unlockSeatUseCase.execute($0) }
-            state.bottomSeats = state.bottomSeats.map { unlockSeatUseCase.execute($0) }
+            let seatSection = model.unlockAllSeats(
+                topSeats: state.topSeats,
+                bottomSeats: state.bottomSeats
+            )
+            state = State(
+                selectedSeat: state.selectedSeat,
+                topSeats: seatSection.topSeats,
+                bottomSeats: seatSection.bottomSeats
+            )
         }
     }
 }
