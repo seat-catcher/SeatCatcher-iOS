@@ -29,7 +29,7 @@ public final class SeatSectionViewModel: ViewModel {
     private let userStore: UserStore
     private(set) var state: State
     
-    init(
+    public init(
         userStore: UserStore,
         model: SeatSectionModel
     ) {
