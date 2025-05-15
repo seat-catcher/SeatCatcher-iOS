@@ -1,5 +1,5 @@
 //
-//  TokenVO.swift
+//  Token.swift
 //  SeatCatcherDomain
 //
 //  Created by 박현수 on 3/21/25.

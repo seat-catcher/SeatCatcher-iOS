@@ -37,9 +37,6 @@ public final class TokenRepositoryImpl: TokenRepository {
     // MARK: - AccessToken
     public func saveAccessToken(_ token: String) throws {
         // Swagger Authorize를 위해 액세스토큰 저장 시 로그 출력하도록 남겨놓았습니다.
-        #if DEBUG
-        dump(token)
-        #endif
         try KeychainService.save(token: token, key: accessToken)
     }
     public func getAccessToken() throws -> String? {

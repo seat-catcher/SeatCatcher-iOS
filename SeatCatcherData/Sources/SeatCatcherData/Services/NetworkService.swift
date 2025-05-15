@@ -10,40 +10,38 @@ import Alamofire
 import Moya
 import SeatCatcherDomain
 
-public struct NetworkService {
-    enum TokenError: Error {
-        case accessTokenIsNil
-    }
-
+public struct NetworkService: Sendable {
     /// _AuthInterceptor는 Alamofire의 RequestInterceptor 프로토콜을 채택하여,
     /// HTTP 응답이 401(Unauthorized)일 때 토큰 리이슈를 시도하고, 그 결과에 따라 요청을 재시도할지 결정하는 역할을 합니다.
     private struct AuthInterceptor: RequestInterceptor {
+        /// 키체인 토큰 fetch 에러
+        enum TokenError: Error {
+            case accessTokenIsNil
+            case refreshTokenIsNil
+        }
+        /// 토큰 refreshing status 관리
+        actor TokenRefreshingStatus: Sendable {
+            static var flag: Bool = false
+            private init() {}
+        }
 
         /// Alamofire의 RequestInterceptor 프로토콜을 채택한 _AuthInterceptor의 adapt 메소드입니다.
         /// 이 메소드는 HTTP 요청을 보낼 때 호출되며,
-        /// 만약 UserDefaults에 "isTokenRefreshed" 값이 true로 설정되어 있다면,
+        /// 만약 TokenRefreshingStatus에 flag값이 true로 설정되어 있다면,
         /// 새롭게 갱신된 토큰을 사용해 Authorization 헤더를 업데이트한 후 수정된 URLRequest를 반환합니다.
         func adapt(
             _ urlRequest: URLRequest,
             for session: Session,
             completion: @escaping @Sendable (Result<URLRequest, any Error>) -> Void
         ) {
-            // UserDefaults에서 "isTokenRefreshed" 플래그를 읽습니다.
-            // 이 값은 이전에 토큰 리이슈 작업이 성공했음을 나타내며, 새 토큰을 적용해야 함을 의미합니다.
-
             // 만약 토큰이 새로 갱신된 상태라면, HTTP 헤더의 Authorization 값을 갱신합니다.
-            if UserDefaultsService.isTokenRefreshed {
-                // 새로운 토큰을 가져오기 위해 TokenRepositoryImpl 인스턴스를 생성합니다.
-                let tokenRepository = TokenRepositoryImpl(networkService: NetworkService())
+            if TokenRefreshingStatus.flag {
                 // urlRequest를 복사하여 수정할 새 변수에 저장합니다.
                 var urlRequestWithReissuedToken = urlRequest
-                // 재시도 후에는 "isTokenRefreshed" 플래그를 false로 리셋합니다.
-                UserDefaultsService.isTokenRefreshed = false
-
                 do {
-                    // TokenRepositoryImpl에서 액세스 토큰을 가져옵니다.
+                    // KeyChain에서 액세스 토큰을 가져옵니다.
                     // 토큰이 nil인 경우 에러를 던집니다.
-                    guard let accessToken = try tokenRepository.getAccessToken() else {
+                    guard let accessToken = try KeychainService.get(key: "accessToken") else {
                         completion(.failure(TokenError.accessTokenIsNil))
                         throw TokenError.accessTokenIsNil
                     }
@@ -53,14 +51,16 @@ public struct NetworkService {
                     dump("HTTP Request Failed | HTTP Authorization 헤더 AccessToken 교체 후 재시도")
                     // 수정된 URLRequest를 성공 결과로 반환합니다.
                     completion(.success(urlRequestWithReissuedToken))
+                    // 재시도 후에는 flag를 false로 리셋합니다.
+                    TokenRefreshingStatus.flag = false
                 } catch {
                     dump("HTTP Request Failed | AccessToken Not Found")
                     // 토큰을 가져오거나 수정하는 중 에러가 발생하면 로그아웃합니다.
                     completion(.failure(error))
-                    logout(tokenRepository: tokenRepository)
+                    logout()
                 }
             } else {
-                // 만약 "isTokenRefreshed" 플래그가 false이면, 원본 URLRequest를 그대로 반환합니다.
+                // 만약 플래그가 false이면, 원본 URLRequest를 그대로 반환합니다.
                 completion(.success(urlRequest))
             }
         }
@@ -88,26 +88,21 @@ public struct NetworkService {
             else {
                 completion(.doNotRetryWithError(error))
                 dump("HTTP Request Failed | 리프레시 토큰 만료, 로그아웃")
-
-                // 키체인에 저장된 토큰을 삭제하고 로그아웃합니다.
-                let tokenRepository = TokenRepositoryImpl(networkService: NetworkService())
-                logout(tokenRepository: tokenRepository)
+                logout()
                 return
             }
-
-            // 토큰 리이슈를 위해 TokenRepositoryImpl의 인스턴스를 생성합니다.
-            // 내부에 Stored Property로 저장할 경우 RequestInterceptor의 Sendable을 충족하지 못하므로,
-            // 블록 내부 지역 변수로 선언합니다.
-            let tokenRepository = TokenRepositoryImpl(networkService: NetworkService())
 
             // 비동기 Task를 생성하여 토큰 리이슈 작업을 실행합니다.
             _Concurrency.Task {
                 do {
                     dump("HTTP Request Failed | 토큰 리이슈")
                     // 토큰을 새로 갱신합니다.
-                    let token = try await tokenRepository.reissue()
-                    try tokenRepository.saveTokens(token)
-                    UserDefaultsService.isTokenRefreshed = true
+                    let token = try await reissue()
+                    // 갱신된 토큰을 키체인에 저장합니다.
+                    try KeychainService.save(token: token.accessToken, key: "accessToken")
+                    try KeychainService.save(token: token.refreshToken, key: "refreshToken")
+                    // TokenRefreshingStatus를 true로 설정합니다.
+                    TokenRefreshingStatus.flag = true
                     dump("HTTP Request Failed | 토큰 갱신 성공, 재시도")
                     // 토큰 갱신에 성공하면 completion 클로저에 .retry를 전달하여 요청 재시도를 알립니다.
                     completion(.retry)
@@ -115,21 +110,27 @@ public struct NetworkService {
                     dump("HTTP Request Failed | 토큰 갱신 실패, 로그아웃")
                     // 토큰 갱신에 실패하면 completion 클로저에 실패 결과를 전달합니다.
                     completion(.doNotRetryWithError(error))
-
                     // 키체인에 저장된 토큰을 삭제하고 로그아웃합니다.
-                    logout(tokenRepository: tokenRepository)
+                    logout()
                 }
             }
         }
 
-        private func logout(tokenRepository: TokenRepository) {
-            try? tokenRepository.deleteTokens()
+        func reissue() async throws -> Token {
+            guard let refreshToken = try KeychainService.get(key: "refreshToken") else { throw TokenError.accessTokenIsNil }
+
+            let provider = MoyaProvider<SeatCatcherAPI>()
+            let requestDTO = RefreshTokenRequestDTO(refreshToken: refreshToken)
+            let response = try await provider.request(.postRefreshToken(requestDTO))
+            let responseDTO = try JSONDecoder().decode(RefreshTokenResponseDTO.self, from: response)
+            return responseDTO.domainModel
+        }
+
+        private func logout() {
+            try? KeychainService.delete(key: "accessToken")
+            try? KeychainService.delete(key: "refreshToken")
             UserDefaultsService.isSignedIn = false
         }
-    }
-
-    enum DecodingError: Error {
-        case plaintextDecodingError
     }
 
     private let provider = MoyaProvider<SeatCatcherAPI>(session: Session(interceptor: AuthInterceptor()))

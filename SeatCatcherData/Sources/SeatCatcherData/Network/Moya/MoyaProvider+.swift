@@ -1,5 +1,5 @@
 //
-//  MoyaProvider+Concurrency.swift
+//  MoyaProvider+.swift
 //  SeatCatcher
 //
 //  Created by 박현수 on 3/12/25.
@@ -17,7 +17,7 @@ extension MoyaProvider {
      2. `self.request(target) { result in ... }`을 호출하여 네트워크 요청 실행
      3. 요청이 완료되면 (`result`가 반환되면) Task의 suspend를 해제 (`resume()`)
      4. 성공 시 `Response` 객체를 반환, 실패 시 `MoyaError`를 throw
-    */
+     */
     func request(_ target: Target) async throws -> Data {
         try await withCheckedThrowingContinuation { continuation in
             self.request(target) { result in
@@ -32,3 +32,30 @@ extension MoyaProvider {
         }
     }
 }
+
+// TODO: - 추후 MoyaProvider Sendable 채택 시 제거
+/// MoyaProvider에 @unchecked Sendable을 채택하기 위한 extension입니다.
+/// MoyaProvider는 Sendable을 채택하고 있지 않지만, @Atomic 프로퍼티 래퍼를 통해 스레드 안전성을 보장합니다.
+///
+///     @propertyWrapper
+///     final class Atomic<Value> {
+///         private var lock: NSRecursiveLock = NSRecursiveLock()
+///         private var value: Value
+///
+///         var wrappedValue: Value {
+///             get {
+///                 lock.lock(); defer { lock.unlock() }
+///                 return value
+///             }
+///             set {
+///                 lock.lock(); defer { lock.unlock() }
+///                 value = newValue
+///             }
+///         }
+///
+///         init(wrappedValue value: Value) {
+///             self.value = value
+///         }
+///     }
+
+extension MoyaProvider: @unchecked Sendable {}

@@ -64,8 +64,12 @@ public final class SelectPathViewModel: ViewModel {
         // SelectPathView
         case .viewAppeared:
             Task { [getPathHistoriesUseCase] in
-                let histories = try await getPathHistoriesUseCase.execute(cursor: nil)
-                self.state.histories = histories
+                do {
+                    let histories = try await getPathHistoriesUseCase.execute(cursor: nil)
+                    self.state.histories = histories
+                } catch {
+                    self.state.histories = []
+                }
             }
         case .swapButtonTapped:
             guard state.departure != nil, state.arrival != nil else { return }
@@ -89,8 +93,12 @@ public final class SelectPathViewModel: ViewModel {
             state.searchText = text
             guard !text.isEmpty else { return } // keyword 쿼리 파라미터 빈 문자열로 호출 방지
             Task { [searchStationsUseCase] in // self 전체 메인액터 격리 방지
-                let searchResults = try await searchStationsUseCase.execute(keyword: text, line: line)
-                self.state.searchResults = searchResults
+                do {
+                    let searchResults = try await searchStationsUseCase.execute(keyword: text, line: line)
+                    self.state.searchResults = searchResults
+                } catch {
+                    self.state.searchResults = []
+                }
             }
         case .searchViewBackButtonTapped:
             state.searchText = ""
