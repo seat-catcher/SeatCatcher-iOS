@@ -8,7 +8,7 @@
 import Foundation
 import SeatCatcherDomain
 
-final class SeatSectionModel: Sendable {
+public final class SeatSectionModel: Sendable {
     private let getSeatInSectionUseCase: GetSeatInSectionUseCase
     private let unlockSeatUseCase: UnlockSeatUseCase
     
@@ -17,7 +17,7 @@ final class SeatSectionModel: Sendable {
         var bottomSeats: [Seat]
     }
     
-    init(
+    public init(
         getSeatInSectionUseCase: GetSeatInSectionUseCase,
         unlockSeatUseCase: UnlockSeatUseCase
     ) {
