@@ -18,35 +18,17 @@ public struct SeatSectionView: View {
     
     public var body: some View {
         VStack(alignment: .center, spacing: 0) {
-            HStack(alignment: .top, spacing: 6) {
-                ForEach(viewModel.state.topSeats, id: \.id) { seat in
-                    if seat.isVisible {
-                        Image(seat.image(isSelected: viewModel.state.selectedSeat?.id == seat.id))
-                            .frame(width: 40, height: 42)
-                            .onTapGesture {
-                                viewModel.action(.willSelectSeat(seat))
-                            }
-                    } else {
-                        Spacer()
-                            .frame(width: 40, height: 42)
-                    }
-                }
-            }
+            SeatRowView(
+                seats: viewModel.state.topSeats,
+                selectedSeat: viewModel.state.selectedSeat,
+                onTap: { viewModel.action(.willSelectSeat($0)) }
+            )
             Spacer()
-            HStack(alignment: .bottom, spacing: 6) {
-                ForEach(viewModel.state.bottomSeats, id: \.id) { seat in
-                    if seat.isVisible {
-                        Image(seat.image(isSelected: viewModel.state.selectedSeat?.id == seat.id))
-                            .frame(width: 40, height: 42)
-                            .onTapGesture {
-                                viewModel.action(.willSelectSeat(seat))
-                            }
-                    } else {
-                        Spacer()
-                            .frame(width: 40, height: 42)
-                    }
-                }
-            }
+            SeatRowView(
+                seats: viewModel.state.bottomSeats,
+                selectedSeat: viewModel.state.selectedSeat,
+                onTap: { viewModel.action(.willSelectSeat($0)) }
+            )
         }
         .padding(.vertical, 20)
         .padding(.horizontal, 10)
@@ -59,6 +41,29 @@ public struct SeatSectionView: View {
         .padding(.horizontal, 20)
         .onAppear {
             viewModel.action(.willAppear)
+        }
+    }
+}
+
+private struct SeatRowView: View {
+    let seats: [Seat]
+    let selectedSeat: Seat?
+    let onTap: (Seat) -> Void
+
+    var body: some View {
+        HStack(alignment: .center, spacing: 6) {
+            ForEach(seats, id: \.id) { seat in
+                if seat.isVisible {
+                    Image(seat.image(isSelected: selectedSeat?.id == seat.id))
+                        .frame(width: 40, height: 42)
+                        .onTapGesture {
+                            onTap(seat)
+                        }
+                } else {
+                    Spacer()
+                        .frame(width: 40, height: 42)
+                }
+            }
         }
     }
 }
