@@ -7,15 +7,16 @@
 
 import Foundation
 
-public protocol GetSeatInSectionUseCase {
-    func execute() -> (top: [Seat], bottom: [Seat])
+public protocol GetSeatInSectionUseCase: Sendable {
+    func execute() async throws -> (top: [Seat], bottom: [Seat])
 }
 
 public final class GetSeatInSectionUseCaseImpl: GetSeatInSectionUseCase {
     
     public init() {}
     
-    public func execute() -> (top: [Seat], bottom: [Seat]) {
+    public func execute() async throws -> (top: [Seat], bottom: [Seat]) {
+        //TODO: 서버 연결
         let topSeats: [Seat] = [
             Seat(minutesLeft: 30, isAvailable: false, isVisible: true, isSeated: false, isBlocked: false, seatDirection: .top),
             Seat(minutesLeft: 20, isAvailable: false, isVisible: true, isSeated: false, isBlocked: false, seatDirection: .top),

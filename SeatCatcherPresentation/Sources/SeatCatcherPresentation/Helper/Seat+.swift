@@ -8,7 +8,7 @@
 import SeatCatcherDomain
 import SwiftUI
 
-internal extension Seat {
+extension Seat {
     
     func image(isSelected: Bool) -> ImageResource {
         // 좌석 방향
