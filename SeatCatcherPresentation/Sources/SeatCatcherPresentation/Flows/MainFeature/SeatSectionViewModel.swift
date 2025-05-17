@@ -26,14 +26,14 @@ public final class SeatSectionViewModel: ViewModel {
     }
     
     private let model: SeatSectionModel
-    private let userStore: UserStore
+    private let appStore: AppStore
     private(set) var state: State
     
     public init(
-        userStore: UserStore,
+        appStore: AppStore,
         model: SeatSectionModel
     ) {
-        self.userStore = userStore
+        self.appStore = appStore
         self.model = model
         self.state = State(topSeats: [], bottomSeats: [])
     }
