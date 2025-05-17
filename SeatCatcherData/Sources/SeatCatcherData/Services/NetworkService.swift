@@ -121,7 +121,7 @@ public struct NetworkService: Sendable {
 
             let provider = MoyaProvider<SeatCatcherAPI>()
             let requestDTO = RefreshTokenRequestDTO(refreshToken: refreshToken)
-            let response = try await provider.request(.postRefreshToken(requestDTO))
+            let response = try await provider.request(.postRefreshToken(requestDTO: requestDTO))
             let responseDTO = try JSONDecoder().decode(RefreshTokenResponseDTO.self, from: response)
             return responseDTO.domainModel
         }
@@ -134,38 +134,39 @@ public struct NetworkService: Sendable {
     }
 
     private let provider = MoyaProvider<SeatCatcherAPI>(session: Session(interceptor: AuthInterceptor()))
-    private var accessToken: String { (try? KeychainService.get(key: "accessToken")) ?? "" }
-    private var refreshToken: String { (try? KeychainService.get(key: "refreshToken")) ?? "" }
 
     public init() {}
 
+    // MARK: - Auth
     func postAppleLogin(_ token: String) async throws -> AppleLoginResponseDTO {
         let requestDTO = AppleLoginRequestDTO(identityToken: token)
-        let response = try await provider.request(.postSignInWithApple(requestDTO))
+        let response = try await provider.request(.postSignInWithApple(requestDTO: requestDTO))
         let responseDTO = try JSONDecoder().decode(AppleLoginResponseDTO.self, from: response)
         return responseDTO
     }
 
     func postKakaoLogin(_ token: String) async throws -> KakaoLoginResponseDTO {
         let requestDTO = KakaoLoginRequestDTO(accessToken: token)
-        let response = try await provider.request(.postSignInWithKakao(requestDTO))
+        let response = try await provider.request(.postSignInWithKakao(requestDTO: requestDTO))
         let responseDTO = try JSONDecoder().decode(KakaoLoginResponseDTO.self, from: response)
         return responseDTO
     }
 
     func postRefreshToken() async throws -> RefreshTokenResponseDTO {
+        let refreshToken = (try? KeychainService.get(key: "refreshToken")) ?? ""
         let requestDTO = RefreshTokenRequestDTO(refreshToken: refreshToken)
-        let response = try await provider.request(.postRefreshToken(requestDTO))
+        let response = try await provider.request(.postRefreshToken(requestDTO: requestDTO))
         let responseDTO = try JSONDecoder().decode(RefreshTokenResponseDTO.self, from: response)
         return responseDTO
     }
 
     func getAccessTokenValidStatus() async throws {
-        try await provider.request(.getAccessTokenValidStatus(accessToken))
+        let _ = try await provider.request(.getAccessTokenValidStatus)
     }
 
+    // MARK: - User
     func getUser() async throws -> GetUserResponseDTO {
-        let response = try await provider.request(.getUser(accessToken: accessToken))
+        let response = try await provider.request(.getUser)
         let responseDTO = try JSONDecoder().decode(GetUserResponseDTO.self, from: response)
         return responseDTO
     }
@@ -178,14 +179,15 @@ public struct NetworkService: Sendable {
             credit: user.credit,
             hasOnBoarded: user.hasOnBoarded
         )
-        let response = try await provider.request(.patchUser(requestDTO, accessToken: accessToken))
+        let response = try await provider.request(.patchUser(requestDTO: requestDTO))
         let responseDTO = try JSONDecoder().decode(PatchUserResponseDTO.self, from: response)
         return responseDTO
     }
 
+    // MARK: - Stations
     func getStations(keyword: String, line: Int) async throws -> [GetStationsResponseDTO] {
         let requestDTO = GetStationsRequestDTO(keyword: keyword, line: String(line))
-        let response = try await provider.request(.getStations(requestDTO: requestDTO, accessToken: accessToken))
+        let response = try await provider.request(.getStations(requestDTO: requestDTO))
         // 검색 결과가 없을 경우 response body X, data가 없으므로 빈 배열 리턴
         guard !response.isEmpty else { return [] }
         let responseDTO = try JSONDecoder().decode([GetStationsResponseDTO].self, from: response)
@@ -193,19 +195,20 @@ public struct NetworkService: Sendable {
     }
 
     func getStationInfo(stationId: Int) async throws -> GetStationInfoResponseDTO {
-        let response = try await provider.request(.getStationInfo(stationId: stationId, accessToken: accessToken))
+        let response = try await provider.request(.getStationInfo(stationId: stationId))
         let responseDTO = try JSONDecoder().decode(GetStationInfoResponseDTO.self, from: response)
         return responseDTO
     }
 
+    // MARK: - PathHIstories
     func getPathHistories(cursor: Int?) async throws -> GetPathHistoriesResponseDTO {
-        let response = try await provider.request(.getPathHistories(cursor: cursor, accessToken: accessToken))
+        let response = try await provider.request(.getPathHistories(cursor: cursor))
         let responseDTO = try JSONDecoder().decode(GetPathHistoriesResponseDTO.self, from: response)
         return responseDTO
     }
 
     func postPathHistories(departureStationId: Int, arrivalStationId: Int) async throws {
         let requestDTO = PostPathHistoriesRequestDTO(startStationId: departureStationId, endStationId: arrivalStationId)
-        try await provider.request(.postPathHistories(requestDTO: requestDTO, accessToken: accessToken))
+        let _ = try await provider.request(.postPathHistories(requestDTO: requestDTO))
     }
 }

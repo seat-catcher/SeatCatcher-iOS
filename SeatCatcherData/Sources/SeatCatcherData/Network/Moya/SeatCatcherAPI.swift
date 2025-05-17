@@ -9,20 +9,20 @@ import Foundation
 import Moya
 
 enum SeatCatcherAPI: Sendable {
-    case getAccessTokenValidStatus(_ accessToken: String)
+    case getAccessTokenValidStatus
 
-    case postSignInWithApple(_ requestDTO: AppleLoginRequestDTO)
-    case postSignInWithKakao(_ requestDTO: KakaoLoginRequestDTO)
-    case postRefreshToken(_ requestDTO: RefreshTokenRequestDTO)
+    case postSignInWithApple(requestDTO: AppleLoginRequestDTO)
+    case postSignInWithKakao(requestDTO: KakaoLoginRequestDTO)
+    case postRefreshToken(requestDTO: RefreshTokenRequestDTO)
 
-    case getUser(accessToken: String)
-    case patchUser(_ requestDTO: PatchUserRequestDTO, accessToken: String)
+    case getUser
+    case patchUser(requestDTO: PatchUserRequestDTO)
 
-    case getStations(requestDTO: GetStationsRequestDTO, accessToken: String)
-    case getStationInfo(stationId: Int, accessToken: String)
+    case getStations(requestDTO: GetStationsRequestDTO)
+    case getStationInfo(stationId: Int)
 
-    case getPathHistories(cursor: Int?, accessToken: String)
-    case postPathHistories(requestDTO: PostPathHistoriesRequestDTO, accessToken: String)
+    case getPathHistories(cursor: Int?)
+    case postPathHistories(requestDTO: PostPathHistoriesRequestDTO)
 }
 
 extension SeatCatcherAPI: TargetType {
@@ -49,7 +49,7 @@ extension SeatCatcherAPI: TargetType {
             return "/user/me"
         case .getStations:
             return "/stations"
-        case let .getStationInfo(stationId, _):
+        case let .getStationInfo(stationId):
             return "/stations/\(stationId)"
         case .getPathHistories:
             return "/path-histories"
@@ -95,9 +95,9 @@ extension SeatCatcherAPI: TargetType {
             return .requestJSONEncodable(requestDTO)
         case .getUser:
             return .requestPlain
-        case let .patchUser(requestDTO, _):
+        case let .patchUser(requestDTO):
             return .requestJSONEncodable(requestDTO)
-        case let .getStations(requestDTO, _):
+        case let .getStations(requestDTO):
             let parameters: [String: Any] = [
                 "keyword": requestDTO.keyword,
                 "line": requestDTO.line,
@@ -106,46 +106,45 @@ extension SeatCatcherAPI: TargetType {
             return .requestParameters(parameters: parameters, encoding: URLEncoding.default)
         case .getStationInfo:
             return .requestPlain
-        case let .getPathHistories(cursor, _):
+        case let .getPathHistories(cursor):
             var parameters: [String: Any] = [ "size": 10 ]
             if let cursor = cursor { parameters.merge(["cursor": cursor]) { _, new in new } }
             return .requestParameters(parameters: parameters, encoding: URLEncoding.default)
-        case let .postPathHistories(requestDTO, _):
+        case let .postPathHistories(requestDTO):
             return .requestJSONEncodable(requestDTO)
         }
     }
 
     var headers: [String : String]? {
+        var accessToken: String { (try? KeychainService.get(key: "accessToken")) ?? "" }
+
         let base = ["Content-type": "application/json"]
+        let baseWithAuth = [
+            "Content-type": "application/json",
+            "Authorization": "Bearer \(accessToken)"
+        ]
 
         switch self {
-        case let .getAccessTokenValidStatus(accessToken):
-            let auth = ["Authorization": "Bearer \(accessToken)"]
-            return base.merging(auth) { _, new in new }
+        case .getAccessTokenValidStatus:
+            return baseWithAuth
         case .postSignInWithApple:
             return base
         case .postSignInWithKakao:
             return base
         case .postRefreshToken:
             return base
-        case let .getUser(accessToken):
-            let auth = ["Authorization": "Bearer \(accessToken)"]
-            return base.merging(auth) { _, new in new }
-        case let .patchUser(_, accessToken):
-            let auth = ["Authorization": "Bearer \(accessToken)"]
-            return base.merging(auth) { _, new in new }
-        case let .getStations(_, accessToken):
-            let auth = ["Authorization": "Bearer \(accessToken)"]
-            return base.merging(auth) { _, new in new }
-        case let .getStationInfo(_, accessToken):
-            let auth = ["Authorization": "Bearer \(accessToken)"]
-            return base.merging(auth) { _, new in new }
-        case let .getPathHistories(_, accessToken):
-            let auth = ["Authorization": "Bearer \(accessToken)"]
-            return base.merging(auth) { _, new in new }
-        case let .postPathHistories(_, accessToken):
-            let auth = ["Authorization": "Bearer \(accessToken)"]
-            return base.merging(auth) { _, new in new }
+        case .getUser:
+            return baseWithAuth
+        case .patchUser:
+            return baseWithAuth
+        case .getStations:
+            return baseWithAuth
+        case .getStationInfo:
+            return baseWithAuth
+        case .getPathHistories:
+            return baseWithAuth
+        case .postPathHistories:
+            return baseWithAuth
         }
     }
 

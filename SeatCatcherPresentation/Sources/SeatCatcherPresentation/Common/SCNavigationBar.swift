@@ -52,74 +52,23 @@ struct SCNavigationBar: View {
         VStack(spacing: 0) {
             Group {
                 switch config {
-                case .skip(let action):
-                    HStack {
-                        Spacer()
-                        Button(action: action) {
-                            Text("건너뛰기")
-                                .underline()
-                                .font(.C01_M)
-                                .foregroundStyle(.gray200)
-                        }
-                    }
-                    .frame(height: 46)
-                case .logoWithNotification(let action):
-                    HStack {
-                        Image(.scTextLogo)
-                            .resizable()
-                            .frame(width: 140, height: 18)
-                        Spacer()
-                        Button(action: action) {
-                            Image(.iconNotification)
-                                .resizable()
-                                .frame(width: 24, height: 24)
-                        }
-                    }
-                    .frame(height: 46)
+                case .skip(let skipButtonAction):
+                    SkipNavigationBar(skipButtonAction: skipButtonAction)
+                case .logoWithNotification(let notificationButtonAction):
+                    LogoWithNotificationNavigationBar(notificationButtonAction: notificationButtonAction)
                 case let .title(title, backButtonAction):
-                    ZStack(alignment: .center) {
-                        HStack {
-                            Button {
-                                backButtonAction?()
-                                coordinator.pop()
-                            } label: {
-                                Image(.iconLeftArrow)
-                                    .resizable()
-                                    .frame(width: 24, height: 24)
-                            }
-                            Spacer()
-                        }
-                        Text(title)
-                            .font(.B02_SB)
-                            .foregroundStyle(.gray300)
-                    }
-                    .frame(height: 46)
+                    TitleNavigationBar(
+                        title: title,
+                        backButtonAction: backButtonAction,
+                        coordinator: coordinator
+                    )
                 case let .titleWithHomeButton(title, backButtonAction, homeButtonAction):
-                    HStack {
-                        Button {
-                            backButtonAction?()
-                            coordinator.pop()
-                        } label: {
-                            Image(.iconLeftArrow)
-                                .resizable()
-                                .frame(width: 24, height: 24)
-                        }
-                        Spacer()
-                        Text(title)
-                            .font(.B02_SB)
-                            .foregroundStyle(.gray300)
-                        Spacer()
-                        Button(action: {
-                            homeButtonAction?()
-                            coordinator.popToRoot()
-                        }) {
-                            Image(.iconHome)
-                                .resizable()
-                                .frame(width: 24, height: 24)
-                        }
-                    }
-                    .frame(height: 46)
-
+                    TitleWithHomeButtonNavigationBar(
+                        title: title,
+                        backButtonAction: backButtonAction,
+                        homeButtonAction: homeButtonAction,
+                        coordinator: coordinator
+                    )
                 case let .stationSelection(
                     departureName,
                     arrivalName,
@@ -128,76 +77,22 @@ struct SCNavigationBar: View {
                     selectDepartureButtonAction,
                     selectArrivalButtonAction
                 ):
-                    HStack(alignment: .top, spacing: 8) {
-
-                        Button {
-                            backButtonAction?()
-                            coordinator.pop()
-                        } label: {
-                            Image(.iconLeftArrow)
-                                .resizable()
-                                .frame(width: 24, height: 24)
-                        }
-                        .padding(.top, 3)
-
-
-                        HStack(spacing: 10) {
-                            Button(action: swapStationsButtonAction) { Image(.iconSwapStations) }
-
-                            VStack(spacing: 10) {
-                                Button(action: selectDepartureButtonAction) {
-                                    HStack(spacing: 10) {
-                                        StationNodeView(.departure)
-                                        Text(departureName == nil ? "승차역 입력" : "\(departureName ?? "")역")
-                                            .font(.B02_M)
-                                            .foregroundStyle(departureName == nil ? .gray300 : .gray100)
-                                            .frame(maxWidth: .infinity, alignment: .leading)
-                                    }
-                                }
-
-                                Rectangle()
-                                    .fill(.gray700)
-                                    .frame(height: 1.6)
-
-
-                                Button(action: selectArrivalButtonAction) {
-                                    HStack(spacing: 10) {
-                                        StationNodeView(.arrival)
-                                        Text(arrivalName == nil ? "하차역 입력" : "\(arrivalName ?? "")역")
-                                            .font(.B02_M)
-                                            .foregroundStyle(arrivalName == nil ? .gray300 : .gray100)
-                                            .frame(maxWidth: .infinity, alignment: .leading)
-                                    }
-                                }
-                            }
-                        }
-                        .padding(10)
-                        .background(.gray850)
-                        .clipShape(.rect(cornerRadius: 12))
-                    }
-                    .frame(height: 118)
-
+                    StationSelectionNavigationBar(
+                        departureName: departureName,
+                        arrivalName: arrivalName,
+                        backButtonAction: backButtonAction,
+                        swapStationsButtonAction: swapStationsButtonAction,
+                        selectDepartureButtonAction: selectDepartureButtonAction,
+                        selectArrivalButtonAction: selectArrivalButtonAction,
+                        coordinator: coordinator
+                    )
                 case let .search(backButtonAction, placeholder, text):
-                    HStack(alignment: .top, spacing: 8) {
-                        Button {
-                            backButtonAction?()
-                            coordinator.pop()
-                        } label: {
-                            Image(.iconLeftArrow)
-                                .resizable()
-                                .frame(width: 24, height: 24)
-                                .padding(.top, 3)
-                        }
-
-                        TextField(placeholder, text: text, prompt: Text(placeholder).font(.B02_M).foregroundStyle(.gray300))
-                            .font(.B02_M)
-                            .foregroundStyle(.gray100)
-                            .padding(.vertical, 10)
-                            .padding(.horizontal, 12)
-                            .background(.gray850)
-                            .clipShape(.rect(cornerRadius: 12))
-                    }
-                    .frame(height: 77)
+                    SearchNavigationBar(
+                        backButtonAction: backButtonAction,
+                        placeholder: placeholder,
+                        text: text,
+                        coordinator: coordinator
+                    )
                 }
             }
             .padding(.horizontal, 18)
@@ -206,5 +101,191 @@ struct SCNavigationBar: View {
                 .foregroundStyle(.gray700)
         }
         .background(.gray900)
+    }
+}
+
+private struct SkipNavigationBar: View {
+    let skipButtonAction: () -> Void
+
+    var body: some View {
+        HStack {
+            Spacer()
+            Button(action: skipButtonAction) {
+                Text("건너뛰기")
+                    .underline()
+                    .font(.C01_M)
+                    .foregroundStyle(.gray200)
+            }
+        }
+        .frame(height: 46)
+    }
+}
+
+private struct LogoWithNotificationNavigationBar: View {
+    let notificationButtonAction: () -> Void
+
+    var body: some View {
+        HStack {
+            Image(.scTextLogo)
+                .resizable()
+                .frame(width: 140, height: 18)
+            Spacer()
+            Button(action: notificationButtonAction) {
+                Image(.iconNotification)
+                    .resizable()
+                    .frame(width: 24, height: 24)
+            }
+        }
+        .frame(height: 46)
+    }
+}
+
+private struct TitleNavigationBar: View {
+    let title: String
+    let backButtonAction: (() -> Void)?
+    let coordinator: Coordinator
+
+    var body: some View {
+        ZStack(alignment: .center) {
+            HStack {
+                Button {
+                    backButtonAction?()
+                    coordinator.pop()
+                } label: {
+                    Image(.iconLeftArrow)
+                        .resizable()
+                        .frame(width: 24, height: 24)
+                }
+                Spacer()
+            }
+            Text(title)
+                .font(.B02_SB)
+                .foregroundStyle(.gray300)
+        }
+        .frame(height: 46)
+    }
+}
+
+private struct TitleWithHomeButtonNavigationBar: View {
+    let title: String
+    let backButtonAction: (() -> Void)?
+    let homeButtonAction: (() -> Void)?
+    let coordinator: Coordinator
+
+    var body: some View {
+        HStack {
+            Button {
+                backButtonAction?()
+                coordinator.pop()
+            } label: {
+                Image(.iconLeftArrow)
+                    .resizable()
+                    .frame(width: 24, height: 24)
+            }
+            Spacer()
+            Text(title)
+                .font(.B02_SB)
+                .foregroundStyle(.gray300)
+            Spacer()
+            Button(action: {
+                homeButtonAction?()
+                coordinator.popToRoot()
+            }) {
+                Image(.iconHome)
+                    .resizable()
+                    .frame(width: 24, height: 24)
+            }
+        }
+        .frame(height: 46)
+    }
+}
+
+private struct StationSelectionNavigationBar: View {
+    let departureName: String?
+    let arrivalName: String?
+    let backButtonAction: (() -> Void)?
+    let swapStationsButtonAction: () -> Void
+    let selectDepartureButtonAction: () -> Void
+    let selectArrivalButtonAction: () -> Void
+    let coordinator: Coordinator
+
+    var body: some View {
+        HStack(alignment: .top, spacing: 8) {
+            Button {
+                backButtonAction?()
+                coordinator.pop()
+            } label: {
+                Image(.iconLeftArrow)
+                    .resizable()
+                    .frame(width: 24, height: 24)
+            }
+            .padding(.top, 3)
+
+
+            HStack(spacing: 10) {
+                Button(action: swapStationsButtonAction) { Image(.iconSwapStations) }
+
+                VStack(spacing: 10) {
+                    Button(action: selectDepartureButtonAction) {
+                        HStack(spacing: 10) {
+                            StationNodeView(.departure)
+                            Text(departureName == nil ? "승차역 입력" : "\(departureName ?? "")역")
+                                .font(.B02_M)
+                                .foregroundStyle(departureName == nil ? .gray300 : .gray100)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                        }
+                    }
+
+                    Rectangle()
+                        .fill(.gray700)
+                        .frame(height: 1.6)
+
+
+                    Button(action: selectArrivalButtonAction) {
+                        HStack(spacing: 10) {
+                            StationNodeView(.arrival)
+                            Text(arrivalName == nil ? "하차역 입력" : "\(arrivalName ?? "")역")
+                                .font(.B02_M)
+                                .foregroundStyle(arrivalName == nil ? .gray300 : .gray100)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                        }
+                    }
+                }
+            }
+            .padding(10)
+            .background(.gray850)
+            .clipShape(.rect(cornerRadius: 12))
+        }
+        .frame(height: 118)
+    }
+}
+
+private struct SearchNavigationBar: View {
+    let backButtonAction: (() -> Void)?
+    let placeholder: String
+    let text: Binding<String>
+    let coordinator: Coordinator
+
+    var body: some View {
+        HStack(alignment: .top, spacing: 8) {
+            Button {
+                backButtonAction?()
+                coordinator.pop()
+            } label: {
+                Image(.iconLeftArrow)
+                    .resizable()
+                    .frame(width: 24, height: 24)
+                    .padding(.top, 3)
+            }
+
+            TextField(placeholder, text: text, prompt: Text(placeholder).font(.B02_M).foregroundStyle(.gray300))
+                .font(.B02_M)
+                .foregroundStyle(.gray100)
+                .padding(.vertical, 10)
+                .padding(.horizontal, 12)
+                .background(.gray850)
+                .clipShape(.rect(cornerRadius: 12))
+        }
+        .frame(height: 77)
     }
 }
