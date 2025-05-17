@@ -18,15 +18,16 @@ public struct OnboardingView: View {
     public var body: some View {
         GeometryReader { proxy in
             VStack(spacing: 0) {
-                OnboardingTopBar(viewModel: viewModel)
-
                 OnboardingContentsView(
                     viewModel: viewModel,
                     scrollID: $scrollID,
                     size: proxy.size
                 )
 
-                OnboardingMessageView(scrollID: scrollID)
+                OnboardingMessageView(
+                    scrollID: scrollID,
+                    size: proxy.size
+                )
 
                 Spacer()
 
@@ -35,9 +36,13 @@ public struct OnboardingView: View {
                     scrollID: scrollID
                 )
 
-                OnboardingNextButton(viewModel: viewModel, scrollID: $scrollID)
+                OnboardingNextButton(
+                    viewModel: viewModel,
+                    scrollID: $scrollID
+                )
             }
         }
+        .withNavigationBar(viewModel.coordinator, config: .skip(skipButtonAction: { viewModel.action(.skipButtonTapped) }))
         .withBackground(.gray900)
         .onAppear { scrollID = 0 }
     }
@@ -143,6 +148,8 @@ private struct OnboardingContentsCell: View {
 
 private struct OnboardingMessageView: View {
     let scrollID: Int?
+    let size: CGSize
+    private var isSESeries: Bool { size.width <= 375 }
 
     var body: some View {
         Group {
@@ -159,11 +166,11 @@ private struct OnboardingMessageView: View {
                 EmptyView()
             }
         }
-        .font(.T01_SB)
+        .font(isSESeries ? .T02_SB : .T01_SB)
         .foregroundStyle(.scWhite)
         .multilineTextAlignment(.center)
-        .lineSpacing(4)
-        .padding(.top, 50)
+        .lineSpacing(isSESeries ? 0 : 4)
+        .padding(.top, isSESeries ? 30 : 50)
     }
 }
 

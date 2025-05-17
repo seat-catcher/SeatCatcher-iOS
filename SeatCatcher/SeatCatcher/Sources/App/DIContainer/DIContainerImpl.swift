@@ -11,34 +11,55 @@ import SeatCatcherDomain
 import SeatCatcherCore
 import SeatCatcherData
 
-final class DIContainerImpl: DIContainer {
-    let userStore: UserStore
+final class DIContainerImpl {
+    // MARK: - Store Instances
+    private let appStore = AppStore(user: User(hasOnBoarded: true))
 
-    init(userStore: UserStore) {
-        self.userStore = userStore
-    }
+    // MARK: - Repository Instances
+    private lazy var loginRepository = LoginRepositoryImpl()
+    private lazy var tokenRepository = TokenRepositoryImpl()
+    private lazy var userRepository = UserRepositoryImpl()
 
-    func resolveAuthUseCase() -> AuthUseCase {
-        let loginRepository = LoginRepositoryImpl()
-        let tokenRepository = TokenRepositoryImpl()
-        let userRepository = UserRepositoryImpl()
+    // MARK: - Auth UseCase Instances
+    private lazy var appleLoginUseCase = AppleLoginUseCaseImpl(
+        loginRepository: loginRepository,
+        tokenRepository: tokenRepository,
+        userRepository: userRepository
+    )
+    private lazy var kakaoLoginUseCase = KakaoLoginUseCaseImpl(
+        loginRepository: loginRepository,
+        tokenRepository: tokenRepository,
+        userRepository: userRepository
+    )
+    private lazy var validateTokenUseCase = ValidateTokenUseCaseImpl(
+        tokenRepository: tokenRepository
+    )
+    private lazy var logoutUseCase = LogoutUseCaseImpl(
+        tokenRepository: tokenRepository,
+        userRepository: userRepository
+    )
 
-        let authUseCase = AuthUseCaseImpl(
-            loginRepository: loginRepository,
-            tokenRepository: tokenRepository,
-            userRepository: userRepository
-        )
-        
-        return authUseCase
-    }
+    // MARK: - User UseCase Instances
+    private lazy var getRandomNicknameUseCase = GetRandomNicknameUseCaseImpl(userRepository: userRepository)
+    private lazy var getRandomUserImageUseCase = GetRandomUserImageUseCaseImpl(userRepository: userRepository)
+    private lazy var getUserInfoUseCase = GetUserInfoUseCaseImpl(userRepository: userRepository)
+    private lazy var patchUserInfoUseCase = PatchUserInfoUseCaseImpl(userRepository: userRepository)
+}
 
-    func resolveUserUseCase() -> UserUseCase {
-        let userRepository = UserRepositoryImpl()
-        let userUseCase = UserUseCaseImpl(userRepository: userRepository)
-        return userUseCase
-    }
+// MARK: - DIContainer 프로토콜 구현
+extension DIContainerImpl: DIContainer {
+    // MARK: - Auth UseCases
+    func resolveAppleLoginUseCase() -> AppleLoginUseCase { return appleLoginUseCase }
+    func resolveKakaoLoginUseCase() -> KakaoLoginUseCase { return kakaoLoginUseCase }
+    func resolveValidateTokenUseCase() -> ValidateTokenUseCase { return validateTokenUseCase }
+    func resolveLogoutUseCase() -> LogoutUseCase { return logoutUseCase }
 
-    func resolveUserStore() -> UserStore {
-        return userStore
-    }
+    // MARK: - User UseCases
+    func resolveGetRandomNicknameUseCase() -> GetRandomNicknameUseCase { return getRandomNicknameUseCase }
+    func resolveGetRandomUserImageUseCase() -> GetRandomUserImageUseCase { return getRandomUserImageUseCase }
+    func resolveGetUserInfoUseCase() -> GetUserInfoUseCase { return getUserInfoUseCase }
+    func resolvePatchUserInfoUseCase() -> PatchUserInfoUseCase { return patchUserInfoUseCase }
+
+    // MARK: - Store
+    func resolveAppStore() -> AppStore { return appStore }
 }

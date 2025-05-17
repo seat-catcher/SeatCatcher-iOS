@@ -7,7 +7,6 @@
 
 public protocol UserRepository: AnyObject {
     var isSignedIn: Bool { get set }
-    var isOnboardingRequired: Bool { get set }
 
     func getRandomNickname() -> String
     func getRandomUserImage() -> UserImage

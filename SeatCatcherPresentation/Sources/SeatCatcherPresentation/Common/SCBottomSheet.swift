@@ -199,10 +199,10 @@ struct SCBottomSheet<Content: View>: View {
     private var doubleButtonsView: some View {
         VStack(alignment: .leading, spacing: 0) {
             HStack(alignment: .top) {
-                if let profileConfig {
-                    profileView
-                }else {
+                if profileConfig == nil {
                     titleView
+                } else {
+                    profileView
                 }
                 Spacer()
                 if let reportAction {

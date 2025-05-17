@@ -38,9 +38,17 @@ final class AppCoordinator: Coordinator {
     func buildScene(_ scene: AppScene) -> some View {
         switch scene {
         case .home:
-            let userStore = diContainer.resolveUserStore()
-            let homeViewModel = HomeViewModel(userStore: userStore)
+            let store = diContainer.resolveAppStore()
+            let homeViewModel = HomeViewModel(
+                store: store,
+                coordinator: self
+            )
             HomeView(viewModel: homeViewModel)
+        case .notifications:
+            let notificationsViewModel = NotificationsViewModel(
+                coordinator: self
+            )
+            NotificationsView(viewModel: notificationsViewModel)
         }
     }
 

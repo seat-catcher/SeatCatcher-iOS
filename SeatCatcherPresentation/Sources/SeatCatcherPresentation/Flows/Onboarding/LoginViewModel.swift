@@ -23,36 +23,39 @@ public final class LoginViewModel: ViewModel {
     }
 
     private(set) var state = State()
-    private let authUseCase: AuthUseCase
+    private let appStore: AppStore
+    private let kakaoLoginUseCase: KakaoLoginUseCase
+    private let appleLoginUseCase: AppleLoginUseCase
+    private let getUserInfoUseCase: GetUserInfoUseCase
     private let coordinator: Coordinator
 
     public init(
-        authUseCase: AuthUseCase,
+        appStore: AppStore,
+        kakaoLoginUseCase: KakaoLoginUseCase,
+        appleLoginUseCase: AppleLoginUseCase,
+        getUserInfoUseCase: GetUserInfoUseCase,
         coordinator: Coordinator
     ) {
-        self.authUseCase = authUseCase
+        self.appStore = appStore
+        self.kakaoLoginUseCase = kakaoLoginUseCase
+        self.appleLoginUseCase = appleLoginUseCase
+        self.getUserInfoUseCase = getUserInfoUseCase
         self.coordinator = coordinator
     }
 
     func action(_ action: Action) {
         switch action {
         case .loginWithKakaoButtonTapped:
-            Task { [weak self] in
-                guard let self = self else { return }
+            Task {
                 do {
-                    try await authUseCase.kakaoLogin()
-                } catch {
-                    self.action(.loginFailure(error))
-                }
+                    try await kakaoLoginUseCase.execute()
+                    let user = try await getUserInfoUseCase.execute()
+                    appStore.setUser(user)
+                } catch { self.action(.loginFailure(error)) }
             }
         case let .loginFailure(error):
             state.errorMessage = error.localizedDescription
         }
-    }
-
-    /// 카카오 SDK에서 accessToken을 받아 오고, 해당 accessToken을 통해 서버와 로그인 로직 수행
-    func loginWithKakao() async throws {
-        try await authUseCase.kakaoLogin()
     }
 
     /// 애플 로그인 리퀘스트 파라미터 설정
@@ -72,13 +75,12 @@ public final class LoginViewModel: ViewModel {
             else { return }
 
             // authUseCase에 identityToken을 넘겨 서버와 로그인 로직 수행
-            Task { [weak self] in
-                guard let self = self else { return }
+            Task {
                 do {
-                    try await authUseCase.appleLogin(identityToken: identityToken.base64EncodedString())
-                } catch {
-                    self.action(.loginFailure(error))
-                }
+                    try await appleLoginUseCase.execute(identityToken: identityToken.base64EncodedString())
+                    let user = try await getUserInfoUseCase.execute()
+                    appStore.setUser(user)
+                } catch { self.action(.loginFailure(error)) }
             }
 
         // 로컬에서 identityToken 받아오기 실패

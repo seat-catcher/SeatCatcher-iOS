@@ -34,12 +34,15 @@ public enum SCFontStyle {
     
     case C01_M
     case C01_R
-    
+    case C01_SB
+
+    case LINE
+
     var weight: String {
         switch self {
-        case .T01_B, .T02_B, .T03_B, .B01_B, .B02_B, .B03_B:
+        case .T01_B, .T02_B, .T03_B, .B01_B, .B02_B, .B03_B, .LINE:
             return SCFontName.bold.rawValue
-        case .T01_SB, .T02_SB, .T03_SB, .B01_SB, .B02_SB, .B03_SB:
+        case .T01_SB, .T02_SB, .T03_SB, .B01_SB, .B02_SB, .B03_SB, .C01_SB:
             return SCFontName.semibold.rawValue
         case .B01_M, .B02_M, .B03_M, .C01_M:
             return SCFontName.medium.rawValue
@@ -62,8 +65,10 @@ public enum SCFontStyle {
             return 16
         case .B03_B, .B03_SB, .B03_M:
             return 14
-        case .C01_M, .C01_R:
+        case .C01_M, .C01_R, .C01_SB:
             return 12
+        case .LINE:
+            return 10
         }
     }
     
@@ -96,6 +101,8 @@ extension Font {
     static let B03_M = SCFontStyle.B03_M.font
     static let C01_M = SCFontStyle.C01_M.font
     static let C01_R = SCFontStyle.C01_R.font
+    static let C01_SB = SCFontStyle.C01_SB.font
+    static let LINE = SCFontStyle.LINE.font
 }
 
 extension View {

@@ -19,19 +19,17 @@ public final class HomeViewModel: ViewModel {
 
     }
 
-    let userStore: UserStore
+    let store: AppStore
+    let coordinator: Coordinator
 
-    public init(userStore: UserStore) {
-        self.userStore = userStore
+    public init(store: AppStore, coordinator: Coordinator) {
+        self.store = store
+        self.coordinator = coordinator
     }
 
     private(set) var state = State()
 
     func action(_ action: Action) {
 
-    }
-
-    func changeUserImage() {
-        userStore.user.profileImage = UserImage.allCases.randomElement() ?? .catchy1
     }
 }

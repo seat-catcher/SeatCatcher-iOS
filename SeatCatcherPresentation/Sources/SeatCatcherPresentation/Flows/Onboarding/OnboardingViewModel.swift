@@ -20,19 +20,15 @@ public final class OnboardingViewModel: ViewModel {
 
     private(set) var state = State()
 
-    private let userUseCase: UserUseCase
     let coordinator: Coordinator
 
-    public init(userUseCase: UserUseCase, coordinator: Coordinator) {
-        self.userUseCase = userUseCase
+    public init(coordinator: Coordinator) {
         self.coordinator = coordinator
     }
 
     func action(_ action: Action) {
         switch action {
-        case .skipButtonTapped:
-            coordinator.push(OnboardingScene.userInfo)
-        case .nextButtonTapped:
+        case .skipButtonTapped, .nextButtonTapped:
             coordinator.push(OnboardingScene.userInfo)
         }
     }
