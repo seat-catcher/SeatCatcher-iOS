@@ -10,7 +10,7 @@ import SwiftUI
 
 extension Seat {
     
-    func image(isSelected: Bool) -> ImageResource {
+    func image(isSelected: Bool, isBlocked: Bool) -> ImageResource {
         // 좌석 방향
         let directionPrefix = seatDirection == .top ? "seat_top" : "seat_bottom"
         
