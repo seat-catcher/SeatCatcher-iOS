@@ -13,27 +13,23 @@ import SeatCatcherDomain
 @Observable
 public final class SeatSectionViewModel: ViewModel {
     
-    public enum Action {
+    enum Action {
         case willAppear
         case willSelectSeat(Seat)
         case willUnlockAllSeats
     }
     
-    public struct State {
+    struct State {
         var selectedSeat: Seat?
         var isBlocked: Bool
-        var topSeats: [Seat]
-        var bottomSeats: [Seat]
-    }
-    
-    struct SeatSection: Sendable {
-        var topSeats: [Seat]
-        var bottomSeats: [Seat]
+        var seats: (topSeats: [Seat], bottomSeats: [Seat])
     }
     
     private let appStore: AppStore
     private let getSeatInSectionUseCase: GetSeatInSectionUseCase
     private let unlockSeatUseCase: UnlockSeatUseCase
+
+    
     private(set) var state: State
     
     public init(
@@ -45,18 +41,17 @@ public final class SeatSectionViewModel: ViewModel {
         self.appStore = appStore
         self.getSeatInSectionUseCase = getSeatInSectionUseCase
         self.unlockSeatUseCase = unlockSeatUseCase
-        self.state = State(isBlocked: isBlocked, topSeats: [], bottomSeats: [])
+        self.state = State(isBlocked: isBlocked, seats: (topSeats: [], bottomSeats: []))
     }
     
-    public func action(_ action: Action) {
+    func action(_ action: Action) {
         switch action {
         case .willAppear:
             Task {
                 do {
-                    /// 좌석 정보를 불러옵니다
-                    let seatSection = try await fetchSeats()
-                    state.topSeats = seatSection.topSeats
-                    state.bottomSeats = seatSection.bottomSeats
+                    /// 좌석 정보를 불러오기 위한 유즈케이스
+                    let seats = try await getSeatInSectionUseCase.execute()
+                    state.seats = seats
                 } catch {
                     print(error.localizedDescription)
                 }
@@ -81,10 +76,5 @@ public final class SeatSectionViewModel: ViewModel {
                 }
             }
         }
-    }
-    
-    private func fetchSeats() async throws -> SeatSection {
-        let seats = try await getSeatInSectionUseCase.execute()
-        return SeatSection(topSeats: seats.top, bottomSeats: seats.bottom)
     }
 }

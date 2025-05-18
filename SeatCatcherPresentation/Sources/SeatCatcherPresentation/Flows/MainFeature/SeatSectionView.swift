@@ -11,7 +11,7 @@ import SeatCatcherCore
 
 public struct SeatSectionView: View {
     
-    let viewModel: SeatSectionViewModel
+    private let viewModel: SeatSectionViewModel
     
     public init(viewModel: SeatSectionViewModel) {
         self.viewModel = viewModel
@@ -21,14 +21,14 @@ public struct SeatSectionView: View {
         VStack(alignment: .center, spacing: 0) {
             SeatRowView(
                 isBlocked: viewModel.state.isBlocked,
-                seats: viewModel.state.topSeats,
+                seats: viewModel.state.seats.topSeats,
                 selectedSeat: viewModel.state.selectedSeat,
                 onTap: { viewModel.action(.willSelectSeat($0)) }
             )
             Spacer()
             SeatRowView(
                 isBlocked: viewModel.state.isBlocked,
-                seats: viewModel.state.bottomSeats,
+                seats: viewModel.state.seats.bottomSeats,
                 selectedSeat: viewModel.state.selectedSeat,
                 onTap: { viewModel.action(.willSelectSeat($0)) }
             )
