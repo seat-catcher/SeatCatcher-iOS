@@ -20,7 +20,6 @@ public final class GetSeatInSectionUseCaseImpl: GetSeatInSectionUseCase {
     }
     
     public func execute() async throws -> (topSeats: [Seat], bottomSeats: [Seat]) {
-        let (topSeats, bottomSeats) = try await seatRepository.getSeatsInSection()
-        return (topSeats: topSeats, bottomSeats: bottomSeats)
+        return try await seatRepository.getSeatsInSection()
     }
 }
