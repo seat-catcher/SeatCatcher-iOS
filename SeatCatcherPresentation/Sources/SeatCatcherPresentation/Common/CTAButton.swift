@@ -27,6 +27,7 @@ struct CTAButton: View {
     enum SCButtonStyle {
         case bottomEnabled
         case bottomDisabled
+        case bottomMain
         case mainLeft
         case mainRight
         case selectionYes
@@ -37,7 +38,7 @@ struct CTAButton: View {
         switch style {
         case .bottomEnabled, .mainRight, .selectionYes:
             .scGreen
-        case .mainLeft, .selectionNo:
+        case .mainLeft, .selectionNo, .bottomMain:
             .scGreen700
         case .bottomDisabled:
             .gray500
@@ -48,7 +49,7 @@ struct CTAButton: View {
         switch style {
         case .bottomEnabled, .mainRight, .selectionYes:
             .scWhite
-        case .mainLeft, .selectionNo:
+        case .mainLeft, .selectionNo, .bottomMain:
             .scGreen
         case .bottomDisabled:
             .gray300
@@ -57,7 +58,7 @@ struct CTAButton: View {
     
     var height: CGFloat {
         switch style {
-        case .bottomEnabled, .bottomDisabled, .selectionYes, .selectionNo:
+        case .bottomEnabled, .bottomDisabled, .selectionYes, .selectionNo, .bottomMain:
             52
         case .mainLeft, .mainRight:
             87
