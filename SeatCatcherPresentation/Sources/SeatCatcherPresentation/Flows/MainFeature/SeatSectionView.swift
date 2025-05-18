@@ -41,7 +41,6 @@ public struct SeatSectionView: View {
             RoundedRectangle(cornerRadius: 12)
                 .stroke(Color.gray800, lineWidth: 3)
         )
-        .padding(.horizontal, 20)
         .onAppear {
             viewModel.action(.willAppear)
         }
