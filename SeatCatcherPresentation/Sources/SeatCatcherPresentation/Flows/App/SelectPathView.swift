@@ -49,7 +49,7 @@ private struct PathHistoryCell: View {
                     HStack(spacing: 0) {
                         StationNodeView(.departure)
                             .padding(.trailing, 10)
-                        LineNumberCircle(history.line ?? 7)
+                        LineNumberCircle(history.line)
                             .padding(.trailing, 4)
                         Text("\(history.departureStationName)역")
                             .font(.B02_M)

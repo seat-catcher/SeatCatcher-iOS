@@ -23,7 +23,7 @@ public final class PathHistoriesRepositoryImpl: PathHistoriesRepository {
         let fakePathHistories = (0..<10).map {
             PathHistory(
                 id: $0,
-                line: nil,
+                line: 2,
                 departureStationId: 1704,
                 departureStationName: "사당",
                 arrivalStationId: 1715,

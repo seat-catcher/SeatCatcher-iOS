@@ -7,7 +7,7 @@
 
 public struct PathHistory: Sendable, Identifiable {
     public let id: Int
-    public var line: Int?
+    public var line: Int
     public let departureStationId: Int
     public let departureStationName: String
     public let arrivalStationId: Int
@@ -16,7 +16,7 @@ public struct PathHistory: Sendable, Identifiable {
 
     public init(
         id: Int,
-        line: Int?,
+        line: Int,
         departureStationId: Int,
         departureStationName: String,
         arrivalStationId: Int,
