@@ -8,16 +8,18 @@
 import Foundation
 
 public protocol UnlockSeatUseCase: Sendable {
-    func execute(_ seat: Seat) -> Seat
+    func execute() async throws
 }
 
 public final class UnlockSeatUseCaseImpl: UnlockSeatUseCase {
     
-    public init() {}
+    private let seatRepository: SeatRepository
     
-    public func execute(_ seat: Seat) -> Seat{
-        var newSeat = seat
-        newSeat.isBlocked = false
-        return newSeat
+    public init(seatRepository: SeatRepository) {
+        self.seatRepository = seatRepository
+    }
+    
+    public func execute() async throws {
+        try await seatRepository.unlockAllSeats()
     }
 }

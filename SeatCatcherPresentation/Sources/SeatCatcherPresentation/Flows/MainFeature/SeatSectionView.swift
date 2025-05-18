@@ -7,10 +7,11 @@
 
 import SwiftUI
 import SeatCatcherDomain
+import SeatCatcherCore
 
 public struct SeatSectionView: View {
     
-    @State private var viewModel: SeatSectionViewModel
+    let viewModel: SeatSectionViewModel
     
     public init(viewModel: SeatSectionViewModel) {
         self.viewModel = viewModel
@@ -19,12 +20,14 @@ public struct SeatSectionView: View {
     public var body: some View {
         VStack(alignment: .center, spacing: 0) {
             SeatRowView(
+                isBlocked: viewModel.state.isBlocked,
                 seats: viewModel.state.topSeats,
                 selectedSeat: viewModel.state.selectedSeat,
                 onTap: { viewModel.action(.willSelectSeat($0)) }
             )
             Spacer()
             SeatRowView(
+                isBlocked: viewModel.state.isBlocked,
                 seats: viewModel.state.bottomSeats,
                 selectedSeat: viewModel.state.selectedSeat,
                 onTap: { viewModel.action(.willSelectSeat($0)) }
@@ -46,15 +49,16 @@ public struct SeatSectionView: View {
 }
 
 private struct SeatRowView: View {
+    let isBlocked: Bool
     let seats: [Seat]
     let selectedSeat: Seat?
     let onTap: (Seat) -> Void
 
     var body: some View {
         HStack(alignment: .center, spacing: 6) {
-            ForEach(seats, id: \.id) { seat in
+            ForEach(seats) { seat in
                 if seat.isVisible {
-                    Image(seat.image(isSelected: selectedSeat?.id == seat.id))
+                    Image(seat.image(isSelected: selectedSeat?.id == seat.id, isBlocked: isBlocked))
                         .frame(width: 40, height: 42)
                         .onTapGesture {
                             onTap(seat)

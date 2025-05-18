@@ -9,7 +9,7 @@ import SwiftUI
 import SeatCatcherCore
 
 public struct MainFeatureView: View {
-    @Environment(UserStore.self) private var userStore
+    @Environment(AppStore.self) private var appStore
     @State private var viewModel: MainFeatureViewModel
 
     public init(viewModel: MainFeatureViewModel) {

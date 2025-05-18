@@ -15,7 +15,6 @@ public struct Seat: Sendable, Identifiable {
     public var isAvailable: Bool // 앉을 수 있는 자리인지 여부
     public var isVisible: Bool // 화면에 띄울지 여부
     public var isSeated: Bool // 내가 앉아있는지 여부
-    public var isBlocked: Bool // 잠겨있는지 여부
     public var seatDirection: SeatDirection // UI 기준 좌석 방향
 
     public init(
@@ -30,7 +29,6 @@ public struct Seat: Sendable, Identifiable {
         self.isAvailable = isAvailable
         self.isVisible = isVisible
         self.isSeated = isSeated
-        self.isBlocked = isBlocked
         self.seatDirection = seatDirection
     }
 }

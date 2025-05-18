@@ -18,10 +18,10 @@ public final class MainFeatureViewModel: ViewModel {
 
     }
 
-    let userStore: UserStore
+    let appStore: AppStore
 
-    public init(userStore: UserStore) {
-        self.userStore = userStore
+    public init(appStore: AppStore) {
+        self.appStore = appStore
     }
 
     private(set) var state = State()
