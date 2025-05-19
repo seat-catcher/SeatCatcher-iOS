@@ -13,14 +13,9 @@ public protocol GetPathHistoriesUseCase {
 
 public final class GetPathHistoriesUseCaseImpl: GetPathHistoriesUseCase {
     private let pathHistoriesRepository: PathHistoriesRepository
-    private let stationsRepository: StationsRepository
 
-    public init(
-        pathHistoriesRepository: PathHistoriesRepository,
-        stationsRepository: StationsRepository
-    ) {
+    public init(pathHistoriesRepository: PathHistoriesRepository) {
         self.pathHistoriesRepository = pathHistoriesRepository
-        self.stationsRepository = stationsRepository
     }
 
     /// - Parameters:

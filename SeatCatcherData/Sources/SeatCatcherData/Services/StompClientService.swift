@@ -30,28 +30,30 @@ final class StompClientService {
 
     private let swiftStomp: SwiftStomp // 실제 WebSocket + STOMP 엔진
     private var activeTopics = Set<String>() // 현재 구독 중인 토픽 집합
+
     private var cancellables = Set<AnyCancellable>() // Combine 구독 해제 저장소
 
     private let connectionSubject = CurrentValueSubject<Bool, Never>(false) // 연결 상태를 저장·발행하는 Subject, 초기값은 false(미연결)
     private let messageSubject = PassthroughSubject<StompTextMessageDTO, Never>() // 수신 메시지를 발행하는 Subject, 초기값 없이 순수 이벤트만 발행
 
-    init(url: URL) {
+    init() {
+        let url = URL(string: "ws://api.dev.seatcatcher.site/seatcatcher")! // url 생성
+
+        // connectionHeader 생성
+        let accessToken = try? KeychainService.get(key: "accessToken")
+        let connectionHeaders: [String: String] = ["Authorization": "Bearer \(accessToken ?? "")"]
+
         // SwiftStomp 인스턴스 생성 (WebSocket URL 설정)
-        swiftStomp = SwiftStomp(host: url)
+        swiftStomp = SwiftStomp(host: url, headers: connectionHeaders, httpConnectionHeaders: connectionHeaders)
 
-        // 네트워크 끊김 시 자동 재연결 활성화
-        swiftStomp.autoReconnect = true
-        // WebSocket ping(heartbeat) 자동 전송 활성화
-        swiftStomp.enableAutoPing()
-        // 콘솔 로그 출력 활성화
-        swiftStomp.enableLogging = true
+        swiftStomp.autoReconnect = true // 네트워크 연결 끊길 시 자동 재연결 활성화
+        swiftStomp.enableAutoPing() // WebSocket ping(heartbeat) 자동 전송 활성화
+        swiftStomp.enableLogging = true // 콘솔 로그 출력 활성화
 
-        // SwiftStomp의 Publisher들을 StompClientService 내부 Publisher들에 Bind
-        bindSwiftStomp()
+        bindSwiftStomp() // SwiftStomp의 Publisher들을 StompClientService 내부 Publisher들에 Bind
     }
 
     // MARK: - 바인딩
-
     private func bindSwiftStomp() {
         // 1) 연결/해제/오류 이벤트 처리
         swiftStomp.eventsUpstream
@@ -99,7 +101,7 @@ final class StompClientService {
     func connect() {
         swiftStomp.autoReconnect = true // disconnect 후 connect시 자동 재연결 다시 true로 설정
         guard !swiftStomp.isConnected else { return } // 이미 연결되어 있다면 중복 연결 방지
-        swiftStomp.connect() // 내부적으로 WebSocketTask 생성 → CONNECT 프레임 전송
+        swiftStomp.connect(autoReconnect: true) // 내부적으로 WebSocketTask 생성 → CONNECT 프레임 전송
     }
 
     /// STOMP DISCONNECT 보내고 WebSocket 연결 종료
@@ -125,6 +127,6 @@ final class StompClientService {
 
     /// 특정 토픽으로 메시지 전송
     func send(topic: String, message: String) {
-        swiftStomp.send(body: message, to: topic, receiptId: nil, headers: nil)
+        swiftStomp.send(body: message, to: topic, receiptId: nil, headers: ["content-type": "application/json"])
     }
 }

@@ -54,10 +54,7 @@ final class DIContainerImpl {
     private lazy var searchStationsUseCase = SearchStationsUseCaseImpl(stationsRepository: stationsRepository)
 
     // MARK: - PathHistories UseCase Instances
-    private lazy var getPathHistoriesUseCase = GetPathHistoriesUseCaseImpl(
-        pathHistoriesRepository: pathHistoriesRepository,
-        stationsRepository: stationsRepository
-    )
+    private lazy var getPathHistoriesUseCase = GetPathHistoriesUseCaseImpl(pathHistoriesRepository: pathHistoriesRepository)
     private lazy var postPathHistoriesUseCase = PostPathHistoriesImpl(pathHistoriesRespotiry: pathHistoriesRepository)
 }
 
