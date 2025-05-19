@@ -28,7 +28,7 @@ public final class PathHistoriesRepositoryImpl: PathHistoriesRepository {
                 departureStationName: "사당",
                 arrivalStationId: 1715,
                 arrivalStationName: "당산",
-                createdDate: "09.23"
+                createdDate: "05.18"
             )
         }
         return fakePathHistories
