@@ -20,8 +20,9 @@ public final class MainFeatureViewModel: ViewModel {
     }
 
     struct State {
-        var seatSection: SeatSection
-        var lookingCount: Int
+        var userStatus: MainFeatureUserStatus // 유저의 상황 대분류
+        var seatSection: SeatSection // 좌석 정보
+        var lookingCount: Int // 좌석 찾고있는 사람 수
     }
 
     let appStore: AppStore
@@ -29,7 +30,15 @@ public final class MainFeatureViewModel: ViewModel {
     private(set) var seatSectionViewModel: SeatSectionViewModel
     private(set) var state: State
 
-    public init(appStore: AppStore, coordinator: Coordinator, isBlocked: Bool, getSeatInSectionUseCase: GetSeatInSectionUseCase, unlockSeatUseCase: UnlockSeatUseCase, seatSection: SeatSection, lookingCount: Int) {
+    public init(
+        appStore: AppStore,
+        coordinator: Coordinator,
+        isBlocked: Bool,
+        getSeatInSectionUseCase: GetSeatInSectionUseCase,
+        unlockSeatUseCase: UnlockSeatUseCase,
+        seatSection: SeatSection,
+        lookingCount: Int
+    ) {
         self.appStore = appStore
         self.coordinator = coordinator
         self._seatSectionViewModel = .init(
@@ -38,18 +47,20 @@ public final class MainFeatureViewModel: ViewModel {
             getSeatInSectionUseCase: getSeatInSectionUseCase,
             unlockSeatUseCase: unlockSeatUseCase
         )
-        self.state = .init(seatSection: seatSection, lookingCount: lookingCount)
+        self.state = .init(userStatus: .standing, seatSection: seatSection, lookingCount: lookingCount)
     }
-
+    
+    
+    
+    
     func action(_ action: Action) {
-
+        
     }
 }
 
-public enum SeatSection: String {
-    case priority_A = "교통약자구역 A"
-    case normal_A = "일반구역 A"
-    case normal_B = "일반구역 B"
-    case normal_C = "일반구역 C"
-    case priority_B = "교통약자구역 B"
+public enum MainFeatureUserStatus {
+    case seated // 착석 중
+    case standing // 자리 찾는 중
+    case selecting // 좌석 관리 - 앉은 자리 선택 중
+    case cancelling // 좌석 관리 - 앉은 자리 취소 중
 }
