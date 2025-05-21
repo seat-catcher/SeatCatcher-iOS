@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SeatCatcherDomain
 
 public enum MainFeatureLiterals {
     
@@ -24,7 +25,7 @@ public enum MainFeatureLiterals {
         case cancelSeat = "앉은좌석 취소하기"
     }
     
-    static func getTitleText(seatSection: SeatSection, status: MainFeatureUserStatus) -> (title: String, subtitle: String?) {
+    static func getTitleText(seatSection: SeatSection, status: MainFeatureViewModel.UserStatus) -> (title: String, subtitle: String?) {
         switch status {
         case .seated:
             return (title: seatSection.rawValue + "에서\n앉아 있어요", subtitle: nil)

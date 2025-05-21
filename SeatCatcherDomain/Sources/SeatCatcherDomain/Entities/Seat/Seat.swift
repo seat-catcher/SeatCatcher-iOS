@@ -13,21 +13,18 @@ public struct Seat: Sendable, Identifiable {
     
     public var minutesLeft: Int // 하차까지 남은 시간(분)
     public var isAvailable: Bool // 앉을 수 있는 자리인지 여부
-    public var isVisible: Bool // 화면에 띄울지 여부
     public var isSeated: Bool // 내가 앉아있는지 여부
     public var seatDirection: SeatDirection // UI 기준 좌석 방향
 
     public init(
         minutesLeft: Int,
         isAvailable: Bool,
-        isVisible: Bool,
         isSeated: Bool,
         isBlocked: Bool,
         seatDirection: SeatDirection
     ) {
         self.minutesLeft = minutesLeft
         self.isAvailable = isAvailable
-        self.isVisible = isVisible
         self.isSeated = isSeated
         self.seatDirection = seatDirection
     }
