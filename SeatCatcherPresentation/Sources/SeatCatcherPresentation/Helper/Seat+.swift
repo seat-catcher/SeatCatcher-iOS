@@ -10,7 +10,7 @@ import SwiftUI
 
 extension Seat {
     
-    func image(isSelected: Bool, isBlocked: Bool) -> ImageResource {
+    func image(isSelected: Bool, isBlocked: Bool, isSelecting: Bool) -> ImageResource {
         // 좌석 방향
         let directionPrefix = seatDirection == .top ? "seat_top" : "seat_bottom"
         
@@ -18,13 +18,13 @@ extension Seat {
         if isBlocked {
             return ImageResource(name: "\(directionPrefix)_blocked", bundle: .module)
         }
+        // 내가 앉은 자리 or 앉을 자리 선택 시
+        if isSeated || (isSelecting && isSelected) {
+            return ImageResource(name: "\(directionPrefix)_user", bundle: .module)
+        }
         // 빈 자리
         if isAvailable {
             return ImageResource(name: "\(directionPrefix)_empty", bundle: .module)
-        }
-        // 내가 앉은 자리
-        if isSeated {
-            return ImageResource(name: "\(directionPrefix)_user", bundle: .module)
         }
         
         // 하차까지 시간
