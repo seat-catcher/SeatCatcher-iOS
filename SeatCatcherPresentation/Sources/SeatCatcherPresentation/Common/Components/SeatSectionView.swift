@@ -55,11 +55,15 @@ private struct SeatRowView: View {
         HStack(alignment: .center, spacing: 6) {
             ForEach(seats) { seat in
                 if shouldShowSeat(seat: seat) {
-                    Image(seat.image(isSelected: selectedSeat?.id == seat.id, isBlocked: isBlocked))
-                        .frame(width: 40, height: 42)
-                        .onTapGesture {
-                            onTap(seat)
-                        }
+                    Image(seat.image(
+                        isSelected: selectedSeat?.id == seat.id,
+                        isBlocked: isBlocked,
+                        isSelecting: userStatus == .selecting)
+                    )
+                    .frame(width: 40, height: 42)
+                    .onTapGesture {
+                        onTap(seat)
+                    }
                 } else {
                     Spacer()
                         .frame(width: 40, height: 42)
@@ -70,6 +74,10 @@ private struct SeatRowView: View {
     
     private func shouldShowSeat(seat: Seat) -> Bool {
         /// 좌석 이동/등록 시엔 점유된 좌석은 보여주지 않습니다
-        return !(userStatus == .selecting && seat.isAvailable)
+        if userStatus == .selecting {
+            return seat.isAvailable  // 빈 좌석만 표시
+        } else {
+            return true  // 다른 상태에서는 모든 좌석 표시
+        }
     }
 }

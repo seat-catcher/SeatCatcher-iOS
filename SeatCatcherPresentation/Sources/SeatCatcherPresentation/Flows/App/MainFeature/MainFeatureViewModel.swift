@@ -189,7 +189,7 @@ public final class MainFeatureViewModel: ViewModel {
         switch action {
         case .willSelectSeat(let seat):
             /// 좌석을 선택합니다
-            if state.userStatus != .cancelling {
+            if state.userStatus != .cancelling { // 좌석 취소 중에는 선택 불가
                 if state.seatSectionState.selectedSeat?.id == seat.id {
                     state.seatSectionState.selectedSeat = nil
                 } else {
