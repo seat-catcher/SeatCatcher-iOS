@@ -17,7 +17,7 @@ public struct MainFeatureView: View {
     
     public var body: some View {
         VStack(spacing: 0) {
-            TitleTextView(seatSection: viewModel.state.seatSection)
+            TitleTextView(seatSection: viewModel.state.seatSection, status: .standing)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.top, 18)
                 .padding(.bottom, 32)
@@ -57,20 +57,26 @@ public struct MainFeatureView: View {
 
 private struct TitleTextView: View {
     let seatSection: SeatSection
+    let status: MainFeatureUserStatus
     
     var body: some View {
         VStack(spacing: 8) {
             Text(
-                "\(seatSection.rawValue)에서\n원하는 좌석을 찾아보세요",
+                "\(MainFeatureLiterals.getTitleText(seatSection: seatSection, status: status).title)에서\n원하는 좌석을 찾아보세요",
                 styledSubstring: seatSection.rawValue,
                 color: .scGreen,
                 font: .T02_B
             )
             .font(.T02_B)
             .foregroundStyle(.gray100)
-            Text("크레딧을 통해 좌석정보를 확인할 수 있어요")
-                .font(.B03_M)
-                .foregroundStyle(.gray300)
+            if let subtitle = MainFeatureLiterals.getTitleText(seatSection: seatSection, status: status).subtitle {
+                Text(subtitle)
+                    .font(.B03_M)
+                    .foregroundStyle(.gray300)
+            } else {
+                Spacer()
+                    .frame(height: 18)
+            }
         }
     }
 }
@@ -104,6 +110,7 @@ private struct LookingCountView: View {
 private struct ToastAlertView: View {
     let seatSection: SeatSection
     let action: () -> Void
+    
     var body: some View {
         HStack(spacing: 0) {
             Image(.iconWarning)
