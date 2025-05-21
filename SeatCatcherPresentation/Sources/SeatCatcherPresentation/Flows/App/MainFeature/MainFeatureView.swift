@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SeatCatcherCore
+import SeatCatcherDomain
 
 public struct MainFeatureView: View {
     @State private var viewModel: MainFeatureViewModel
@@ -21,19 +22,29 @@ public struct MainFeatureView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.top, 18)
                 .padding(.bottom, 32)
-            SeatSectionView(viewModel: viewModel.seatSectionViewModel)
-                .padding(.bottom, 12)
-            LookingCountView(count: viewModel.state.lookingCount)
-            Spacer()
-            ToastAlertView(
-                seatSection: .normal_A,
-                action: {
-                    
+            SeatSectionView(
+                selectedSeat: viewModel.state.seatSectionState.selectedSeat,
+                isBlocked: viewModel.state.seatSectionState.isBlocked,
+                seats: viewModel.state.seatSectionState.seats,
+                userStatus: viewModel.state.userStatus,
+                onTap: { seat in
+                    viewModel.action(.manageSeatSection(.willSelectSeat(seat)))
                 }
             )
-            .padding(.bottom, 20)
+            .padding(.bottom, 12)
+            LookingCountView(count: viewModel.state.lookingCount)
+            Spacer()
+            if let section = viewModel.state.nearestAvailableSection {
+                ToastAlertView(
+                    seatSection: section,
+                    action: {
+                        //TODO: 해당 구역으로 이동
+                    }
+                )
+                .padding(.bottom, 20)
+            }
             CTAButton(
-                title: "내 좌석 관리하기",
+                title: MainFeatureLiterals.BottomButton.manageSeat.rawValue,
                 action: {
                     viewModel.action(.manageMySeatButtonDidTap)
                 },
@@ -52,17 +63,19 @@ public struct MainFeatureView: View {
                 homeButtonAction: { viewModel.action(.homeButtonDidTap) }
             )
         )
+        .onAppear {
+            viewModel.action(.willAppear)
+        }
     }
 }
-
 private struct TitleTextView: View {
     let seatSection: SeatSection
-    let status: MainFeatureUserStatus
+    let status: MainFeatureViewModel.UserStatus
     
     var body: some View {
-        VStack(spacing: 8) {
+        VStack(alignment: .leading, spacing: 8) {
             Text(
-                "\(MainFeatureLiterals.getTitleText(seatSection: seatSection, status: status).title)에서\n원하는 좌석을 찾아보세요",
+                MainFeatureLiterals.getTitleText(seatSection: seatSection, status: status).title,
                 styledSubstring: seatSection.rawValue,
                 color: .scGreen,
                 font: .T02_B
@@ -124,7 +137,6 @@ private struct ToastAlertView: View {
                 action: action,
                 label: {
                     Text("\(seatSection.rawValue)가기")
-                        .underline()
                 }
             )
             .font(.B03_M)
