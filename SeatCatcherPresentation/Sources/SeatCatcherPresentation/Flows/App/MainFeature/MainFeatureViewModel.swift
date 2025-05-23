@@ -19,8 +19,8 @@ public final class MainFeatureViewModel: ViewModel {
         case backButtonDidTap // 백 버튼
         case homeButtonDidTap // 홈 버튼
         case manageMySeatButtonDidTap // 좌석 관리 버튼
-        case willRegisterSeat // 좌석 등록
-        case willMoveSeat // 좌석 이동
+        case willRegisterSeat(Seat) // 좌석 등록
+        case willMoveSeat(Seat) // 좌석 이동
         case willCancelSeat // 좌석 취소
         case willGoToNearestAvailableSection // 좌석 정보가 있는 가장 가까운 구역으로 이동
         case manageSeatSection(SeatSectionAction)
@@ -54,8 +54,10 @@ public final class MainFeatureViewModel: ViewModel {
     private(set) var state: State
     
     // MARK: UseCases
-    private let getSeatInSectionUseCase: GetSeatInSectionUseCase?
-    private let unlockSeatUseCase: UnlockSeatUseCase?
+    // necessary
+    private let getSeatInSectionUseCase: GetSeatInSectionUseCase
+    private let unlockSeatUseCase: UnlockSeatUseCase
+    // optional
     private let registerSeatUseCase: RegisterSeatUseCase?
     private let moveSeatUseCase: MoveSeatUseCase?
     private let cancelSeatUseCase: CancelSeatUseCase?
@@ -198,27 +200,23 @@ public final class MainFeatureViewModel: ViewModel {
             }
         case .willUnlockAllSeats:
             /// 좌석 정보를 잠금 해제합니다
-            if let unlockSeatUseCase {
-                Task {
-                    do {
-                        try await unlockSeatUseCase.execute()
-                        state.seatSectionState.isBlocked = false
-                    } catch {
-                        print(error.localizedDescription)
-                    }
+            Task {
+                do {
+                    try await unlockSeatUseCase.execute()
+                    state.seatSectionState.isBlocked = false
+                } catch {
+                    print(error.localizedDescription)
                 }
             }
         }
     }
     
     private func fetchSeatInSection() {
-        if let getSeatInSectionUseCase {
-            Task {
-                do {
-                    state.seatSectionState.seats = try await getSeatInSectionUseCase.execute()
-                } catch {
-                    print(error.localizedDescription)
-                }
+        Task {
+            do {
+                state.seatSectionState.seats = try await getSeatInSectionUseCase.execute()
+            } catch {
+                print(error.localizedDescription)
             }
         }
     }
