@@ -21,12 +21,14 @@ struct SCNavigationBar: View {
         )
         case title(
             title: String,
-            backButtonAction: (() -> Void)? = nil
+            backButtonAction: (() -> Void)? = nil,
+            applyDefaultPopAction: Bool = true
         )
         case titleWithHomeButton(
             title: String,
             backButtonAction: (() -> Void)? = nil,
-            homeButtonAction: (() -> Void)? = nil
+            homeButtonAction: (() -> Void)? = nil,
+            applyDefaultPopAction: Bool = true
         )
         case stationSelection(
             departureName: String?,
@@ -34,12 +36,14 @@ struct SCNavigationBar: View {
             backButtonAction: (() -> Void)? = nil,
             swapStationsButtonAction: () -> Void,
             selectDepartureButtonAction: () -> Void,
-            selectArrivalButtonAction: () -> Void
+            selectArrivalButtonAction: () -> Void,
+            applyDefaultPopAction: Bool = true
         )
         case search(
             backButtonAction: (() -> Void)? = nil,
             placeholder: String,
-            text: Binding<String>
+            text: Binding<String>,
+            applyDefaultPopAction: Bool = true
         )
     }
     
@@ -52,22 +56,29 @@ struct SCNavigationBar: View {
         VStack(spacing: 0) {
             Group {
                 switch config {
-                case .skip(let skipButtonAction):
+                case let .skip(skipButtonAction):
                     SkipNavigationBar(skipButtonAction: skipButtonAction)
-                case .logoWithNotification(let notificationButtonAction):
+                case let .logoWithNotification(notificationButtonAction):
                     LogoWithNotificationNavigationBar(notificationButtonAction: notificationButtonAction)
-                case let .title(title, backButtonAction):
+                case let .title(title, backButtonAction, applyDefaultPopAction):
                     TitleNavigationBar(
                         title: title,
                         backButtonAction: backButtonAction,
-                        coordinator: coordinator
+                        coordinator: coordinator,
+                        applyDefaultPopAction: applyDefaultPopAction
                     )
-                case let .titleWithHomeButton(title, backButtonAction, homeButtonAction):
+                case let .titleWithHomeButton(
+                    title,
+                    backButtonAction,
+                    homeButtonAction,
+                    applyDefaultPopAction
+                ):
                     TitleWithHomeButtonNavigationBar(
                         title: title,
                         backButtonAction: backButtonAction,
                         homeButtonAction: homeButtonAction,
-                        coordinator: coordinator
+                        coordinator: coordinator,
+                        applyDefaultPopAction: applyDefaultPopAction
                     )
                 case let .stationSelection(
                     departureName,
@@ -75,7 +86,8 @@ struct SCNavigationBar: View {
                     backButtonAction,
                     swapStationsButtonAction,
                     selectDepartureButtonAction,
-                    selectArrivalButtonAction
+                    selectArrivalButtonAction,
+                    applyDefaultPopAction
                 ):
                     StationSelectionNavigationBar(
                         departureName: departureName,
@@ -84,14 +96,21 @@ struct SCNavigationBar: View {
                         swapStationsButtonAction: swapStationsButtonAction,
                         selectDepartureButtonAction: selectDepartureButtonAction,
                         selectArrivalButtonAction: selectArrivalButtonAction,
-                        coordinator: coordinator
+                        coordinator: coordinator,
+                        applyDefaultPopAction: applyDefaultPopAction
                     )
-                case let .search(backButtonAction, placeholder, text):
+                case let .search(
+                    backButtonAction,
+                    placeholder,
+                    text,
+                    applyDefaultPopAction
+                ):
                     SearchNavigationBar(
                         backButtonAction: backButtonAction,
                         placeholder: placeholder,
                         text: text,
-                        coordinator: coordinator
+                        coordinator: coordinator,
+                        applyDefaultPopAction: applyDefaultPopAction
                     )
                 }
             }
@@ -144,13 +163,16 @@ private struct TitleNavigationBar: View {
     let title: String
     let backButtonAction: (() -> Void)?
     let coordinator: Coordinator
+    let applyDefaultPopAction: Bool
 
     var body: some View {
         ZStack(alignment: .center) {
             HStack {
                 Button {
                     backButtonAction?()
-                    coordinator.pop()
+                    if applyDefaultPopAction {
+                        coordinator.pop()
+                    }
                 } label: {
                     Image(.iconLeftArrow)
                         .resizable()
@@ -171,12 +193,15 @@ private struct TitleWithHomeButtonNavigationBar: View {
     let backButtonAction: (() -> Void)?
     let homeButtonAction: (() -> Void)?
     let coordinator: Coordinator
+    let applyDefaultPopAction: Bool
 
     var body: some View {
         HStack {
             Button {
                 backButtonAction?()
-                coordinator.pop()
+                if applyDefaultPopAction {
+                    coordinator.pop()
+                }
             } label: {
                 Image(.iconLeftArrow)
                     .resizable()
@@ -189,7 +214,9 @@ private struct TitleWithHomeButtonNavigationBar: View {
             Spacer()
             Button(action: {
                 homeButtonAction?()
-                coordinator.popToRoot()
+                if applyDefaultPopAction {
+                    coordinator.popToRoot()
+                }
             }) {
                 Image(.iconHome)
                     .resizable()
@@ -208,12 +235,15 @@ private struct StationSelectionNavigationBar: View {
     let selectDepartureButtonAction: () -> Void
     let selectArrivalButtonAction: () -> Void
     let coordinator: Coordinator
+    let applyDefaultPopAction: Bool
 
     var body: some View {
         HStack(alignment: .top, spacing: 8) {
             Button {
                 backButtonAction?()
-                coordinator.pop()
+                if applyDefaultPopAction {
+                    coordinator.pop()
+                }
             } label: {
                 Image(.iconLeftArrow)
                     .resizable()
@@ -265,12 +295,15 @@ private struct SearchNavigationBar: View {
     let placeholder: String
     let text: Binding<String>
     let coordinator: Coordinator
+    let applyDefaultPopAction: Bool
 
     var body: some View {
         HStack(alignment: .top, spacing: 8) {
             Button {
                 backButtonAction?()
-                coordinator.pop()
+                if applyDefaultPopAction {
+                    coordinator.pop()
+                }
             } label: {
                 Image(.iconLeftArrow)
                     .resizable()
