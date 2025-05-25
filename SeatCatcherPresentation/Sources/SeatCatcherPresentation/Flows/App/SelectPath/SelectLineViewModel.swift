@@ -20,10 +20,12 @@ public final class SelectLineViewModel: ViewModel {
     }
 
     private(set) var state = State()
+    let boardingState: BoardingState
 
     let coordinator: Coordinator
 
-    public init(coordinator: Coordinator) {
+    public init(boardingState: BoardingState, coordinator: Coordinator) {
+        self.boardingState = boardingState
         self.coordinator = coordinator
     }
 
@@ -36,7 +38,12 @@ public final class SelectLineViewModel: ViewModel {
             if state.selection == .seven { state.selection = nil }
             else { state.selection = .seven }
         case .nextButtonTapped:
-            coordinator.push(AppScene.selectPath(line: state.selection?.rawValue ?? 2))
+            coordinator.push(
+                AppScene.selectPath(
+                    boardingState: boardingState,
+                    line: state.selection?.rawValue ?? 2
+                )
+            )
         }
     }
 }

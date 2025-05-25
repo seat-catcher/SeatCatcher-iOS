@@ -18,6 +18,8 @@ public final class SelectPathViewModel: ViewModel {
         var arrival: Station?
         var searchResults: [Station] = []
         var searchText: String = ""
+
+        var isPathSelected: Bool { departure != nil && arrival != nil }
     }
 
     enum Action {
@@ -27,6 +29,7 @@ public final class SelectPathViewModel: ViewModel {
         case departureButtonTapped
         case arrivalButtonTapped
         case historyTapped(history: PathHistory)
+        case nextButtonTapped
 
         // SearchStationsView
         case searchTextChanged(text: String)
@@ -45,14 +48,26 @@ public final class SelectPathViewModel: ViewModel {
 
     let coordinator: Coordinator
 
+    let boardingState: BoardingState
     let line: Int
 
+    @MainActor
+    var searchBarPlaceholder: String {
+        if boardingState == .boarded { "여기서 \(state.searchMode == .departure ? "승차역" : "하차역") 검색하기" }
+        else {
+            if state.searchMode == .departure { "열차의 다음 도착역 입력" }
+            else { "여기서 하차역 검색하기" }
+        }
+    }
+
     public init(
+        boardingState: BoardingState,
         line: Int,
         getPathHistoriesUseCase: GetPathHistoriesUseCase,
         searchStationsUseCase: SearchStationsUseCase,
         coordinator: Coordinator
     ) {
+        self.boardingState = boardingState
         self.line = line
         self.getPathHistoriesUseCase = getPathHistoriesUseCase
         self.searchStationsUseCase = searchStationsUseCase
@@ -86,6 +101,10 @@ public final class SelectPathViewModel: ViewModel {
         case .historyTapped(let history):
             state.departure = Station(id: history.departureStationId, name: history.departureStationName, line: history.line ?? 2)
             state.arrival = Station(id: history.arrivalStationId, name: history.arrivalStationName, line: history.line ?? 2)
+        case .nextButtonTapped:
+            dump(#function)
+            // TODO: - 다음 뷰 작업 (차량번호 입력)
+//            coordinator.push(AppScene.)
 
         // SearchStationsView
         case .searchTextChanged(let text):

@@ -21,7 +21,12 @@ public struct SelectBoardingStateView: View {
                 .padding(.bottom, 54)
             SelectionButtonGroup(viewModel: viewModel)
             Spacer()
-            CTAButton(title: "다음", action: {}, style: .bottomEnabled)
+            CTAButton(
+                title: "다음",
+                action: { viewModel.action(.nextButtonTapped) },
+                style: viewModel.state.boardingState == nil ? .bottomDisabled : .bottomEnabled
+            )
+            .disabled(viewModel.state.boardingState == nil)
         }
         .padding(.horizontal, 18)
         .withBackground(.gray900)

@@ -31,6 +31,7 @@ struct SCNavigationBar: View {
             applyDefaultPopAction: Bool = true
         )
         case stationSelection(
+            boardingState: BoardingState,
             departureName: String?,
             arrivalName: String?,
             backButtonAction: (() -> Void)? = nil,
@@ -81,6 +82,7 @@ struct SCNavigationBar: View {
                         applyDefaultPopAction: applyDefaultPopAction
                     )
                 case let .stationSelection(
+                    boardingState,
                     departureName,
                     arrivalName,
                     backButtonAction,
@@ -90,6 +92,7 @@ struct SCNavigationBar: View {
                     applyDefaultPopAction
                 ):
                     StationSelectionNavigationBar(
+                        boardingState: boardingState,
                         departureName: departureName,
                         arrivalName: arrivalName,
                         backButtonAction: backButtonAction,
@@ -228,6 +231,7 @@ private struct TitleWithHomeButtonNavigationBar: View {
 }
 
 private struct StationSelectionNavigationBar: View {
+    let boardingState: BoardingState
     let departureName: String?
     let arrivalName: String?
     let backButtonAction: (() -> Void)?
@@ -236,6 +240,14 @@ private struct StationSelectionNavigationBar: View {
     let selectArrivalButtonAction: () -> Void
     let coordinator: Coordinator
     let applyDefaultPopAction: Bool
+
+    var departurePlaceholder: String {
+        if let departureName = departureName { "\(departureName ?? "")역" }
+        else {
+            if boardingState == .boarded { "열차의 다음 도착역 입력" }
+            else { "승차역 입력" }
+        }
+    }
 
     var body: some View {
         HStack(alignment: .top, spacing: 8) {
@@ -259,7 +271,7 @@ private struct StationSelectionNavigationBar: View {
                     Button(action: selectDepartureButtonAction) {
                         HStack(spacing: 10) {
                             StationNodeView(.departure)
-                            Text(departureName == nil ? "승차역 입력" : "\(departureName ?? "")역")
+                            Text(departurePlaceholder)
                                 .font(.B02_M)
                                 .foregroundStyle(departureName == nil ? .gray300 : .gray100)
                                 .frame(maxWidth: .infinity, alignment: .leading)

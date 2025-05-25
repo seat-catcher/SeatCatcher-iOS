@@ -50,13 +50,20 @@ final class AppCoordinator: Coordinator {
                 coordinator: self
             )
             NotificationsView(viewModel: notificationsViewModel)
-        case .selectLine:
+        case .selectBoardingState:
+            let selectBoardingStateViewModel = SelectBoardingStateViewModel(
+                coordinator: self
+            )
+            SelectBoardingStateView(viewModel: selectBoardingStateViewModel)
+        case .selectLine(let boardingState):
             let selectLineViewModel = SelectLineViewModel(
+                boardingState: boardingState,
                 coordinator: self
             )
             SelectLineView(viewModel: selectLineViewModel)
-        case .selectPath(let line):
+        case let .selectPath(boardingState, line):
             let selectPathViewModel = SelectPathViewModel(
+                boardingState: boardingState,
                 line: line,
                 getPathHistoriesUseCase: diContainer.resolveGetPathHistoriesUseCase(),
                 searchStationsUseCase: diContainer.resolveSearchStationsUseCase(),

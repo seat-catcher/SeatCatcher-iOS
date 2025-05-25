@@ -30,7 +30,7 @@ public final class HomeViewModel: ViewModel {
     func action(_ action: Action) {
         switch action {
         case .catchSeatButtonTapped:
-            coordinator.push(AppScene.selectLine)
+            coordinator.push(AppScene.selectBoardingState)
         }
     }
 }
