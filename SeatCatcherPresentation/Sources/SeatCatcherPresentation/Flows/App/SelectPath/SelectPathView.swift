@@ -16,15 +16,26 @@ public struct SelectPathView: View {
     }
 
     public var body: some View {
-        ScrollView {
-            ForEach(viewModel.state.histories) {
-                PathHistoryCell(viewModel: viewModel, history: $0)
+        VStack(spacing: 0) {
+            ScrollView {
+                LazyVStack(spacing: 0) {
+                    ForEach(viewModel.state.histories) {
+                        PathHistoryCell(viewModel: viewModel, history: $0)
+                    }
+                }
             }
+            CTAButton(
+                title: "탑승 여부 선택하기",
+                action: { viewModel.action(.nextButtonTapped) },
+                style: viewModel.state.isPathSelected ? .bottomEnabled : .bottomDisabled
+            )
+            .disabled(!viewModel.state.isPathSelected)
         }
         .withBackground(.gray900)
         .withNavigationBar(
             viewModel.coordinator,
             config: .stationSelection(
+                boardingState: viewModel.boardingState,
                 departureName: viewModel.state.departure?.name,
                 arrivalName: viewModel.state.arrival?.name,
                 swapStationsButtonAction: { viewModel.action(.swapButtonTapped) },

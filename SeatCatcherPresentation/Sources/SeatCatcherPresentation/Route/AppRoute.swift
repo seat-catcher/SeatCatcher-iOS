@@ -12,8 +12,9 @@ import SeatCatcherDomain
 public enum AppScene: AppRoute {
     case home
     case notifications
-    case selectLine
-    case selectPath(line: Int)
+    case selectBoardingState
+    case selectLine(boardingState: BoardingState)
+    case selectPath(boardingState: BoardingState, line: Int)
     case searchStations(viewModel: SelectPathViewModel)
     case mainFeature
     case mainFeatureRegisterSeat
@@ -26,6 +27,7 @@ public enum AppScene: AppRoute {
         switch self {
         case .home: return "home"
         case .notifications: return "notifications"
+        case .selectBoardingState: return "selectBoardingState"
         case .selectLine: return "selectLine"
         case .selectPath: return "selectPath"
         case .searchStations: return "searchStations"

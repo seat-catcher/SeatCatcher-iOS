@@ -17,6 +17,7 @@ public final class SelectBoardingStateViewModel: ViewModel {
     enum Action {
         case hasBoardButtonTapped
         case hasNotBoardedButtonTapped
+        case nextButtonTapped
     }
 
     private(set) var state = State()
@@ -33,6 +34,9 @@ public final class SelectBoardingStateViewModel: ViewModel {
             self.state.boardingState = .boarded
         case .hasNotBoardedButtonTapped:
             self.state.boardingState = .notBoarded
+        case .nextButtonTapped:
+            guard let boardingState = self.state.boardingState else { return }
+            self.coordinator.push(AppScene.selectLine(boardingState: boardingState))
         }
     }
 
