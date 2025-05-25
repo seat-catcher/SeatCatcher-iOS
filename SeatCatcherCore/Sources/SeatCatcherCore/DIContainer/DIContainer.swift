@@ -28,6 +28,14 @@ public protocol DIContainer {
     // MARK: - PathHistories UseCases
     func resolveGetPathHistoriesUseCase() -> GetPathHistoriesUseCase
     func resolvePostPathHistoriesUseCase() -> PostPathHistoriesUseCase
+    
+    // MARK: - Seat UseCases
+    func resolveGetSeatInSectionUseCase() -> GetSeatInSectionUseCase
+    func resolveUnlockSeatUseCase() -> UnlockSeatUseCase
+    func resolveRegisterSeatUseCase() -> RegisterSeatUseCase
+    func resolveMoveSeatUseCase() -> MoveSeatUseCase
+    func resolveCancelSeatUseCase() -> CancelSeatUseCase
+
 
     // MARK: - Store
     func resolveAppStore() -> AppStore

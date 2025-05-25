@@ -18,7 +18,7 @@ public struct MainFeatureView: View {
     
     public var body: some View {
         VStack(spacing: 0) {
-            TitleTextView(seatSection: viewModel.state.seatSection, status: .standing)
+            TitleTextView(seatSection: viewModel.state.seatSection, status: viewModel.state.userStatus)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.top, 18)
                 .padding(.bottom, 32)
@@ -32,7 +32,9 @@ public struct MainFeatureView: View {
                 }
             )
             .padding(.bottom, 12)
-            LookingCountView(count: viewModel.state.lookingCount)
+            if viewModel.state.lookingCount > 0 {
+                LookingCountView(count: viewModel.state.lookingCount)
+            }
             Spacer()
             if let section = viewModel.state.nearestAvailableSection {
                 ToastAlertView(
@@ -43,13 +45,7 @@ public struct MainFeatureView: View {
                 )
                 .padding(.bottom, 20)
             }
-            CTAButton(
-                title: MainFeatureLiterals.BottomButton.manageSeat.rawValue,
-                action: {
-                    viewModel.action(.manageMySeatButtonDidTap)
-                },
-                style: .bottomMain
-            )
+            CTAButtonView(viewModel: viewModel)
             .padding(.bottom, 2)
         }
         .padding(.horizontal, 18)
@@ -87,6 +83,7 @@ private struct TitleTextView: View {
                 Text(subtitle)
                     .font(.B03_M)
                     .foregroundStyle(.gray300)
+                    .underline(status != .standing)
             } else {
                 Spacer()
                     .frame(height: 18)
@@ -148,5 +145,37 @@ private struct ToastAlertView: View {
         .frame(height: 40)
         .background(.gray500)
         .clipShape(Capsule())
+    }
+}
+
+private struct CTAButtonView: View {
+    
+    let viewModel: MainFeatureViewModel
+    
+    var body: some View {
+        let ctaButtonTitle = switch viewModel.state.userStatus {
+        case .seated, .standing: MainFeatureLiterals.BottomButton.manageSeat.rawValue
+        case .registering, .moving, .cancelling: MainFeatureLiterals.BottomButton.confirm.rawValue
+        }
+        CTAButton(
+            title: ctaButtonTitle,
+            action: {
+                switch viewModel.state.userStatus {
+                case .seated, .standing:
+                    viewModel.action(.manageMySeatButtonDidTap)
+                case .registering:
+                    if let seat = viewModel.state.seatSectionState.selectedSeat {
+                        viewModel.action(.willRegisterSeat(seat))
+                    }
+                case .moving:
+                    if let seat = viewModel.state.seatSectionState.selectedSeat {
+                        viewModel.action(.willMoveSeat(seat))
+                    }
+                case .cancelling:
+                    viewModel.action(.willCancelSeat)
+                }
+            },
+            style: .bottomMain
+        )
     }
 }

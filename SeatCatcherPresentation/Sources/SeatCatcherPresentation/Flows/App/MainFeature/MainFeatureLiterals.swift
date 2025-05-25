@@ -31,7 +31,7 @@ public enum MainFeatureLiterals {
             return (title: seatSection.rawValue + "에서\n앉아 있어요", subtitle: nil)
         case .standing:
             return (title: seatSection.rawValue + "에서\n원하는 좌석을 찾아보세요", subtitle: "빨리 비워지는 좌석일수록 밝아져요")
-        case .selecting:
+        case .registering, .moving:
             return (title: seatSection.rawValue + "에서\n내가 앉은 좌석을 선택해주세요", subtitle: "허위 등록 시, 이용이 제한될 수 있습니다.")
         case .cancelling:
             return (title: "현재 좌석등록을\n정말 취소하시겠어요?", subtitle: "등록 후, 5분 내 취소 시 리워드는 회수됩니다.")

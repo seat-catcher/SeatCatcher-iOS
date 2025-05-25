@@ -34,6 +34,7 @@ final class AppCoordinator: Coordinator {
         self.diContainer = diContainer
     }
 
+    @MainActor
     @ViewBuilder
     func buildScene(_ scene: AppScene) -> some View {
         switch scene {
@@ -64,6 +65,49 @@ final class AppCoordinator: Coordinator {
             SelectPathView(viewModel: selectPathViewModel)
         case .searchStations(let viewModel):
             SearchStationsView(viewModel: viewModel)
+        case .mainFeature(let hasSeated):
+            let viewModel = MainFeatureViewModel(
+                store: diContainer.resolveAppStore(),
+                coordinator: self,
+                getSeatInSectionUseCase: diContainer.resolveGetSeatInSectionUseCase(),
+                unlockSeatUseCase: diContainer.resolveUnlockSeatUseCase(),
+                userStatus: hasSeated ? .seated : .standing
+            )
+            MainFeatureView(viewModel: viewModel)
+        case .mainFeatureRegisterSeat:
+            let viewModel = MainFeatureViewModel(
+                store: diContainer.resolveAppStore(),
+                coordinator: self,
+                getSeatInSectionUseCase: diContainer.resolveGetSeatInSectionUseCase(),
+                unlockSeatUseCase: diContainer.resolveUnlockSeatUseCase(),
+                registerSeatUseCase: diContainer.resolveRegisterSeatUseCase()
+            )
+            MainFeatureView(viewModel: viewModel)
+        case .mainFeatureMoveSeat:
+            let viewModel = MainFeatureViewModel(
+                store: diContainer.resolveAppStore(),
+                coordinator: self,
+                getSeatInSectionUseCase: diContainer.resolveGetSeatInSectionUseCase(),
+                unlockSeatUseCase: diContainer.resolveUnlockSeatUseCase(),
+                moveSeatUseCase: diContainer.resolveMoveSeatUseCase()
+            )
+            MainFeatureView(viewModel: viewModel)
+        case .mainFeatureCancelSeat:
+            let viewModel = MainFeatureViewModel(
+                store: diContainer.resolveAppStore(),
+                coordinator: self,
+                getSeatInSectionUseCase: diContainer.resolveGetSeatInSectionUseCase(),
+                unlockSeatUseCase: diContainer.resolveUnlockSeatUseCase(),
+                cancelSeatUseCase: diContainer.resolveCancelSeatUseCase()
+            )
+            MainFeatureView(viewModel: viewModel)
+        case .manageSeat:
+            let store = diContainer.resolveAppStore()
+            let viewModel = ManageSeatViewModel(
+                store: store,
+                coordinator: self
+            )
+            ManageSeatView(viewModel: viewModel)
         }
     }
 
