@@ -24,6 +24,7 @@ final class DIContainerImpl {
     private lazy var userRepository = UserRepositoryImpl(networkService: networkService)
     private lazy var stationsRepository = StationsRepositoryImpl(networkService: networkService)
     private lazy var pathHistoriesRepository = PathHistoriesRepositoryImpl(networkService: networkService)
+    private lazy var seatRepository = SeatRepositoryImpl()
 
     // MARK: - Auth UseCase Instances
     private lazy var appleLoginUseCase = AppleLoginUseCaseImpl(
@@ -52,7 +53,14 @@ final class DIContainerImpl {
 
     // MARK: - Stations UseCase Instances
     private lazy var searchStationsUseCase = SearchStationsUseCaseImpl(stationsRepository: stationsRepository)
-
+    
+    // MARK: - Seat UseCases Instances
+    private lazy var getSeatInSectionUseCase = GetSeatInSectionUseCaseImpl(seatRepository: seatRepository)
+    private lazy var unlockSeatUseCase = UnlockSeatUseCaseImpl(seatRepository: seatRepository)
+    private lazy var registerSeatUseCase: RegisterSeatUseCase = RegisterSeatUseCaseImpl(seatRepository: seatRepository)
+    private lazy var moveSeatUseCase: MoveSeatUseCase = MoveSeatUseCaseImpl(seatRepository: seatRepository)
+    private lazy var cancelSeatUseCase: CancelSeatUseCase = CancelSeatUseCaseImpl(seatRepository: seatRepository)
+    
     // MARK: - PathHistories UseCase Instances
     private lazy var getPathHistoriesUseCase = GetPathHistoriesUseCaseImpl(pathHistoriesRepository: pathHistoriesRepository)
     private lazy var postPathHistoriesUseCase = PostPathHistoriesImpl(pathHistoriesRespotiry: pathHistoriesRepository)
@@ -78,6 +86,13 @@ extension DIContainerImpl: DIContainer {
     // MARK: - PathHistories UseCases
     func resolveGetPathHistoriesUseCase() ->  GetPathHistoriesUseCase { return getPathHistoriesUseCase }
     func resolvePostPathHistoriesUseCase() -> PostPathHistoriesUseCase { return postPathHistoriesUseCase }
+    
+    // MARK: - Seat UseCases
+    func resolveGetSeatInSectionUseCase() -> GetSeatInSectionUseCase { return getSeatInSectionUseCase }
+    func resolveUnlockSeatUseCase() -> UnlockSeatUseCase { return unlockSeatUseCase }
+    func resolveRegisterSeatUseCase() -> RegisterSeatUseCase { return registerSeatUseCase }
+    func resolveMoveSeatUseCase() -> MoveSeatUseCase { return moveSeatUseCase }
+    func resolveCancelSeatUseCase() -> CancelSeatUseCase { return cancelSeatUseCase }
 
     // MARK: - Store
     func resolveAppStore() -> AppStore { return appStore }

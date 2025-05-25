@@ -47,7 +47,7 @@ public final class MainFeatureViewModel: ViewModel {
     }
     
     // MARK: Dependencies
-    let appStore: AppStore
+    let store: AppStore
     let coordinator: Coordinator
     
     // MARK: States
@@ -64,11 +64,9 @@ public final class MainFeatureViewModel: ViewModel {
     
     
     // MARK: Initialize
-    init(
-        appStore: AppStore,
+    public init(
+        store: AppStore,
         coordinator: Coordinator,
-        isBlocked: Bool,
-        seatSection: SeatSection,
         getSeatInSectionUseCase: GetSeatInSectionUseCase,
         unlockSeatUseCase: UnlockSeatUseCase,
         registerSeatUseCase: RegisterSeatUseCase? = nil,
@@ -76,7 +74,7 @@ public final class MainFeatureViewModel: ViewModel {
         cancelSeatUseCase: CancelSeatUseCase? = nil,
         userStatus: UserStatus
     ) {
-        self.appStore = appStore
+        self.store = store
         self.coordinator = coordinator
         self.getSeatInSectionUseCase = getSeatInSectionUseCase
         self.unlockSeatUseCase = unlockSeatUseCase
@@ -86,75 +84,80 @@ public final class MainFeatureViewModel: ViewModel {
         self.state = .init(
             nearestAvailableSection: nil, // 초깃값
             userStatus: userStatus,
-            seatSection: seatSection,
+            seatSection: .normal_A, // FIXME: 전역 관리 필요
             lookingCount: 0, // 초깃값
             seatSectionState: .init(
                 selectedSeat: nil,
-                isBlocked: isBlocked,
+                isBlocked: false, // FIXME: 전역 관리 필요
                 seats: (topSeats: [], bottomSeats: [])
             )
         )
     }
     
+    
+    // MARK: 기본
+    public convenience init(
+        store: AppStore,
+        coordinator: Coordinator,
+        getSeatInSectionUseCase: GetSeatInSectionUseCase,
+        unlockSeatUseCase: UnlockSeatUseCase
+    ) {
+        self.init(
+            store: store,
+            coordinator: coordinator,
+            getSeatInSectionUseCase: getSeatInSectionUseCase,
+            unlockSeatUseCase: unlockSeatUseCase,
+            userStatus: .standing
+        )
+    }
+    
     // MARK: 좌석 등록하는 경우
     public convenience init(
-        appStore: AppStore,
+        store: AppStore,
         coordinator: Coordinator,
-        isBlocked: Bool,
-        seatSection: SeatSection,
         getSeatInSectionUseCase: GetSeatInSectionUseCase,
         unlockSeatUseCase: UnlockSeatUseCase,
         registerSeatUseCase: RegisterSeatUseCase
     ) {
         self.init(
-            appStore: appStore,
+            store: store,
             coordinator: coordinator,
-            isBlocked: isBlocked,
-            seatSection: seatSection,
             getSeatInSectionUseCase: getSeatInSectionUseCase,
             unlockSeatUseCase: unlockSeatUseCase,
             registerSeatUseCase: registerSeatUseCase,
-            userStatus: .selecting
+            userStatus: .registering
         )
     }
     
     // MARK: 좌석 이동하는 경우
     public convenience init(
-        appStore: AppStore,
+        store: AppStore,
         coordinator: Coordinator,
-        isBlocked: Bool,
-        seatSection: SeatSection,
         getSeatInSectionUseCase: GetSeatInSectionUseCase,
         unlockSeatUseCase: UnlockSeatUseCase,
         moveSeatUseCase: MoveSeatUseCase
     ) {
         self.init(
-            appStore: appStore,
+            store: store,
             coordinator: coordinator,
-            isBlocked: isBlocked,
-            seatSection: seatSection,
             getSeatInSectionUseCase: getSeatInSectionUseCase,
             unlockSeatUseCase: unlockSeatUseCase,
             moveSeatUseCase: moveSeatUseCase,
-            userStatus: .selecting
+            userStatus: .moving
         )
     }
     
     // MARK: 좌석 취소하는 경우
     public convenience init(
-        appStore: AppStore,
+        store: AppStore,
         coordinator: Coordinator,
-        isBlocked: Bool,
-        seatSection: SeatSection,
         getSeatInSectionUseCase: GetSeatInSectionUseCase,
         unlockSeatUseCase: UnlockSeatUseCase,
         cancelSeatUseCase: CancelSeatUseCase
     ) {
         self.init(
-            appStore: appStore,
+            store: store,
             coordinator: coordinator,
-            isBlocked: isBlocked,
-            seatSection: seatSection,
             getSeatInSectionUseCase: getSeatInSectionUseCase,
             unlockSeatUseCase: unlockSeatUseCase,
             cancelSeatUseCase: cancelSeatUseCase,
@@ -174,8 +177,7 @@ public final class MainFeatureViewModel: ViewModel {
         case .homeButtonDidTap:
             coordinator.popToRoot()
         case .manageMySeatButtonDidTap:
-            //TODO: 좌석 관리 페이지로 이동
-            break
+            coordinator.push(AppScene.manageSeat)
         case .willRegisterSeat:
             registerSeat()
         case .willMoveSeat:
@@ -263,7 +265,8 @@ public final class MainFeatureViewModel: ViewModel {
     public enum UserStatus {
         case seated // 착석 중
         case standing // 자리 찾는 중
-        case selecting // 좌석 관리 - 앉은 자리 등록 or 이동 중
+        case registering // 좌석 관리 - 앉은 자리 등록 중
+        case moving // 좌석 관리 - 앉은 자리 이동 중
         case cancelling // 좌석 관리 - 앉은 자리 취소 중
     }
 }

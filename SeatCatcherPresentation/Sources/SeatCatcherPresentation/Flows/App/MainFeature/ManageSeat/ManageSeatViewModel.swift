@@ -40,14 +40,15 @@ public class ManageSeatViewModel: ViewModel {
     }
     
     // MARK: Dependencies
-    let appStore: AppStore
+    let store: AppStore
     let coordinator: Coordinator
     private(set) var state = State(selectedOption: nil)
     
-    public init(appStore: AppStore,
-         coordinator: Coordinator
+    public init(
+        store: AppStore,
+        coordinator: Coordinator
     ) {
-        self.appStore = appStore
+        self.store = store
         self.coordinator = coordinator
     }
     
@@ -60,8 +61,17 @@ public class ManageSeatViewModel: ViewModel {
                 state.selectedOption = option // 변경
             }
         case .didSelectOption:
-            // TODO: 코디네이터 push
-            break
+            if let option = state.selectedOption {
+                let scene = switch option {
+                case .register:
+                    AppScene.mainFeatureRegisterSeat
+                case .move:
+                    AppScene.mainFeatureMoveSeat
+                case .cancel:
+                    AppScene.mainFeatureCancelSeat
+                }
+                coordinator.push(scene)
+            }
         case .backButtonDidTap:
             coordinator.pop()
         case .homeButtonDidTap:

@@ -14,6 +14,11 @@ public enum AppScene: AppRoute {
     case selectLine
     case selectPath(line: Int)
     case searchStations(viewModel: SelectPathViewModel)
+    case mainFeature(hasSeated: Bool)
+    case mainFeatureRegisterSeat
+    case mainFeatureMoveSeat
+    case mainFeatureCancelSeat
+    case manageSeat
 
     public var id: String {
         switch self {
@@ -22,6 +27,11 @@ public enum AppScene: AppRoute {
         case .selectLine: return "selectLine"
         case .selectPath: return "selectPath"
         case .searchStations: return "searchStations"
+        case .mainFeature: return "mainFeature"
+        case .mainFeatureRegisterSeat: return "mainFeatureRegisterSeat"
+        case .mainFeatureMoveSeat: return "mainFeatureMoveSeat"
+        case .mainFeatureCancelSeat: return "mainFeatureCancelSeat"
+        case .manageSeat: return "manageSeat"
         }
     }
 

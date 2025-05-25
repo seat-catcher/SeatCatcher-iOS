@@ -58,7 +58,7 @@ private struct SeatRowView: View {
                     Image(seat.image(
                         isSelected: selectedSeat?.id == seat.id,
                         isBlocked: isBlocked,
-                        isSelecting: userStatus == .selecting)
+                        isSelecting: userStatus == .registering || userStatus == .moving)
                     )
                     .frame(width: 40, height: 42)
                     .onTapGesture {
@@ -74,7 +74,7 @@ private struct SeatRowView: View {
     
     private func shouldShowSeat(seat: Seat) -> Bool {
         /// 좌석 이동/등록 시엔 점유된 좌석은 보여주지 않습니다
-        if userStatus == .selecting {
+        if userStatus == .registering || userStatus == .moving {
             return seat.isAvailable  // 빈 좌석만 표시
         } else {
             return true  // 다른 상태에서는 모든 좌석 표시
