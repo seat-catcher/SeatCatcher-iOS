@@ -60,7 +60,8 @@ public struct MainFeatureView: View {
             config: .titleWithHomeButton(
                 title: "좌석찾기",
                 backButtonAction: { viewModel.action(.backButtonDidTap) },
-                homeButtonAction: { viewModel.action(.homeButtonDidTap) }
+                homeButtonAction: { viewModel.action(.homeButtonDidTap) },
+                applyDefaultPopAction: false
             )
         )
         .onAppear {
