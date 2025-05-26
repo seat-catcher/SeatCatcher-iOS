@@ -31,6 +31,9 @@ public final class TokenRepositoryImpl: TokenRepository {
     
     public func getTokenValidStatus() async throws {
         guard let accessToken = try getAccessToken() else { throw TokenError.accessTokenNotFoundInKeychain }
+        #if DEBUG
+        dump(accessToken)
+        #endif
         try await networkService.getAccessTokenValidStatus()
     }
 

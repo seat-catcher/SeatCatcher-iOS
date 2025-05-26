@@ -227,4 +227,12 @@ public struct NetworkService: Sendable {
     func cancelSeat() async throws {
         try await provider.request(.deleteSeat)
     }
+
+    // MARK: - Incomings
+    func getIncomings(departure: String, arrival: String, line: String) async throws -> [GetIncomingsResponseDTO] {
+        let requestDTO = GetIncomingsRequestDTO(lineNumber: line, dep: departure, dest: arrival)
+        let response = try await provider.request(.getIncomings(requestDTO: requestDTO))
+        let responseDTO = try JSONDecoder().decode([GetIncomingsResponseDTO].self, from: response)
+        return responseDTO
+    }
 }

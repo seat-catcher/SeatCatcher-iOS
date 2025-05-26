@@ -25,11 +25,13 @@ public struct SelectPathView: View {
                 }
             }
             CTAButton(
-                title: "탑승 여부 선택하기",
+                title: "열차 선택하기",
                 action: { viewModel.action(.nextButtonTapped) },
                 style: viewModel.state.isPathSelected ? .bottomEnabled : .bottomDisabled
             )
             .disabled(!viewModel.state.isPathSelected)
+            .padding(.top, 18)
+            .padding(.horizontal, 18)
         }
         .withBackground(.gray900)
         .withNavigationBar(
