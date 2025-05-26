@@ -18,10 +18,22 @@ extension Seat {
         if isBlocked {
             return ImageResource(name: "\(directionPrefix)_blocked", bundle: .module)
         }
-        // 내가 앉은 자리 or 앉을 자리 선택 시
-        if isSeated || (isSelecting && isSelected) {
+        
+        // 등록/이동 중 선택한 자리인 경우
+        // 등록/이동 중 아닐 때 내가 앉은 자리인 경우
+        if isSelecting {
+            if isSelected {
+                return ImageResource(name: "\(directionPrefix)_user", bundle: .module)
+            } else {
+                return ImageResource(name: "\(directionPrefix)_empty", bundle: .module)
+            }
+        }
+        
+        // 내가 앉아있는 자리
+        if isSeated {
             return ImageResource(name: "\(directionPrefix)_user", bundle: .module)
         }
+        
         // 빈 자리
         if isAvailable {
             return ImageResource(name: "\(directionPrefix)_empty", bundle: .module)
