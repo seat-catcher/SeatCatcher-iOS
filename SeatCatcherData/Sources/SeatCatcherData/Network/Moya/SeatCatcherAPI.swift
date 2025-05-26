@@ -23,11 +23,13 @@ enum SeatCatcherAPI: Sendable {
 
     case getPathHistories(cursor: Int?)
     case postPathHistories(requestDTO: PostPathHistoriesRequestDTO)
-    
+
     case getSeatInfo(trainCode: String, carCode: String)
     
     case postRegisterSeat(requestDTO: PostRegisterSeatRequestDTO)
     case deleteSeat
+
+    case getIncomings(requestDTO: GetIncomingsRequestDTO)
 }
 
 extension SeatCatcherAPI: TargetType {
@@ -66,6 +68,8 @@ extension SeatCatcherAPI: TargetType {
             return "/user/seats"
         case .deleteSeat:
             return "/user/seats"
+        case .getIncomings:
+            return "/trains/incomings"
         }
     }
     
@@ -97,6 +101,8 @@ extension SeatCatcherAPI: TargetType {
             return .post
         case .deleteSeat:
             return .delete
+        case .getIncomings:
+            return .get
         }
     }
     
@@ -135,6 +141,13 @@ extension SeatCatcherAPI: TargetType {
             return .requestJSONEncodable(requestDTO)
         case .deleteSeat:
             return .requestPlain
+        case let .getIncomings(requestDTO):
+            let parameters: [String: Any] = [
+                "lineNumber": requestDTO.lineNumber,
+                "dep": requestDTO.dep,
+                "dest": requestDTO.dest
+            ]
+            return .requestParameters(parameters: parameters, encoding: URLEncoding.default)
         }
     }
 
@@ -173,6 +186,7 @@ extension SeatCatcherAPI: TargetType {
         case .postRegisterSeat:
             return baseWithAuth
         case .deleteSeat:
+        case .getIncomings:
             return baseWithAuth
         }
     }
