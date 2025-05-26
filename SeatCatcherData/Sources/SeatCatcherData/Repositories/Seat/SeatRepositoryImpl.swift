@@ -27,7 +27,7 @@ public final class SeatRepositoryImpl: SeatRepository, Sendable {
         
         let bottomSeats: [Seat] = [
             Seat(minutesLeft: 12, isAvailable: true, isSeated: false, isBlocked: false, seatDirection: .bottom),
-            Seat(minutesLeft: 7, isAvailable: true, isSeated: true, isBlocked: false, seatDirection: .bottom),
+            Seat(minutesLeft: 7, isAvailable: true, isSeated: false, isBlocked: false, seatDirection: .bottom),
             Seat(minutesLeft: 2, isAvailable: false, isSeated: false, isBlocked: true, seatDirection: .bottom),
             Seat(minutesLeft: 18, isAvailable: true, isSeated: false, isBlocked: false, seatDirection: .bottom),
             Seat(minutesLeft: 9, isAvailable: true, isSeated: false, isBlocked: false, seatDirection: .bottom),

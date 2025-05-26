@@ -46,7 +46,7 @@ public struct MainFeatureView: View {
                 .padding(.bottom, 20)
             }
             CTAButtonView(viewModel: viewModel)
-            .padding(.bottom, 2)
+                .padding(.bottom, 2)
         }
         .padding(.horizontal, 18)
         .frame(maxWidth: .infinity)
@@ -153,9 +153,16 @@ private struct CTAButtonView: View {
     let viewModel: MainFeatureViewModel
     
     var body: some View {
-        let ctaButtonTitle = switch viewModel.state.userStatus {
+        let ctaButtonTitle: String = switch viewModel.state.userStatus {
         case .seated, .standing: MainFeatureLiterals.BottomButton.manageSeat.rawValue
         case .registering, .moving, .cancelling: MainFeatureLiterals.BottomButton.confirm.rawValue
+        }
+        let ctaButtonStyle: CTAButton.SCButtonStyle = switch viewModel.state.userStatus {
+        case .registering, .moving:
+            viewModel.state.seatSectionState.selectedSeat != nil
+            ? .bottomEnabled
+            : .bottomDisabled
+        case .seated, .standing, .cancelling: .bottomEnabled
         }
         CTAButton(
             title: ctaButtonTitle,
@@ -175,7 +182,7 @@ private struct CTAButtonView: View {
                     viewModel.action(.willCancelSeat)
                 }
             },
-            style: .bottomMain
+            style: ctaButtonStyle
         )
     }
 }

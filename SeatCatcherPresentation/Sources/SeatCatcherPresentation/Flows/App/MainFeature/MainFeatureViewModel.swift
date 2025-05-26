@@ -217,6 +217,15 @@ public final class MainFeatureViewModel: ViewModel {
         Task {
             do {
                 state.seatSectionState.seats = try await getSeatInSectionUseCase.execute()
+                if self.state.userStatus == .registering || self.state.userStatus == .moving {
+                    self.state.seatSectionState.selectedSeat
+                    = state.seatSectionState.seats.topSeats.first(
+                        where: { $0.isSeated }
+                    )
+                    ?? state.seatSectionState.seats.bottomSeats.first(
+                        where: { $0.isSeated }
+                    )
+                }
             } catch {
                 print(error.localizedDescription)
             }
