@@ -6,18 +6,18 @@
 //
 
 public protocol GetIncomingsUseCase {
-    func execute(arrival: Station, departure: Station) async throws -> [Incoming]
+    func execute(departure: Station, arrival: Station) async throws -> [Incoming]
 }
 
 public final class GetIncomingsUseCaseImpl: GetIncomingsUseCase {
-    private let repository: IncomingsRepository
+    private let incomingsRepository: IncomingsRepository
 
-    public init(repository: IncomingsRepository) {
-        self.repository = repository
+    public init(incomingsRepository: IncomingsRepository) {
+        self.incomingsRepository = incomingsRepository
     }
 
-    public func execute(arrival: Station, departure: Station) async throws -> [Incoming] {
-        let incomings = try await repository.getIncomings(departure: departure, arrival: arrival)
+    public func execute(departure: Station, arrival: Station) async throws -> [Incoming] {
+        let incomings = try await incomingsRepository.getIncomings(departure: departure, arrival: arrival)
         return incomings
     }
 }

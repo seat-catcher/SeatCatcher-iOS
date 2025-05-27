@@ -10,7 +10,7 @@ import SeatCatcherDomain
 public final class IncomingsRepositoryImpl: IncomingsRepository {
     private let networkService: NetworkService
 
-    public init(_ networkService: NetworkService) {
+    public init(networkService: NetworkService) {
         self.networkService = networkService
     }
 
