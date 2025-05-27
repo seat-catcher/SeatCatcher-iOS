@@ -200,7 +200,7 @@ public struct NetworkService: Sendable {
         return responseDTO
     }
 
-    // MARK: - PathHIstories
+    // MARK: - PathHistories
     func getPathHistories(cursor: Int?) async throws -> GetPathHistoriesResponseDTO {
         let response = try await provider.request(.getPathHistories(cursor: cursor))
         let responseDTO = try JSONDecoder().decode(GetPathHistoriesResponseDTO.self, from: response)
@@ -210,5 +210,12 @@ public struct NetworkService: Sendable {
     func postPathHistories(departureStationId: Int, arrivalStationId: Int) async throws {
         let requestDTO = PostPathHistoriesRequestDTO(startStationId: departureStationId, endStationId: arrivalStationId)
         let _ = try await provider.request(.postPathHistories(requestDTO: requestDTO))
+    }
+    
+    // MARK: - Trains
+    func getSeatInfo(trainCode: Int, carCode: Int) async throws -> GetSeatInfoResponseDTO {
+        let response = try await provider.request(.getSeatInfo(trainCode: trainCode, carCode: carCode))
+        let responseDTO = try JSONDecoder().decode(GetSeatInfoResponseDTO.self, from: response)
+        return responseDTO
     }
 }

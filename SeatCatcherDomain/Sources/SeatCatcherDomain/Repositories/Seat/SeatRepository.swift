@@ -8,6 +8,6 @@
 import Foundation
 
 public protocol SeatRepository: Sendable {
-    func getSeatsInSection() async throws -> (topSeats: [Seat], bottomSeats: [Seat])
+    func getSeatsInTrainCar(trainCode: Int, carCode: Int) async throws -> TrainCar
     func unlockAllSeats() async throws
 }

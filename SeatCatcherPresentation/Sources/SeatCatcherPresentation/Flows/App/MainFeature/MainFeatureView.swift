@@ -66,7 +66,7 @@ public struct MainFeatureView: View {
     }
 }
 private struct TitleTextView: View {
-    let seatSection: SeatSection
+    let seatSection: SeatSectionType
     let status: MainFeatureViewModel.UserStatus
     
     var body: some View {
@@ -119,7 +119,7 @@ private struct LookingCountView: View {
 }
 
 private struct ToastAlertView: View {
-    let seatSection: SeatSection
+    let seatSection: SeatSectionType
     let action: () -> Void
     
     var body: some View {
