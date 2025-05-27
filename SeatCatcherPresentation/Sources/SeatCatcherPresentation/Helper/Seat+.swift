@@ -35,7 +35,7 @@ extension Seat {
         }
         
         // 빈 자리
-        if isEmpty {
+        if occupant == nil {
             return ImageResource(name: "\(directionPrefix)_empty", bundle: .module)
         }
         
