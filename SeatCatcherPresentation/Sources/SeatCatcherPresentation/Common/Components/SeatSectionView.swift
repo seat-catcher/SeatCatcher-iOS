@@ -11,15 +11,19 @@ import SeatCatcherDomain
 public struct SeatSectionView: View {
     let selectedSeat: Seat?
     let isBlocked: Bool
-    let seats: (topSeats: [Seat], bottomSeats: [Seat])
+    let seats: SeatSection // 변경: 튜플 대신 SeatSection
     let userStatus: MainFeatureViewModel.UserStatus
     let onTap: (Seat) -> Void
     
     public var body: some View {
-        VStack(alignment: .center, spacing: 0) {
+        // SeatLocation 대로 정렬
+        let topSeats = seats.topSeats.sorted { $0.key < $1.key }.map { $0.value }
+        let bottomSeats = seats.bottomSeats.sorted { $0.key < $1.key }.map { $0.value }
+        
+        VStack(alignment: .center, spacing: 8) {
             SeatRowView(
                 isBlocked: isBlocked,
-                seats: seats.topSeats,
+                seats: topSeats,
                 selectedSeat: selectedSeat,
                 userStatus: userStatus,
                 onTap: onTap
@@ -27,7 +31,7 @@ public struct SeatSectionView: View {
             Spacer()
             SeatRowView(
                 isBlocked: isBlocked,
-                seats: seats.bottomSeats,
+                seats: bottomSeats,
                 selectedSeat: selectedSeat,
                 userStatus: userStatus,
                 onTap: onTap
@@ -75,7 +79,7 @@ private struct SeatRowView: View {
     private func shouldShowSeat(seat: Seat) -> Bool {
         /// 좌석 이동/등록 시엔 점유된 좌석은 보여주지 않습니다
         if userStatus == .registering || userStatus == .moving {
-            return seat.isAvailable || seat.isSeated // 빈 좌석과 앉은 자리만 표시
+            return seat.isEmpty || seat.isMySeat // 빈 좌석과 앉은 자리만 표시
         } else {
             return true  // 다른 상태에서는 모든 좌석 표시
         }

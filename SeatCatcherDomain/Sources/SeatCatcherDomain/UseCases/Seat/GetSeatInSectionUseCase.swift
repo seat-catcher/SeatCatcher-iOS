@@ -14,7 +14,9 @@ public protocol GetSeatInSectionUseCase: Sendable {
 
 public final class GetSeatInSectionUseCaseImpl: GetSeatInSectionUseCase {
     
+    public init() { }
+    
     public func execute(trainCar: TrainCar, seatSectionType: SeatSectionType) -> SeatSection {
-        return trainCar.seatInfo[seatSectionType] ?? SeatSection(type: seatSectionType, topSeats: [:], bottomSeats: [:])
+        return trainCar.seatInfo[seatSectionType] ?? SeatSection(topSeats: [:], bottomSeats: [:])
     }
 }

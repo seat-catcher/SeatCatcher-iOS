@@ -24,7 +24,7 @@ final class DIContainerImpl {
     private lazy var userRepository = UserRepositoryImpl(networkService: networkService)
     private lazy var stationsRepository = StationsRepositoryImpl(networkService: networkService)
     private lazy var pathHistoriesRepository = PathHistoriesRepositoryImpl(networkService: networkService)
-    private lazy var seatRepository = SeatRepositoryImpl()
+    private lazy var seatRepository = SeatRepositoryImpl(networkService: networkService)
 
     // MARK: - Auth UseCase Instances
     private lazy var appleLoginUseCase = AppleLoginUseCaseImpl(
@@ -55,7 +55,8 @@ final class DIContainerImpl {
     private lazy var searchStationsUseCase = SearchStationsUseCaseImpl(stationsRepository: stationsRepository)
     
     // MARK: - Seat UseCases Instances
-    private lazy var getSeatInSectionUseCase = GetSeatInSectionUseCaseImpl(seatRepository: seatRepository)
+    private lazy var getSeatInTrainCarUseCase = GetSeatInTrainCarUseCaseImpl(seatRepository: seatRepository)
+    private lazy var getSeatInSectionUseCase = GetSeatInSectionUseCaseImpl()
     private lazy var unlockSeatUseCase = UnlockSeatUseCaseImpl(seatRepository: seatRepository)
     private lazy var registerSeatUseCase: RegisterSeatUseCase = RegisterSeatUseCaseImpl(seatRepository: seatRepository)
     private lazy var moveSeatUseCase: MoveSeatUseCase = MoveSeatUseCaseImpl(seatRepository: seatRepository)
@@ -88,6 +89,7 @@ extension DIContainerImpl: DIContainer {
     func resolvePostPathHistoriesUseCase() -> PostPathHistoriesUseCase { return postPathHistoriesUseCase }
     
     // MARK: - Seat UseCases
+    func resolveGetSeatInTrainCarUseCase() -> GetSeatInTrainCarUseCase { return getSeatInTrainCarUseCase }
     func resolveGetSeatInSectionUseCase() -> GetSeatInSectionUseCase { return getSeatInSectionUseCase }
     func resolveUnlockSeatUseCase() -> UnlockSeatUseCase { return unlockSeatUseCase }
     func resolveRegisterSeatUseCase() -> RegisterSeatUseCase { return registerSeatUseCase }

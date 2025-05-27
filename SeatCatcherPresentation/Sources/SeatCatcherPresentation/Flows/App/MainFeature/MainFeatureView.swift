@@ -36,11 +36,10 @@ public struct MainFeatureView: View {
                 LookingCountView(count: viewModel.state.lookingCount)
             }
             Spacer()
-            if let section = viewModel.state.nearestAvailableSection {
+            if viewModel.state.showNoInformationToast {
                 ToastAlertView(
-                    seatSection: section,
                     action: {
-                        //TODO: 해당 구역으로 이동
+                        viewModel.action(.backToSeatSectionPage) // 구역 선택 페이지로 이동
                     }
                 )
                 .padding(.bottom, 20)
@@ -119,7 +118,6 @@ private struct LookingCountView: View {
 }
 
 private struct ToastAlertView: View {
-    let seatSection: SeatSectionType
     let action: () -> Void
     
     var body: some View {
@@ -134,12 +132,12 @@ private struct ToastAlertView: View {
             Button(
                 action: action,
                 label: {
-                    Text("\(seatSection.rawValue)가기")
+                    Text("다시 구역 선택하기")
+                        .underline()
                 }
             )
             .font(.B03_M)
             .foregroundStyle(.scGreen)
-            .underline(true)
         }
         .padding(.horizontal, 10)
         .frame(height: 40)

@@ -14,10 +14,10 @@ public enum AppScene: AppRoute {
     case selectLine
     case selectPath(line: Int)
     case searchStations(viewModel: SelectPathViewModel)
-    case mainFeature(hasSeated: Bool)
-    case mainFeatureRegisterSeat
-    case mainFeatureMoveSeat
-    case mainFeatureCancelSeat
+    case mainFeature(hasSeated: Bool, trainCode: String, carCode: String)
+    case mainFeatureRegisterSeat(trainCode: String, carCode: String)
+    case mainFeatureMoveSeat(trainCode: String, carCode: String)
+    case mainFeatureCancelSeat(trainCode: String, carCode: String)
     case manageSeat
 
     public var id: String {

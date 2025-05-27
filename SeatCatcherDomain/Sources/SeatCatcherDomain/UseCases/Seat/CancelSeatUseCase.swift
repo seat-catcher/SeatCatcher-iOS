@@ -20,6 +20,6 @@ public final class CancelSeatUseCaseImpl: CancelSeatUseCase {
     }
     
     public func execute() async throws {
-        //TODO: 구현
+        try await seatRepository.cancelSeat()
     }
 }

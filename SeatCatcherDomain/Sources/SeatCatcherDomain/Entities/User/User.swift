@@ -8,15 +8,13 @@
 import Foundation
 
 public struct User: Sendable {
-    public var id: Int
     public var name: String
     public var profileImage: UserImage
     public var tags: [UserTag]
     public var credit: Int
     public var hasOnBoarded: Bool
 
-    public init(id: Int, name: String, profileImage: UserImage, tags: [UserTag], credit: Int, hasOnBoarded: Bool) {
-        self.id = id
+    public init(name: String, profileImage: UserImage, tags: [UserTag], credit: Int, hasOnBoarded: Bool) {
         self.name = name
         self.profileImage = profileImage
         self.tags = tags
@@ -25,7 +23,6 @@ public struct User: Sendable {
     }
 
     public init(hasOnBoarded: Bool) {
-        self.id = 0
         self.name = ""
         self.profileImage = .catchy1
         self.tags = []

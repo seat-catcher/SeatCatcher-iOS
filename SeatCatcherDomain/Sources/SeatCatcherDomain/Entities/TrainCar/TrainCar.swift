@@ -9,11 +9,11 @@ import Foundation
 
 public struct TrainCar: Sendable {
     
-    public init(carCode: Int, seatInfo: [SeatSectionType : SeatSection]) {
+    public init(carCode: String, seatInfo: [SeatSectionType : SeatSection]) {
         self.carCode = carCode
         self.seatInfo = seatInfo
     }
     
-    public var carCode: Int
+    public var carCode: String
     public var seatInfo: [SeatSectionType: SeatSection]
 }

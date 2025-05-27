@@ -11,27 +11,26 @@ public struct Seat: Sendable, Identifiable {
     
     public let id: Int // 좌석 식별자 (서버에서 제공)
     
-    public var minutesLeft: Int // 하차까지 남은 시간(분)
-    public var isAvailable: Bool // 앉을 수 있는 자리인지 여부
-    public var isSeated: Bool // 내가 앉아있는지 여부
+    public var isEmpty: Bool // 앉을 수 있는 자리인지 여부
+    public var isMySeat: Bool // 내가 앉아있는지 여부
     public var seatType: SeatType // 좌석 구분
     public var seatDirection: SeatDirection // UI 기준 좌석 방향
+    public var occupant: Occupant? // 착석 유저 정보
 
     public init(
         id: Int,
-        minutesLeft: Int,
-        isAvailable: Bool,
+        isEmpty: Bool,
         isSeated: Bool,
-        isBlocked: Bool,
         seatType: SeatType,
-        seatDirection: SeatDirection
+        seatDirection: SeatDirection,
+        occupant: Occupant?
     ) {
         self.id = id
-        self.minutesLeft = minutesLeft
-        self.isAvailable = isAvailable
-        self.isSeated = isSeated
+        self.isEmpty = isEmpty
+        self.isMySeat = isSeated
         self.seatType = seatType
         self.seatDirection = seatDirection
+        self.occupant = occupant
     }
 }
 

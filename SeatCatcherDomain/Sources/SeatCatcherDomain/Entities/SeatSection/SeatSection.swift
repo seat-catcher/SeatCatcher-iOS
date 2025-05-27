@@ -8,13 +8,11 @@
 import Foundation
 
 public struct SeatSection: Sendable {
-    public init(type: SeatSectionType, topSeats: [Int:Seat], bottomSeats: [Int:Seat]) {
-        self.type = type
+    public init(topSeats: [Int:Seat], bottomSeats: [Int:Seat]) {
         self.topSeats = topSeats
         self.bottomSeats = bottomSeats
     }
     
-    public var type: SeatSectionType
     public var topSeats: [Int:Seat]
     public var bottomSeats: [Int:Seat]
 }

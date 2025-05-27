@@ -30,24 +30,26 @@ extension Seat {
         }
         
         // 내가 앉아있는 자리
-        if isSeated {
+        if isMySeat {
             return ImageResource(name: "\(directionPrefix)_user", bundle: .module)
         }
         
         // 빈 자리
-        if isAvailable {
+        if isEmpty {
             return ImageResource(name: "\(directionPrefix)_empty", bundle: .module)
         }
         
         // 하차까지 시간
-        let levelSuffix: String
-        switch minutesLeft {
-        case ..<11:
-            levelSuffix = "_level_0"
-        case 11..<21:
-            levelSuffix = "_level_1"
-        default:
-            levelSuffix = "_level_2"
+        var levelSuffix: String = ""
+        if let minutesLeftToGetOff = occupant?.minutesLeftToGetOff {
+            switch minutesLeftToGetOff {
+            case ..<11:
+                levelSuffix = "_level_0"
+            case 11..<21:
+                levelSuffix = "_level_1"
+            default:
+                levelSuffix = "_level_2"
+            }
         }
         
         // 선택 상태
