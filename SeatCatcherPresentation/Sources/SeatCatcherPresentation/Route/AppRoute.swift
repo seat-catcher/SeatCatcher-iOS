@@ -7,6 +7,7 @@
 
 import Foundation
 import SeatCatcherCore
+import SeatCatcherDomain
 
 public enum AppScene: AppRoute {
     case home
@@ -14,11 +15,11 @@ public enum AppScene: AppRoute {
     case selectLine
     case selectPath(line: Int)
     case searchStations(viewModel: SelectPathViewModel)
-    case mainFeature(hasSeated: Bool, trainCode: String, carCode: String)
-    case mainFeatureRegisterSeat(trainCode: String, carCode: String)
-    case mainFeatureMoveSeat(trainCode: String, carCode: String)
-    case mainFeatureCancelSeat(trainCode: String, carCode: String)
-    case manageSeat(trainCode: String, carCode: String)
+    case mainFeature(hasSeated: Bool)
+    case mainFeatureRegisterSeat
+    case mainFeatureMoveSeat
+    case mainFeatureCancelSeat
+    case manageSeat
 
     public var id: String {
         switch self {

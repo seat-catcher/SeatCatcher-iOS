@@ -65,61 +65,51 @@ final class AppCoordinator: Coordinator {
             SelectPathView(viewModel: selectPathViewModel)
         case .searchStations(let viewModel):
             SearchStationsView(viewModel: viewModel)
-        case let .mainFeature(hasSeated, trainCode, carCode):
+        case let .mainFeature(hasSeated):
             let viewModel = MainFeatureViewModel(
                 store: diContainer.resolveAppStore(),
                 coordinator: self,
                 getSeatInTrainCarUseCase: diContainer.resolveGetSeatInTrainCarUseCase(),
                 getSeatInSectionUseCase: diContainer.resolveGetSeatInSectionUseCase(),
                 unlockSeatUseCase: diContainer.resolveUnlockSeatUseCase(),
-                trainCode: trainCode,
-                carCode: carCode,
                 userStatus: hasSeated ? .seated : .standing
             )
             MainFeatureView(viewModel: viewModel)
-        case let .mainFeatureRegisterSeat(trainCode, carCode):
+        case .mainFeatureRegisterSeat:
             let viewModel = MainFeatureViewModel(
                 store: diContainer.resolveAppStore(),
                 coordinator: self,
                 getSeatInTrainCarUseCase: diContainer.resolveGetSeatInTrainCarUseCase(),
                 getSeatInSectionUseCase: diContainer.resolveGetSeatInSectionUseCase(),
                 unlockSeatUseCase: diContainer.resolveUnlockSeatUseCase(),
-                registerSeatUseCase: diContainer.resolveRegisterSeatUseCase(),
-                trainCode: trainCode,
-                carCode: carCode
+                registerSeatUseCase: diContainer.resolveRegisterSeatUseCase()
             )
             MainFeatureView(viewModel: viewModel)
-        case let .mainFeatureMoveSeat(trainCode, carCode):
+        case .mainFeatureMoveSeat:
             let viewModel = MainFeatureViewModel(
                 store: diContainer.resolveAppStore(),
                 coordinator: self,
                 getSeatInTrainCarUseCase: diContainer.resolveGetSeatInTrainCarUseCase(),
                 getSeatInSectionUseCase: diContainer.resolveGetSeatInSectionUseCase(),
                 unlockSeatUseCase: diContainer.resolveUnlockSeatUseCase(),
-                moveSeatUseCase: diContainer.resolveMoveSeatUseCase(),
-                trainCode: trainCode,
-                carCode: carCode
+                moveSeatUseCase: diContainer.resolveMoveSeatUseCase()
             )
             MainFeatureView(viewModel: viewModel)
-        case let .mainFeatureCancelSeat(trainCode, carCode):
+        case .mainFeatureCancelSeat:
             let viewModel = MainFeatureViewModel(
                 store: diContainer.resolveAppStore(),
                 coordinator: self,
                 getSeatInTrainCarUseCase: diContainer.resolveGetSeatInTrainCarUseCase(),
                 getSeatInSectionUseCase: diContainer.resolveGetSeatInSectionUseCase(),
                 unlockSeatUseCase: diContainer.resolveUnlockSeatUseCase(),
-                cancelSeatUseCase: diContainer.resolveCancelSeatUseCase(),
-                trainCode: trainCode,
-                carCode: carCode
+                cancelSeatUseCase: diContainer.resolveCancelSeatUseCase()
             )
             MainFeatureView(viewModel: viewModel)
-        case let .manageSeat(trainCode, carCode):
+        case .manageSeat:
             let store = diContainer.resolveAppStore()
             let viewModel = ManageSeatViewModel(
                 store: store,
-                coordinator: self,
-                trainCode: trainCode,
-                carCode: carCode
+                coordinator: self
             )
             ManageSeatView(viewModel: viewModel)
         }
