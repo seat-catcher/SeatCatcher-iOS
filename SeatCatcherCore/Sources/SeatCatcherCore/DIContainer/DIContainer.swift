@@ -37,6 +37,8 @@ public protocol DIContainer {
     func resolveMoveSeatUseCase() -> MoveSeatUseCase
     func resolveCancelSeatUseCase() -> CancelSeatUseCase
 
+    // MARK: - Incoming UseCases
+    func resolveGetIncomingsUseCase() -> GetIncomingsUseCase
 
     // MARK: - Store
     func resolveAppStore() -> AppStore

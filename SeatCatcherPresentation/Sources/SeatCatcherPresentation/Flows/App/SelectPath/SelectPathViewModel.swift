@@ -102,9 +102,10 @@ public final class SelectPathViewModel: ViewModel {
             state.departure = Station(id: history.departureStationId, name: history.departureStationName, line: history.line ?? 2)
             state.arrival = Station(id: history.arrivalStationId, name: history.arrivalStationName, line: history.line ?? 2)
         case .nextButtonTapped:
-            dump(#function)
-            // TODO: - 다음 뷰 작업 (차량번호 입력)
-//            coordinator.push(AppScene.)
+            guard let departure = state.departure,
+                  let arrival = state.arrival
+            else { return }
+            coordinator.push(AppScene.selectTrain(departure: departure, arrival: arrival, boardingState: boardingState))
 
         // SearchStationsView
         case .searchTextChanged(let text):

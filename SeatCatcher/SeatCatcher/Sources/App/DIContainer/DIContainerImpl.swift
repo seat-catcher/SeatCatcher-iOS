@@ -25,6 +25,7 @@ final class DIContainerImpl {
     private lazy var stationsRepository = StationsRepositoryImpl(networkService: networkService)
     private lazy var pathHistoriesRepository = PathHistoriesRepositoryImpl(networkService: networkService)
     private lazy var seatRepository = SeatRepositoryImpl(networkService: networkService)
+    private lazy var incomingsRepository = IncomingsRepositoryImpl(networkService: networkService)
 
     // MARK: - Auth UseCase Instances
     private lazy var appleLoginUseCase = AppleLoginUseCaseImpl(
@@ -65,6 +66,9 @@ final class DIContainerImpl {
     // MARK: - PathHistories UseCase Instances
     private lazy var getPathHistoriesUseCase = GetPathHistoriesUseCaseImpl(pathHistoriesRepository: pathHistoriesRepository)
     private lazy var postPathHistoriesUseCase = PostPathHistoriesImpl(pathHistoriesRespotiry: pathHistoriesRepository)
+
+    // MARK: - Incomings UseCase Instances
+    private lazy var getIncomingsUseCase = GetIncomingsUseCaseImpl(incomingsRepository: incomingsRepository)
 }
 
 // MARK: - DIContainer 프로토콜 구현
@@ -95,6 +99,9 @@ extension DIContainerImpl: DIContainer {
     func resolveRegisterSeatUseCase() -> RegisterSeatUseCase { return registerSeatUseCase }
     func resolveMoveSeatUseCase() -> MoveSeatUseCase { return moveSeatUseCase }
     func resolveCancelSeatUseCase() -> CancelSeatUseCase { return cancelSeatUseCase }
+
+    // MARK: Incomings UseCases
+    func resolveGetIncomingsUseCase() -> GetIncomingsUseCase { return getIncomingsUseCase }
 
     // MARK: - Store
     func resolveAppStore() -> AppStore { return appStore }
