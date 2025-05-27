@@ -11,4 +11,12 @@ enum SeatCatcherDataError: Error {
     case InvalidSeatSectionType // 구역 파싱 오류
     case FailedToGetRowCount // 좌석 개수 파싱 오류
     case InvalidSeatType // 좌석 타입 파싱 오류
+    
+    var description: String {
+        switch self {
+        case .InvalidSeatSectionType: "구역 파싱 오류"
+        case .FailedToGetRowCount: "좌석 개수 파싱 오류"
+        case .InvalidSeatType: "좌석 타입 파싱 오류"
+        }
+    }
 }

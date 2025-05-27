@@ -144,25 +144,25 @@ extension GetSeatInTrainCarResponseDTO: ResponseDTO {
         
         for seatInCar in self {
             do {
-                if let sectionType = try SeatSectionType(string: seatInCar.seatGroupType) {
-                    let rowCount = try sectionType.calculateRowCount(seatInCar.seatGroupType)
-                    var seatSection = seatInfo[sectionType] ?? SeatSection(topSeats: [:], bottomSeats: [:])
+                let sectionType = try SeatSectionType(string: seatInCar.seatGroupType)
+                let rowCount = try sectionType.calculateRowCount(seatInCar.seatGroupType)
+                var seatSection = seatInfo[sectionType] ?? SeatSection(topSeats: [:], bottomSeats: [:])
+                
+                for seat in seatInCar.seatStatus {
+                    guard let seatModel = try mapToSeat(seat, rowCount: rowCount) else { continue }
+                    let isTopSeat = seat.seatLocation < rowCount
                     
-                    for seat in seatInCar.seatStatus {
-                        guard let seatModel = try mapToSeat(seat, rowCount: rowCount) else { continue }
-                        let isTopSeat = seat.seatLocation < rowCount
-                        
-                        if isTopSeat {
-                            seatSection.topSeats[seat.seatLocation] = seatModel
-                        } else {
-                            seatSection.bottomSeats[seat.seatLocation - rowCount] = seatModel
-                        }
+                    if isTopSeat {
+                        seatSection.topSeats[seat.seatLocation] = seatModel
+                    } else {
+                        seatSection.bottomSeats[seat.seatLocation - rowCount] = seatModel
                     }
-                    seatInfo[sectionType] = seatSection
                 }
+                seatInfo[sectionType] = seatSection
+            } catch(let error as SeatCatcherDataError) {
+                print(error.description)
             } catch {
-                // 에러 로깅 또는 무시
-                continue
+                print(error.localizedDescription)
             }
         }
         
@@ -173,9 +173,7 @@ extension GetSeatInTrainCarResponseDTO: ResponseDTO {
     }
     
     private func mapToSeat(_ seat: SeatInfo, rowCount: Int) throws -> Seat? {
-        guard let seatType = try SeatType(rawValue: seat.seatType) else {
-            throw SeatCatcherDataError.InvalidSeatType
-        }
+        let seatType = try SeatType(rawValue: seat.seatType)
         let isTopSeat = seat.seatLocation < rowCount
         let occupant = seat.occupant?.mapToOccupant()
         
@@ -206,7 +204,7 @@ extension OccupantInfo {
 
 fileprivate extension SeatSectionType {
     // 구역 구분 매핑
-    init?(string: String) throws {
+    init(string: String) throws {
         switch string {
         case _ where string.hasPrefix("NORMAL_A"): self = .normal_A
         case _ where string.hasPrefix("NORMAL_B"): self = .normal_B
@@ -235,7 +233,7 @@ fileprivate extension SeatSectionType {
 
 // 좌석 구분 매핑
 fileprivate extension SeatType {
-    init?(rawValue: String) throws {
+    init(rawValue: String) throws {
         switch rawValue {
         case "NORMAL": self = .normal
         case "PREGNANT": self = .pregnant

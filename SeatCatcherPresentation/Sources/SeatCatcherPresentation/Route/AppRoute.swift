@@ -18,7 +18,7 @@ public enum AppScene: AppRoute {
     case mainFeatureRegisterSeat(trainCode: String, carCode: String)
     case mainFeatureMoveSeat(trainCode: String, carCode: String)
     case mainFeatureCancelSeat(trainCode: String, carCode: String)
-    case manageSeat
+    case manageSeat(trainCode: String, carCode: String)
 
     public var id: String {
         switch self {
