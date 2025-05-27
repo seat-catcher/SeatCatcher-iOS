@@ -18,7 +18,7 @@ public struct MainFeatureView: View {
     
     public var body: some View {
         VStack(spacing: 0) {
-            TitleTextView(seatSection: viewModel.state.seatSection, status: viewModel.state.userStatus)
+            TitleTextView(seatSection: viewModel.state.seatSectionType, status: viewModel.state.userStatus)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.top, 18)
                 .padding(.bottom, 32)

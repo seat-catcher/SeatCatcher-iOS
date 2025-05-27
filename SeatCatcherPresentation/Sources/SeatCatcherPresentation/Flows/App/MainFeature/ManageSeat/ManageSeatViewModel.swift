@@ -36,26 +36,21 @@ public class ManageSeatViewModel: ViewModel {
     }
     
     struct State {
-        var trainCode: String
-        var carCode: String
         var selectedOption: ManageSeatOption?
     }
     
     // MARK: Dependencies
     let store: AppStore
     let coordinator: Coordinator
-    private(set) var state: State
+    private(set) var state: State = .init(selectedOption: nil)
     
     @MainActor
     public init(
         store: AppStore,
-        coordinator: Coordinator,
-        trainCode: String,
-        carCode: String
+        coordinator: Coordinator
     ) {
         self.store = store
         self.coordinator = coordinator
-        self.state = .init(trainCode: trainCode, carCode: carCode, selectedOption: nil)
     }
     
     func action(_ action: Action) {
@@ -70,11 +65,11 @@ public class ManageSeatViewModel: ViewModel {
             if let option = state.selectedOption {
                 let scene = switch option {
                 case .register:
-                    AppScene.mainFeatureRegisterSeat(trainCode: state.trainCode, carCode: state.carCode)
+                    AppScene.mainFeatureRegisterSeat
                 case .move:
-                    AppScene.mainFeatureMoveSeat(trainCode: state.trainCode, carCode: state.carCode)
+                    AppScene.mainFeatureMoveSeat
                 case .cancel:
-                    AppScene.mainFeatureCancelSeat(trainCode: state.trainCode, carCode: state.carCode)
+                    AppScene.mainFeatureCancelSeat
                 }
                 coordinator.push(scene)
             }
