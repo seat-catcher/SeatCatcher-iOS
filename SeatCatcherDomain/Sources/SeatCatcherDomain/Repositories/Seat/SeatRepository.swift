@@ -14,8 +14,6 @@ public protocol SeatRepository: Sendable {
     func unlockAllSeats() async throws
     // 좌석 정보를 등록합니다
     func registerSeat(_ seat: Seat) async throws
-    // 좌석 정보를 이동합니다
-    func moveSeat(_ seat: Seat) async throws
     // 좌석 정보를 취소합니다
     func cancelSeat() async throws
 }

@@ -20,6 +20,9 @@ public final class MoveSeatUseCaseImpl: MoveSeatUseCase {
     }
     
     public func execute(_ seat: Seat) async throws {
-        try await seatRepository.moveSeat(seat)
+        // 기존 좌석 정보를 삭제합니다
+        try await seatRepository.cancelSeat()
+        // 이후 새로운 좌석 정보를 등록합니다
+        try await seatRepository.registerSeat(seat)
     }
 }
