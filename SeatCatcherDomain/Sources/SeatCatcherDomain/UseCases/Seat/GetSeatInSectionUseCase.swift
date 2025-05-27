@@ -8,18 +8,13 @@
 import Foundation
 
 public protocol GetSeatInSectionUseCase: Sendable {
-    func execute() async throws -> (topSeats: [Seat], bottomSeats: [Seat])
+    // seatSectionType 구역의 정보만 불러옵니다
+    func execute(trainCar: TrainCar, seatSectionType: SeatSectionType) -> SeatSection
 }
 
 public final class GetSeatInSectionUseCaseImpl: GetSeatInSectionUseCase {
     
-    private let seatRepository: SeatRepository
-    
-    public init(seatRepository: SeatRepository) {
-        self.seatRepository = seatRepository
-    }
-    
-    public func execute() async throws -> (topSeats: [Seat], bottomSeats: [Seat]) {
-        return try await seatRepository.getSeatsInSection()
+    public func execute(trainCar: TrainCar, seatSectionType: SeatSectionType) -> SeatSection {
+        return trainCar.seatInfo[seatSectionType] ?? SeatSection(type: seatSectionType, topSeats: [:], bottomSeats: [:])
     }
 }

@@ -33,9 +33,9 @@ public final class MainFeatureViewModel: ViewModel {
     
     // MARK: State Definition
     struct State {
-        var nearestAvailableSection: SeatSection? // 가장 가까운 좌석 데이터, 띄우지 않을 땐 nil
+        var nearestAvailableSection: SeatSectionType? // 가장 가까운 좌석 데이터, 띄우지 않을 땐 nil
         var userStatus: UserStatus // 유저의 선택 상황
-        var seatSection: SeatSection // 현재 보고있는 구역
+        var seatSection: SeatSectionType // 현재 보고있는 구역
         var lookingCount: Int // 현재 열차 내 자리를 찾는 사용자 수, 0의 경우 띄우지 않음
         var seatSectionState: SeatSectionState
     }
