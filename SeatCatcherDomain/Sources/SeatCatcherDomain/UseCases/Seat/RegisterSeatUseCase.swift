@@ -8,7 +8,7 @@
 import Foundation
 
 public protocol RegisterSeatUseCase: Sendable {
-    func execute() async throws
+    func execute(_ seat: Seat) async throws
 }
 
 public final class RegisterSeatUseCaseImpl: RegisterSeatUseCase {
@@ -19,7 +19,7 @@ public final class RegisterSeatUseCaseImpl: RegisterSeatUseCase {
         self.seatRepository = seatRepository
     }
     
-    public func execute() async throws {
-        //TODO: 구현
+    public func execute(_ seat: Seat) async throws {
+        try await seatRepository.registerSeat(seat)
     }
 }

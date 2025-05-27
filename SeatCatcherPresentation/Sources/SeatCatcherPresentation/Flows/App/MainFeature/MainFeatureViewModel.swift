@@ -22,7 +22,7 @@ public final class MainFeatureViewModel: ViewModel {
         case willRegisterSeat(Seat) // 좌석 등록
         case willMoveSeat(Seat) // 좌석 이동
         case willCancelSeat // 좌석 취소
-        case willGoToNearestAvailableSection // 좌석 정보가 있는 가장 가까운 구역으로 이동
+        case backToSeatSectionPage // 좌석 구역 페이지로 이동
         case manageSeatSection(SeatSectionAction)
     }
     
@@ -33,7 +33,9 @@ public final class MainFeatureViewModel: ViewModel {
     
     // MARK: State Definition
     struct State {
-        var nearestAvailableSection: SeatSectionType? // 가장 가까운 좌석 데이터, 띄우지 않을 땐 nil
+        var trainCode: String // 열차 코드
+        var carCode: String // 차량 코드
+        var showNoInformationToast: Bool // 좌석 정보가 없어요 토스트 메시지 띄움 여부
         var userStatus: UserStatus // 유저의 선택 상황
         var seatSection: SeatSectionType // 현재 보고있는 구역
         var lookingCount: Int // 현재 열차 내 자리를 찾는 사용자 수, 0의 경우 띄우지 않음
@@ -43,7 +45,7 @@ public final class MainFeatureViewModel: ViewModel {
     struct SeatSectionState {
         var selectedSeat: Seat? // 선택한 좌석
         var isBlocked: Bool // 좌석 정보 잠금 상태
-        var seats: (topSeats: [Seat], bottomSeats: [Seat]) // 좌석 정보
+        var seats: SeatSection // 좌석 정보
     }
     
     // MARK: Dependencies
@@ -55,6 +57,7 @@ public final class MainFeatureViewModel: ViewModel {
     
     // MARK: UseCases
     // necessary
+    private let getSeatInTrainCarUseCase: GetSeatInTrainCarUseCase
     private let getSeatInSectionUseCase: GetSeatInSectionUseCase
     private let unlockSeatUseCase: UnlockSeatUseCase
     // optional
@@ -67,29 +70,35 @@ public final class MainFeatureViewModel: ViewModel {
     public init(
         store: AppStore,
         coordinator: Coordinator,
+        getSeatInTrainCarUseCase: GetSeatInTrainCarUseCase,
         getSeatInSectionUseCase: GetSeatInSectionUseCase,
         unlockSeatUseCase: UnlockSeatUseCase,
         registerSeatUseCase: RegisterSeatUseCase? = nil,
         moveSeatUseCase: MoveSeatUseCase? = nil,
         cancelSeatUseCase: CancelSeatUseCase? = nil,
+        trainCode: String,
+        carCode: String,
         userStatus: UserStatus
     ) {
         self.store = store
         self.coordinator = coordinator
+        self.getSeatInTrainCarUseCase = getSeatInTrainCarUseCase
         self.getSeatInSectionUseCase = getSeatInSectionUseCase
         self.unlockSeatUseCase = unlockSeatUseCase
         self.registerSeatUseCase = registerSeatUseCase
         self.moveSeatUseCase = moveSeatUseCase
         self.cancelSeatUseCase = cancelSeatUseCase
         self.state = .init(
-            nearestAvailableSection: nil, // 초깃값
+            trainCode: trainCode,
+            carCode: carCode,
+            showNoInformationToast: false, // 초깃값
             userStatus: userStatus,
-            seatSection: .normal_A, // FIXME: 전역 관리 필요
-            lookingCount: 0, // 초깃값
+            seatSection: .priority_A, // FIXME: 전역 관리 필요
+            lookingCount: 10, // 초깃값
             seatSectionState: .init(
                 selectedSeat: nil,
                 isBlocked: false, // FIXME: 전역 관리 필요
-                seats: (topSeats: [], bottomSeats: [])
+                seats: .init(topSeats: [:], bottomSeats: [:])
             )
         )
     }
@@ -99,14 +108,20 @@ public final class MainFeatureViewModel: ViewModel {
     public convenience init(
         store: AppStore,
         coordinator: Coordinator,
+        getSeatInTrainCarUseCase: GetSeatInTrainCarUseCase,
         getSeatInSectionUseCase: GetSeatInSectionUseCase,
-        unlockSeatUseCase: UnlockSeatUseCase
+        unlockSeatUseCase: UnlockSeatUseCase,
+        trainCode: String,
+        carCode: String
     ) {
         self.init(
             store: store,
             coordinator: coordinator,
+            getSeatInTrainCarUseCase: getSeatInTrainCarUseCase,
             getSeatInSectionUseCase: getSeatInSectionUseCase,
             unlockSeatUseCase: unlockSeatUseCase,
+            trainCode: trainCode,
+            carCode: carCode,
             userStatus: .standing
         )
     }
@@ -115,16 +130,22 @@ public final class MainFeatureViewModel: ViewModel {
     public convenience init(
         store: AppStore,
         coordinator: Coordinator,
+        getSeatInTrainCarUseCase: GetSeatInTrainCarUseCase,
         getSeatInSectionUseCase: GetSeatInSectionUseCase,
         unlockSeatUseCase: UnlockSeatUseCase,
-        registerSeatUseCase: RegisterSeatUseCase
+        registerSeatUseCase: RegisterSeatUseCase,
+        trainCode: String,
+        carCode: String
     ) {
         self.init(
             store: store,
             coordinator: coordinator,
+            getSeatInTrainCarUseCase: getSeatInTrainCarUseCase,
             getSeatInSectionUseCase: getSeatInSectionUseCase,
             unlockSeatUseCase: unlockSeatUseCase,
             registerSeatUseCase: registerSeatUseCase,
+            trainCode: trainCode,
+            carCode: carCode,
             userStatus: .registering
         )
     }
@@ -133,16 +154,22 @@ public final class MainFeatureViewModel: ViewModel {
     public convenience init(
         store: AppStore,
         coordinator: Coordinator,
+        getSeatInTrainCarUseCase: GetSeatInTrainCarUseCase,
         getSeatInSectionUseCase: GetSeatInSectionUseCase,
         unlockSeatUseCase: UnlockSeatUseCase,
-        moveSeatUseCase: MoveSeatUseCase
+        moveSeatUseCase: MoveSeatUseCase,
+        trainCode: String,
+        carCode: String
     ) {
         self.init(
             store: store,
             coordinator: coordinator,
+            getSeatInTrainCarUseCase: getSeatInTrainCarUseCase,
             getSeatInSectionUseCase: getSeatInSectionUseCase,
             unlockSeatUseCase: unlockSeatUseCase,
             moveSeatUseCase: moveSeatUseCase,
+            trainCode: trainCode,
+            carCode: carCode,
             userStatus: .moving
         )
     }
@@ -151,16 +178,22 @@ public final class MainFeatureViewModel: ViewModel {
     public convenience init(
         store: AppStore,
         coordinator: Coordinator,
+        getSeatInTrainCarUseCase: GetSeatInTrainCarUseCase,
         getSeatInSectionUseCase: GetSeatInSectionUseCase,
         unlockSeatUseCase: UnlockSeatUseCase,
-        cancelSeatUseCase: CancelSeatUseCase
+        cancelSeatUseCase: CancelSeatUseCase,
+        trainCode: String,
+        carCode: String
     ) {
         self.init(
             store: store,
             coordinator: coordinator,
+            getSeatInTrainCarUseCase: getSeatInTrainCarUseCase,
             getSeatInSectionUseCase: getSeatInSectionUseCase,
             unlockSeatUseCase: unlockSeatUseCase,
             cancelSeatUseCase: cancelSeatUseCase,
+            trainCode: trainCode,
+            carCode: carCode,
             userStatus: .cancelling
         )
     }
@@ -170,7 +203,7 @@ public final class MainFeatureViewModel: ViewModel {
         switch action {
         case .willAppear:
             fetchSeatInSection()
-        case .manageSeatSection(let seatSectionAction):
+        case let .manageSeatSection(seatSectionAction):
             handleSeatSectionAction(seatSectionAction)
         case .backButtonDidTap:
             coordinator.pop()
@@ -178,14 +211,14 @@ public final class MainFeatureViewModel: ViewModel {
             coordinator.popToRoot()
         case .manageMySeatButtonDidTap:
             coordinator.push(AppScene.manageSeat)
-        case .willRegisterSeat:
-            registerSeat()
-        case .willMoveSeat:
-            moveSeat()
+        case let .willRegisterSeat(seat):
+            registerSeat(seat)
+        case let .willMoveSeat(seat):
+            moveSeat(seat)
         case .willCancelSeat:
             cancelSeat()
-        case .willGoToNearestAvailableSection:
-            coordinator.pop() // FIXME: 유저 플로우 검토 필요
+        case .backToSeatSectionPage:
+            coordinator.pop()
         }
     }
     
@@ -216,15 +249,16 @@ public final class MainFeatureViewModel: ViewModel {
     private func fetchSeatInSection() {
         Task {
             do {
-                state.seatSectionState.seats = try await getSeatInSectionUseCase.execute()
-                if self.state.userStatus == .registering || self.state.userStatus == .moving {
-                    self.state.seatSectionState.selectedSeat
-                    = state.seatSectionState.seats.topSeats.first(
-                        where: { $0.isSeated }
-                    )
-                    ?? state.seatSectionState.seats.bottomSeats.first(
-                        where: { $0.isSeated }
-                    )
+                // 모든 구역의 좌석 데이터
+                let trainCar = try await getSeatInTrainCarUseCase.execute(trainCode: state.trainCode, carCode: state.carCode)
+                
+                // 현재 구역의 좌석 데이터만 필터링
+                state.seatSectionState.seats = try await getSeatInSectionUseCase.execute(trainCar: trainCar, seatSectionType: state.seatSection)
+                
+                // 본인이 앉고 있는 좌석을 선택상태로 처리
+                if state.userStatus == .registering || state.userStatus == .moving {
+                    state.seatSectionState.selectedSeat = state.seatSectionState.seats.topSeats.values.first { $0.isMySeat }
+                    ?? state.seatSectionState.seats.bottomSeats.values.first { $0.isMySeat }
                 }
             } catch {
                 print(error.localizedDescription)
@@ -232,12 +266,12 @@ public final class MainFeatureViewModel: ViewModel {
         }
     }
     
-    private func registerSeat() {
+    private func registerSeat(_ seat: Seat) {
         /// 좌석 정보를 등록합니다
         if let registerSeatUseCase {
             Task {
                 do {
-                    try await registerSeatUseCase.execute()
+                    try await registerSeatUseCase.execute(seat)
                 } catch {
                     print(error.localizedDescription)
                 }
@@ -245,12 +279,12 @@ public final class MainFeatureViewModel: ViewModel {
         }
     }
     
-    private func moveSeat() {
+    private func moveSeat(_ seat: Seat) {
         /// 좌석 정보를 이동합니다
         if let moveSeatUseCase {
             Task {
                 do {
-                    try await moveSeatUseCase.execute()
+                    try await moveSeatUseCase.execute(seat)
                 } catch {
                     print(error.localizedDescription)
                 }
