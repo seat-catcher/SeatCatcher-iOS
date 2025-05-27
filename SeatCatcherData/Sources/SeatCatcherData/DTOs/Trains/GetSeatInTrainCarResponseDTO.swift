@@ -179,7 +179,6 @@ extension GetSeatInTrainCarResponseDTO: ResponseDTO {
         
         return Seat(
             id: seat.seatId,
-            isEmpty: seat.occupant == nil,
             isSeated: seat.occupant?.userId == 0, // FIXME: 유저 데이터와 비교
             seatType: seatType,
             seatDirection: isTopSeat ? .top : .bottom,

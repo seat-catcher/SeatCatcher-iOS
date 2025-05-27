@@ -9,9 +9,7 @@ import Foundation
 
 public struct Seat: Sendable, Identifiable {
     
-    public let id: Int // 좌석 식별자 (서버에서 제공)
-    
-    public var isEmpty: Bool // 앉을 수 있는 자리인지 여부
+    public var id: Int // 좌석 식별자 (서버에서 제공)
     public var isMySeat: Bool // 내가 앉아있는지 여부
     public var seatType: SeatType // 좌석 구분
     public var seatDirection: SeatDirection // UI 기준 좌석 방향
@@ -19,14 +17,12 @@ public struct Seat: Sendable, Identifiable {
 
     public init(
         id: Int,
-        isEmpty: Bool,
         isSeated: Bool,
         seatType: SeatType,
         seatDirection: SeatDirection,
         occupant: Occupant?
     ) {
         self.id = id
-        self.isEmpty = isEmpty
         self.isMySeat = isSeated
         self.seatType = seatType
         self.seatDirection = seatDirection
