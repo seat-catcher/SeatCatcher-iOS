@@ -210,7 +210,7 @@ public final class MainFeatureViewModel: ViewModel {
         case .homeButtonDidTap:
             coordinator.popToRoot()
         case .manageMySeatButtonDidTap:
-            coordinator.push(AppScene.manageSeat)
+            coordinator.push(AppScene.manageSeat(trainCode: state.trainCode, carCode: state.carCode))
         case let .willRegisterSeat(seat):
             registerSeat(seat)
         case let .willMoveSeat(seat):

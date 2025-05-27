@@ -108,16 +108,18 @@ final class AppCoordinator: Coordinator {
                 getSeatInTrainCarUseCase: diContainer.resolveGetSeatInTrainCarUseCase(),
                 getSeatInSectionUseCase: diContainer.resolveGetSeatInSectionUseCase(),
                 unlockSeatUseCase: diContainer.resolveUnlockSeatUseCase(),
-                moveSeatUseCase: diContainer.resolveMoveSeatUseCase(),
+                cancelSeatUseCase: diContainer.resolveCancelSeatUseCase(),
                 trainCode: trainCode,
                 carCode: carCode
             )
             MainFeatureView(viewModel: viewModel)
-        case .manageSeat:
+        case let .manageSeat(trainCode, carCode):
             let store = diContainer.resolveAppStore()
             let viewModel = ManageSeatViewModel(
                 store: store,
-                coordinator: self
+                coordinator: self,
+                trainCode: trainCode,
+                carCode: carCode
             )
             ManageSeatView(viewModel: viewModel)
         }
