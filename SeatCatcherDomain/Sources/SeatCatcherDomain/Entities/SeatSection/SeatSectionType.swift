@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum SeatSectionType: String, Sendable {
+public enum SeatSectionType: String, Sendable, CaseIterable {
     case priority_A = "교통약자구역 A"
     case normal_A = "일반구역 A"
     case normal_B = "일반구역 B"
