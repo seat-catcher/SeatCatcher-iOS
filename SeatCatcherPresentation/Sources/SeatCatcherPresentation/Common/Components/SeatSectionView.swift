@@ -61,7 +61,7 @@ private struct SeatRowView: View {
                 if shouldShowSeat(seat: seat) {
                     Image(seat.image(
                         isSelected: selectedSeat?.id == seat.id,
-                        isBlocked: isBlocked,
+                        isBlocked: isBlocked && seat.occupant != nil,
                         isSelecting: userStatus == .registering || userStatus == .moving)
                     )
                     .frame(width: 40, height: 42)
