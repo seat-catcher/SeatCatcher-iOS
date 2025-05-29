@@ -44,7 +44,7 @@ public final class SelectSeatSectionViewModel: ViewModel {
         self.state = .init(
             carCode: store.carCode ?? "NNNN",
             carDirection: carDirection,
-            availableSections: [.priority_A, .normal_A, .normal_B, .normal_C, .priority_B]
+            availableSections: [] // 초기 상태
         )
     }
 
