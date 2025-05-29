@@ -11,7 +11,7 @@ import SeatCatcherDomain
 public struct SeatSectionView: View {
     let selectedSeat: Seat?
     let isBlocked: Bool
-    let seats: SeatSection // 변경: 튜플 대신 SeatSection
+    let seats: SeatSection
     let userStatus: MainFeatureViewModel.UserStatus
     let onTap: (Seat) -> Void
     
