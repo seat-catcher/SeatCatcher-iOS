@@ -99,11 +99,11 @@ extension GetSeatInTrainCarResponseDTO: ResponseDTO {
                     SeatInfo(seatId: 31, seatLocation: 2, seatType: "NORMAL", occupant: nil),
                     SeatInfo(seatId: 32, seatLocation: 3, seatType: "NORMAL", occupant: nil),
                     SeatInfo(seatId: 33, seatLocation: 4, seatType: "NORMAL", occupant: nil),
-                    SeatInfo(seatId: 34, seatLocation: 5, seatType: "NORMAL", occupant: .stub),
+                    SeatInfo(seatId: 34, seatLocation: 5, seatType: "NORMAL", occupant: nil),
                     SeatInfo(seatId: 35, seatLocation: 6, seatType: "PREGNANT", occupant: nil),
                     SeatInfo(seatId: 36, seatLocation: 7, seatType: "PREGNANT", occupant: nil),
                     SeatInfo(seatId: 37, seatLocation: 8, seatType: "NORMAL", occupant: nil),
-                    SeatInfo(seatId: 38, seatLocation: 9, seatType: "NORMAL", occupant: .stub),
+                    SeatInfo(seatId: 38, seatLocation: 9, seatType: "NORMAL", occupant: nil),
                     SeatInfo(seatId: 39, seatLocation: 10, seatType: "NORMAL", occupant: nil),
                     SeatInfo(seatId: 40, seatLocation: 11, seatType: "NORMAL", occupant: nil),
                     SeatInfo(seatId: 41, seatLocation: 12, seatType: "NORMAL", occupant: nil),
@@ -117,7 +117,7 @@ extension GetSeatInTrainCarResponseDTO: ResponseDTO {
                 seatStatus: [
                     SeatInfo(seatId: 43, seatLocation: 0, seatType: "PRIORITY", occupant: nil),
                     SeatInfo(seatId: 44, seatLocation: 1, seatType: "PRIORITY", occupant: nil),
-                    SeatInfo(seatId: 45, seatLocation: 2, seatType: "PRIORITY", occupant: .stub),
+                    SeatInfo(seatId: 45, seatLocation: 2, seatType: "PRIORITY", occupant: nil),
                     SeatInfo(seatId: 46, seatLocation: 3, seatType: "PRIORITY", occupant: nil),
                     SeatInfo(seatId: 47, seatLocation: 4, seatType: "PRIORITY", occupant: nil),
                     SeatInfo(seatId: 48, seatLocation: 5, seatType: "PRIORITY", occupant: nil)
@@ -241,5 +241,3 @@ fileprivate extension SeatType {
         }
     }
 }
-
-

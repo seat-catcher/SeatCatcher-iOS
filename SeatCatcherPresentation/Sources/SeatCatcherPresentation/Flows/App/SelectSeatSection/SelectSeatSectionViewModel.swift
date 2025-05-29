@@ -18,38 +18,59 @@ public final class SelectSeatSectionViewModel: ViewModel {
         var availableSections: [SeatSectionType]
     }
     
-    public enum CarDirection: String {
-        case up = "위쪽"
-        case down = "아래쪽"
-    }
-
     enum Action {
+        case willAppear
         case willSelectOption(SeatSectionType)
         case didSelectOption
     }
-
+    
     private(set) var state: State
-
+    
     let store: AppStore
     let coordinator: Coordinator
-
+    
+    private let getSeatInTrainCarUseCase: GetSeatInTrainCarUseCase
+    
     @MainActor
     public init(
         store: AppStore,
         coordinator: Coordinator,
-        carDirection: CarDirection
+        getSeatInTrainCarUseCase: GetSeatInTrainCarUseCase
+        
     ) {
         self.store = store
         self.coordinator = coordinator
+        self.getSeatInTrainCarUseCase = getSeatInTrainCarUseCase
         self.state = .init(
             carCode: store.carCode ?? "NNNN",
-            carDirection: carDirection,
+            carDirection: store.carDirection ?? .up,
             availableSections: [] // 초기 상태
         )
     }
-
+    
     func action(_ action: Action) {
         switch action {
+        case .willAppear:
+            guard let trainCode = store.trainCode,
+                  let carCode = store.carCode else {
+                state.availableSections = []
+                return
+            }
+            Task { @MainActor [weak self] in
+                guard let self = self else { return }
+                let trainCar = try await self.getSeatInTrainCarUseCase.execute(
+                    trainCode: trainCode,
+                    carCode: carCode
+                )
+                // occupant가 있는 section만 포함
+                let availableSections = trainCar.seatInfo.compactMap { (sectionType, seatSection) -> SeatSectionType? in
+                    let hasAvailableSeat = seatSection.topSeats.values.contains { $0.occupant != nil } ||
+                    seatSection.bottomSeats.values.contains { $0.occupant != nil }
+                    return hasAvailableSeat ? sectionType : nil
+                }
+                // availableSections 업데이트
+                self.state.availableSections = availableSections
+            }
         case let .willSelectOption(option):
             if option == self.state.selectedOption {
                 self.state.selectedOption = nil
@@ -58,7 +79,7 @@ public final class SelectSeatSectionViewModel: ViewModel {
             }
         case .didSelectOption:
             store.seatSectionType = self.state.selectedOption
-            coordinator.push(AppScene.mainFeature(hasSeated: false)) // FIXME: 수정 필요
+            coordinator.push(AppScene.mainFeature)
         }
     }
 }

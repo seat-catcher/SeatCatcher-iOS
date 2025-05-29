@@ -17,7 +17,7 @@ public final class SeatRepositoryImpl: SeatRepository, Sendable {
     }
     
     public func getSeatsInTrainCar(trainCode: String, carCode: String) async throws -> TrainCar {
-        return GetSeatInTrainCarResponseDTO.stub.domainModel
+//        return GetSeatInTrainCarResponseDTO.stub.domainModel
         
         let response = try await networkService.getSeatsInTrainCar(trainCode: trainCode, carCode: carCode)
         return response.domainModel
