@@ -116,7 +116,7 @@ public final class MainFeatureViewModel: ViewModel {
             getSeatInTrainCarUseCase: getSeatInTrainCarUseCase,
             getSeatInSectionUseCase: getSeatInSectionUseCase,
             unlockSeatUseCase: unlockSeatUseCase,
-            userStatus: .standing
+            userStatus: store.isSitting ? .seated : .standing
         )
     }
     

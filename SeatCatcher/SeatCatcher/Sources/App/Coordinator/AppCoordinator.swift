@@ -65,14 +65,13 @@ final class AppCoordinator: Coordinator {
             SelectPathView(viewModel: selectPathViewModel)
         case .searchStations(let viewModel):
             SearchStationsView(viewModel: viewModel)
-        case let .mainFeature(hasSeated):
+        case .mainFeature:
             let viewModel = MainFeatureViewModel(
                 store: diContainer.resolveAppStore(),
                 coordinator: self,
                 getSeatInTrainCarUseCase: diContainer.resolveGetSeatInTrainCarUseCase(),
                 getSeatInSectionUseCase: diContainer.resolveGetSeatInSectionUseCase(),
-                unlockSeatUseCase: diContainer.resolveUnlockSeatUseCase(),
-                userStatus: hasSeated ? .seated : .standing
+                unlockSeatUseCase: diContainer.resolveUnlockSeatUseCase()
             )
             MainFeatureView(viewModel: viewModel)
         case .mainFeatureRegisterSeat:
@@ -112,6 +111,13 @@ final class AppCoordinator: Coordinator {
                 coordinator: self
             )
             ManageSeatView(viewModel: viewModel)
+        case .selectSeatSection:
+            let viewModel = SelectSeatSectionViewModel(
+                store: diContainer.resolveAppStore(),
+                coordinator: self,
+                getSeatInTrainCarUseCase: diContainer.resolveGetSeatInTrainCarUseCase()
+            )
+            SelectSeatSectionView(viewModel: viewModel)
         }
     }
 

@@ -53,6 +53,9 @@ public struct SelectSeatSectionView: View {
                 applyDefaultPopAction: true
             )
         )
+        .onAppear {
+            viewModel.action(.willAppear)
+        }
     }
 }
 
@@ -171,7 +174,7 @@ private struct SideWheelView: View {
 
 private struct TitleView: View {
     let carCode: String
-    let direction: SelectSeatSectionViewModel.CarDirection
+    let direction: CarDirection
     
     var body: some View {
         VStack(spacing: 0) {
@@ -203,7 +206,7 @@ private struct CarCodeText: View {
 }
 
 private struct DirectionIndicator: View {
-    let direction: SelectSeatSectionViewModel.CarDirection
+    let direction: CarDirection
     
     var body: some View {
         HStack(spacing: 0) {

@@ -1,8 +1,8 @@
 //
 //  SeatSectionType.swift
-//  SeatCatcherPresentation
+//  SeatCatcherDomain
 //
-//  Created by 황채웅 on 5/20/25.
+//  Created by 황채웅 on 5/29/25.
 //
 
 import Foundation
