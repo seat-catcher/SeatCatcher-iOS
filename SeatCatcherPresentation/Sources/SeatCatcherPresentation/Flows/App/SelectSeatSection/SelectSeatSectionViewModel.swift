@@ -20,7 +20,7 @@ public final class SelectSeatSectionViewModel: ViewModel {
     
     public enum CarDirection: String {
         case up = "위쪽"
-        case down = "오른쪽"
+        case down = "아래쪽"
     }
 
     enum Action {
@@ -57,6 +57,7 @@ public final class SelectSeatSectionViewModel: ViewModel {
                 self.state.selectedOption = option
             }
         case .didSelectOption:
+            store.seatSectionType = self.state.selectedOption
             coordinator.push(AppScene.mainFeature(hasSeated: false)) // FIXME: 수정 필요
         }
     }
