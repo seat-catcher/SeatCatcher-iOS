@@ -31,7 +31,7 @@ public final class SelectTrainViewModel: ViewModel {
     private(set) var state = State()
 
     private let getIncomingsUseCase: GetIncomingsUseCase
-
+    private let appStore: AppStore
     let coordinator: Coordinator
 
     public init(
@@ -39,12 +39,14 @@ public final class SelectTrainViewModel: ViewModel {
         arrival: Station,
         boardingState: BoardingState,
         getIncomingsUseCase: GetIncomingsUseCase,
+        appStore: AppStore,
         coordinator: Coordinator
     ) {
         self.departure = departure
         self.arrival = arrival
         self.boardingState = boardingState
         self.getIncomingsUseCase = getIncomingsUseCase
+        self.appStore = appStore
         self.coordinator = coordinator
     }
 
@@ -84,8 +86,15 @@ public final class SelectTrainViewModel: ViewModel {
             if self.state.selectedIncoming == incoming { self.state.selectedIncoming = nil }
             else { self.state.selectedIncoming = incoming }
         case .nextButtonTapped:
-            // TODO: - TrainCode 입력 뷰 연결
-            dump(#function)
+            guard let selectedIncoming = self.state.selectedIncoming else { return }
+
+            appStore.trainCode = selectedIncoming.trainCode
+            appStore.carDirection = selectedIncoming.carDirection
+            if boardingState == .boarded {
+                coordinator.push(AppScene.inputCarCode)
+            } else {
+                coordinator.push(AppScene.inputCarCodeGuide)
+            }
         }
     }
 }

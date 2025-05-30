@@ -16,15 +16,15 @@ public enum AppScene: AppRoute {
     case selectLine(boardingState: BoardingState)
     case selectPath(boardingState: BoardingState, line: Int)
     case searchStations(viewModel: SelectPathViewModel)
-    case mainFeature
-
     case selectTrain(
         departure: Station,
         arrival: Station,
         boardingState: BoardingState
     )
-    
-    case mainFeature(hasSeated: Bool)
+    case inputCarCodeGuide
+    case inputCarCode
+
+    case mainFeature
     case mainFeatureRegisterSeat
     case mainFeatureMoveSeat
     case mainFeatureCancelSeat
@@ -40,6 +40,8 @@ public enum AppScene: AppRoute {
         case .selectPath: return "selectPath"
         case .searchStations: return "searchStations"
         case .selectTrain: return "selectTrain"
+        case .inputCarCodeGuide: return "inputCarCodeGuide"
+        case .inputCarCode: return "inputCarCode"
 
         case .mainFeature: return "mainFeature"
         case .mainFeatureRegisterSeat: return "mainFeatureRegisterSeat"

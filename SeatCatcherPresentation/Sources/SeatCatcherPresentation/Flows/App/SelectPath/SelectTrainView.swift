@@ -20,6 +20,7 @@ public struct SelectTrainView: View {
             TopGuidingText(viewModel: viewModel)
             PathIndicator(viewModel: viewModel)
             IncomingsList(viewModel: viewModel)
+            RefreshButton(viewModel: viewModel)
             CTAButton(
                 title: "다음",
                 action: { viewModel.action(.nextButtonTapped) },

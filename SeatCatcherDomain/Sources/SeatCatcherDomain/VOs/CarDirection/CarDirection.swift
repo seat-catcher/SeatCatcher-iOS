@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum CarDirection: String {
+public enum CarDirection: String, Sendable {
     case up = "위쪽"
     case down = "아래쪽"
 }
