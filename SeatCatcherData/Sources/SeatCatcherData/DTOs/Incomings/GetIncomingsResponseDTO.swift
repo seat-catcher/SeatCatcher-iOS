@@ -13,7 +13,7 @@ struct GetIncomingsResponseDTO {
     let ordkey: String
     let barvlDt: String
     let arvlMsg2: String
-    let arvlCd: String
+    let arvlCd: Int
     let bstatnNm: String
 }
 
@@ -26,15 +26,16 @@ extension GetIncomingsResponseDTO: ResponseDTO {
             ordkey: "11002온수0",
             barvlDt: "180",
             arvlMsg2: "도착",
-            arvlCd: "1",
+            arvlCd: 1,
             bstatnNm: "보라매"
         )
     }
 
     var domainModel: Incoming {
         let (trainCode, destination) = parseOrdKey(ordkey)
+        dump(trainCode)
+        dump(destination)
         let arrivalTime = getFormattedArrivalTime(barvlDt: barvlDt)
-
         return Incoming(
             trainCode: trainCode,
             arrivalTime: arrivalTime,

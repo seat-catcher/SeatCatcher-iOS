@@ -30,6 +30,11 @@ public struct SelectTrainView: View {
             .padding(.horizontal, 18)
         }
         .withBackground(.gray900)
+        .withNavigationBar(
+            viewModel.coordinator,
+            config: .titleWithHomeButton(title: "좌석 찾기")
+        )
+        .onAppear { viewModel.action(.viewWillAppear) }
     }
 }
 
@@ -52,14 +57,14 @@ private struct TopGuidingText: View {
                 .font(.T02_B)
                 .foregroundStyle(.gray100)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.top, 18)
+                .padding(.top, 22)
 
             Text(directionText)
                 .font(.B03_SB)
                 .foregroundStyle(.gray300)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.top, 8)
-                .padding(.bottom, 16)
+                .padding(.top, 15)
+                .padding(.bottom, 19)
         }
         .padding(.horizontal, 18)
     }
@@ -69,7 +74,7 @@ private struct PathIndicator: View {
     let viewModel: SelectTrainViewModel
 
     var body: some View {
-        VStack(spacing: 10) {
+        VStack(spacing: 0) {
             Group {
                 HStack(spacing: 10) {
                     StationNodeView(.departure)
@@ -78,7 +83,7 @@ private struct PathIndicator: View {
                         .foregroundStyle(.gray300)
                     Spacer()
                 }
-                .padding(.top, 10)
+                .padding(.vertical, 13)
 
                 Rectangle().fill(.gray700).frame(height: 1.4)
 
@@ -89,7 +94,7 @@ private struct PathIndicator: View {
                         .foregroundStyle(.gray300)
                     Spacer()
                 }
-                .padding(.bottom, 10)
+                .padding(.vertical, 13)
             }
             .padding(.horizontal, 18)
         }
@@ -113,6 +118,22 @@ private struct IncomingsList: View {
     }
 }
 
+private struct RefreshButton: View {
+    let viewModel: SelectTrainViewModel
+    var body: some View {
+        Button {
+            viewModel.action(.refreshButtonTapped)
+        } label: {
+            Text("열차 정보 새로고침")
+                .font(.REFRESH)
+                .foregroundStyle(.gray300)
+                .underline(true)
+                .padding(.top, 10)
+                .padding(.bottom, 20)
+        }
+    }
+}
+
 private struct IncomingsCell: View {
     let viewModel: SelectTrainViewModel
     let incoming: Incoming
@@ -123,12 +144,12 @@ private struct IncomingsCell: View {
                 .font(.B02_SB)
                 .foregroundStyle(.scGreen)
                 .monospacedDigit()
-            Text(incoming.destination)
+            Text("\(incoming.destination)행")
                 .font(.B02_M)
                 .foregroundStyle(.gray100)
             Spacer()
         }
-        .padding(.vertical, 10)
+        .padding(.vertical, 17)
         .padding(.horizontal, 18)
         .background(viewModel.state.selectedIncoming == incoming ? .gray700 : .clear)
         .onTapGesture { viewModel.action(.incomingSelected(incoming)) }
