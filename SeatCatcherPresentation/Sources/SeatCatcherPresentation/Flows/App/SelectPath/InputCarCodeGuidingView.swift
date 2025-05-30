@@ -10,8 +10,8 @@ import SwiftUI
 public struct InputCarCodeGuidingView: View {
     @State private var viewModel: InputCarCodeGuidingViewModel
 
-    public init(inputCarCodeGuidingViewModel: InputCarCodeGuidingViewModel) {
-        self._viewModel = State(initialValue: inputCarCodeGuidingViewModel)
+    public init(viewModel: InputCarCodeGuidingViewModel) {
+        self._viewModel = State(initialValue: viewModel)
     }
 
     public var body: some View {

@@ -32,19 +32,26 @@ extension GetIncomingsResponseDTO: ResponseDTO {
     }
 
     var domainModel: Incoming {
-        let (trainCode, destination) = parseOrdKey(ordkey)
-        dump(trainCode)
-        dump(destination)
+        let (carDirection, trainCode, destination) = parseOrdKey(ordkey)
         let arrivalTime = getFormattedArrivalTime(barvlDt: barvlDt)
         return Incoming(
             trainCode: trainCode,
             arrivalTime: arrivalTime,
+            carDirection: carDirection,
             destination: destination
         )
     }
 
-    private func parseOrdKey(_ ordkey: String) -> (String, String) {
+    private func parseOrdKey(
+        _ ordkey: String
+    ) -> (
+        carDirection: CarDirection,
+        trainCode: String,
+        destination: String
+    ) {
         var chars = Array(ordkey)
+
+        let carDirection: CarDirection = String(chars[0]) == "0" ? .up : .down
 
         let trainCode = String(chars[2...4])
 
@@ -54,7 +61,7 @@ extension GetIncomingsResponseDTO: ResponseDTO {
 
         let destination = String(chars[5...])
 
-        return (trainCode, destination)
+        return (carDirection, trainCode, destination)
     }
 
     private func getFormattedArrivalTime(barvlDt: String) -> String {

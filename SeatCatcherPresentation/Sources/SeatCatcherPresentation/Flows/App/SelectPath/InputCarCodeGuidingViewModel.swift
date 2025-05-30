@@ -21,15 +21,14 @@ public final class InputCarCodeGuidingViewModel: ViewModel {
 
     let coordinator: Coordinator
 
-    public init(trainCode: String, coordinator: Coordinator) {
-        self.trainCode = trainCode
+    public init(coordinator: Coordinator) {
         self.coordinator = coordinator
     }
 
     func action(_ action: Action) {
         switch action {
         case .nextButtonTapped:
-            // TODO: - Code 입력 뷰 연결
+            
             dump(#function)
         }
     }

@@ -72,17 +72,21 @@ final class AppCoordinator: Coordinator {
             SelectPathView(viewModel: selectPathViewModel)
         case .searchStations(let viewModel):
             SearchStationsView(viewModel: viewModel)
-
         case let .selectTrain(departure, arrival, boardingState):
             let selectTrainViewModel = SelectTrainViewModel(
                 departure: departure,
                 arrival: arrival,
                 boardingState: boardingState,
                 getIncomingsUseCase: diContainer.resolveGetIncomingsUseCase(),
+                appStore: diContainer.resolveAppStore(),
                 coordinator: self
             )
             SelectTrainView(viewModel: selectTrainViewModel)
-        case .mainFeature(let hasSeated):
+        case .inputCarCodeGuide:
+            InputCarCodeGuidingView(inputCarCodeGuidingViewModel: .init(coordinator: self))
+        case .inputCarCode:
+            
+        case .mainFeature:
             let viewModel = MainFeatureViewModel(
                 store: diContainer.resolveAppStore(),
                 coordinator: self,
