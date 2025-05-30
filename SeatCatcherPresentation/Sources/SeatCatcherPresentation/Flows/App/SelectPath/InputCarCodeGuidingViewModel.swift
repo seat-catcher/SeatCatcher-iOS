@@ -17,8 +17,6 @@ public final class InputCarCodeGuidingViewModel: ViewModel {
 
     private(set) var state = State()
 
-    let trainCode: String
-
     let coordinator: Coordinator
 
     public init(coordinator: Coordinator) {

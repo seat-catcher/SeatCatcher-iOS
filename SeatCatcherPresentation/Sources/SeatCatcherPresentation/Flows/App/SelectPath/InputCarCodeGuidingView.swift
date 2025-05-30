@@ -35,10 +35,8 @@ public struct InputCarCodeGuidingView: View {
                 action: { viewModel.action(.nextButtonTapped) },
                 style: .bottomEnabled
             )
+            .padding(.horizontal, 18)
         }
         .withBackground(.gray900)
     }
 }
-
-
-//#Preview { InputCarCodeGuidingView().loadCustomFonts() }

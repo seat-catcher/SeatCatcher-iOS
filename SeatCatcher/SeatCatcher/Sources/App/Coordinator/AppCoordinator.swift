@@ -83,9 +83,9 @@ final class AppCoordinator: Coordinator {
             )
             SelectTrainView(viewModel: selectTrainViewModel)
         case .inputCarCodeGuide:
-            InputCarCodeGuidingView(inputCarCodeGuidingViewModel: .init(coordinator: self))
+            InputCarCodeGuidingView(viewModel: .init(coordinator: self))
         case .inputCarCode:
-            
+            InputCarCodeView(viewModel: .init(coordinator: self))
         case .mainFeature:
             let viewModel = MainFeatureViewModel(
                 store: diContainer.resolveAppStore(),

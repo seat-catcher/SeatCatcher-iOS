@@ -11,7 +11,7 @@ public struct InputCarCodeView: View {
     @State private var viewModel: InputCarCodeViewModel
 
     public init(viewModel: InputCarCodeViewModel) {
-        self._viewModel = @State(initialValue: viewModel)
+        self._viewModel = State(initialValue: viewModel)
     }
     
     public var body: some View {

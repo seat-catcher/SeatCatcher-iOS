@@ -6,8 +6,17 @@
 //
 
 import Foundation
+import SeatCatcherCore
 
 @Observable
-public final class InputCarCodeViewModel {
-    
+public final class InputCarCodeViewModel: ViewModel {
+    struct State {}
+    enum Action {}
+    private(set) var state = State()
+    let coordinator: Coordinator
+
+    public init(coordinator: Coordinator) {
+        self.coordinator = coordinator
+    }
+    func action(_ action: Action) {}
 }
