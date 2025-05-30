@@ -53,7 +53,7 @@ public final class SelectPathViewModel: ViewModel {
 
     @MainActor
     var searchBarPlaceholder: String {
-        if boardingState == .boarded { "여기서 \(state.searchMode == .departure ? "승차역" : "하차역") 검색하기" }
+        if boardingState == .notBoarded { "여기서 \(state.searchMode == .departure ? "승차역" : "하차역") 검색하기" }
         else {
             if state.searchMode == .departure { "열차의 다음 도착역 입력" }
             else { "여기서 하차역 검색하기" }

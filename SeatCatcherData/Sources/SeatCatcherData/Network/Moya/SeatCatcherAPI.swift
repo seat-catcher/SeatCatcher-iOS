@@ -186,6 +186,7 @@ extension SeatCatcherAPI: TargetType {
         case .postRegisterSeat:
             return baseWithAuth
         case .deleteSeat:
+            return baseWithAuth
         case .getIncomings:
             return baseWithAuth
         }

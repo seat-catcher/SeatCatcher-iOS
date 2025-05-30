@@ -19,6 +19,7 @@ public final class SelectTrainViewModel: ViewModel {
     enum Action {
         case viewWillAppear
         case pulledToRefresh
+        case refreshButtonTapped
         case incomingSelected(Incoming)
         case nextButtonTapped
     }
@@ -50,8 +51,7 @@ public final class SelectTrainViewModel: ViewModel {
     func action(_ action: Action) {
         switch action {
         case .viewWillAppear:
-            Task { [weak self] in
-                guard let self = self else { return }
+            Task {
                 do {
                     let incomings = try await getIncomingsUseCase.execute(departure: departure, arrival: arrival)
                     state.incomings = incomings
@@ -61,8 +61,17 @@ public final class SelectTrainViewModel: ViewModel {
                 }
             }
         case .pulledToRefresh:
-            Task { [weak self] in
-                guard let self = self else { return }
+            Task {
+                do {
+                    let incomings = try await getIncomingsUseCase.execute(departure: departure, arrival: arrival)
+                    state.incomings = incomings
+                } catch {
+                    dump(error.localizedDescription)
+                    state.errorMessage = error.localizedDescription
+                }
+            }
+        case .refreshButtonTapped:
+            Task {
                 do {
                     let incomings = try await getIncomingsUseCase.execute(departure: departure, arrival: arrival)
                     state.incomings = incomings
