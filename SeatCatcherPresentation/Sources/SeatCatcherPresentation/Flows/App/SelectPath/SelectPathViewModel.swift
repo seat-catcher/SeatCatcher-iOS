@@ -99,8 +99,8 @@ public final class SelectPathViewModel: ViewModel {
             state.searchMode = .arrival
             coordinator.push(AppScene.searchStations(viewModel: self))
         case .historyTapped(let history):
-            state.departure = Station(id: history.departureStationId, name: history.departureStationName, line: history.line ?? 2)
-            state.arrival = Station(id: history.arrivalStationId, name: history.arrivalStationName, line: history.line ?? 2)
+            state.departure = Station(id: history.departureStationId, name: history.departureStationName, line: history.line)
+            state.arrival = Station(id: history.arrivalStationId, name: history.arrivalStationName, line: history.line)
         case .nextButtonTapped:
             guard let departure = state.departure,
                   let arrival = state.arrival

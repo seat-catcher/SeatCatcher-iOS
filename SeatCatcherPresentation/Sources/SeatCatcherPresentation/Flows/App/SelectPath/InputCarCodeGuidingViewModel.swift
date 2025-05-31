@@ -26,7 +26,7 @@ public final class InputCarCodeGuidingViewModel: ViewModel {
     func action(_ action: Action) {
         switch action {
         case .nextButtonTapped:
-            
+            coordinator.push(AppScene.inputCarCode)
             dump(#function)
         }
     }

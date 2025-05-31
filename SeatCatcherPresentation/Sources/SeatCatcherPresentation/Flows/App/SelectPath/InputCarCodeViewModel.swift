@@ -10,13 +10,27 @@ import SeatCatcherCore
 
 @Observable
 public final class InputCarCodeViewModel: ViewModel {
-    struct State {}
-    enum Action {}
+    struct State {
+        var carCodeDigits: [String] = ["", "", "", ""]
+    }
+    enum Action {
+        case digitChanged(String, Int)
+        case nextButtonTapped
+    }
+    
     private(set) var state = State()
     let coordinator: Coordinator
 
     public init(coordinator: Coordinator) {
         self.coordinator = coordinator
     }
-    func action(_ action: Action) {}
+
+    func action(_ action: Action) {
+        switch action {
+        case let .digitChanged(digit, idx):
+            state.carCodeDigits[idx] = digit
+        case .nextButtonTapped:
+            dump(#function)
+        }
+    }
 }

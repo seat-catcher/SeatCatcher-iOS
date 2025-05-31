@@ -23,10 +23,11 @@ public struct InputCarCodeGuidingView: View {
                 .padding(.top, 18)
                 .padding(.horizontal, 18)
 
-            Image(.inputCodeGuiding)
-                .resizable()
-                .aspectRatio(1, contentMode: .fit)
-                .padding(.top, 32)
+            Text("차량번호는 탑승칸의 문을 확인해주세요")
+                .font(.B02_M)
+                .foregroundStyle(.gray300)
+                .padding(.top, 12)
+                .padding(.horizontal, 18)
 
             Spacer()
 
