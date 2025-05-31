@@ -38,6 +38,7 @@ public enum SCFontStyle {
 
     case LINE
     case REFRESH
+    case DIGIT
 
     var weight: String {
         switch self {
@@ -45,7 +46,7 @@ public enum SCFontStyle {
             return SCFontName.bold.rawValue
         case .T01_SB, .T02_SB, .T03_SB, .B01_SB, .B02_SB, .B03_SB, .C01_SB:
             return SCFontName.semibold.rawValue
-        case .B01_M, .B02_M, .B03_M, .C01_M:
+        case .B01_M, .B02_M, .B03_M, .C01_M, .DIGIT:
             return SCFontName.medium.rawValue
         case .C01_R, .REFRESH:
             return SCFontName.regular.rawValue
@@ -56,7 +57,7 @@ public enum SCFontStyle {
         switch self {
         case .T01_B, .T01_SB:
             return 26
-        case .T02_B, .T02_SB:
+        case .T02_B, .T02_SB, .DIGIT:
             return 24
         case .T03_B, .T03_SB:
             return 20
@@ -105,6 +106,7 @@ extension Font {
     static let C01_SB = SCFontStyle.C01_SB.font
     static let LINE = SCFontStyle.LINE.font
     static let REFRESH = SCFontStyle.REFRESH.font
+    static let DIGIT = SCFontStyle.DIGIT.font
 }
 
 extension View {

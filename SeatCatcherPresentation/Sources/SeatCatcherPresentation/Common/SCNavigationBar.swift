@@ -242,7 +242,7 @@ private struct StationSelectionNavigationBar: View {
     let applyDefaultPopAction: Bool
 
     var departurePlaceholder: String {
-        if let departureName = departureName { "\(departureName ?? "")역" }
+        if let departureName = departureName { "\(departureName)역" }
         else {
             if boardingState == .boarded { "열차의 다음 도착역 입력" }
             else { "승차역 입력" }
