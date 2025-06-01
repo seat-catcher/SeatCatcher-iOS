@@ -7,6 +7,7 @@
 
 import Foundation
 import SeatCatcherCore
+import SeatCatcherDomain
 
 @Observable
 public final class InputCarCodeViewModel: ViewModel {
@@ -19,9 +20,18 @@ public final class InputCarCodeViewModel: ViewModel {
     }
     
     private(set) var state = State()
+
+    let departure: Station
+    let arrival: Station
+
+    let startJourneyUseCase: StartJourneyUseCase
+
     let coordinator: Coordinator
 
-    public init(coordinator: Coordinator) {
+    public init(departure: Station, arrival: Station, startJourneyUseCase: StartJourneyUseCase, coordinator: Coordinator) {
+        self.departure = departure
+        self.arrival = arrival
+        self.startJourneyUseCase = startJourneyUseCase
         self.coordinator = coordinator
     }
 
@@ -30,7 +40,15 @@ public final class InputCarCodeViewModel: ViewModel {
         case let .digitChanged(digit, idx):
             state.carCodeDigits[idx] = digit
         case .nextButtonTapped:
-            dump(#function)
+            let trainCode = state.carCodeDigits.joined()
+            Task {
+                let pathHistoryId = try await startJourneyUseCase.execute(
+                    departure: departure,
+                    arrival: arrival,
+                    trainCode: trainCode
+                )
+                await MainActor.run { coordinator.push(AppScene.selectSeatSection) }
+            }
         }
     }
 }

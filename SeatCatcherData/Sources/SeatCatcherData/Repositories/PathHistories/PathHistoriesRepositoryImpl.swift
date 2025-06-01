@@ -37,4 +37,13 @@ public final class PathHistoriesRepositoryImpl: PathHistoriesRepository {
     public func postPathHistories(departureStationId: Int, arrivalStationId: Int) async throws {
         try await networkService.postPathHistories(departureStationId: departureStationId, arrivalStationId: arrivalStationId)
     }
+
+    public func startJourney(departureStationId: Int, arrivalStationId: Int, trainCode: String) async throws -> Int {
+        let response = try await networkService.postStartJourney(
+            departureStationId: departureStationId,
+            arrivalStationId: arrivalStationId,
+            trainCode: trainCode
+        )
+        return response.domainModel
+    }
 }

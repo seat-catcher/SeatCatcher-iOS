@@ -133,11 +133,12 @@ private struct NextCTAButton: View {
         } label: {
             Text("탑승칸 안 내 구역 찾기")
                 .font(.B01_SB)
-                .foregroundStyle(.gray100)
+                .foregroundStyle(viewModel.state.carCodeDigits.contains(where: { $0.isEmpty }) ? .gray300 : .gray100)
                 .frame(maxWidth: .infinity)
                 .frame(height: 52)
-                .background(.scGreen)
+                .background(viewModel.state.carCodeDigits.contains(where: { $0.isEmpty }) ? .gray500 : .scGreen)
         }
+        .disabled(viewModel.state.carCodeDigits.contains(where: { $0.isEmpty }))
     }
 }
 

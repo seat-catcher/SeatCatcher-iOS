@@ -211,7 +211,18 @@ public struct NetworkService: Sendable {
         let requestDTO = PostPathHistoriesRequestDTO(startStationId: departureStationId, endStationId: arrivalStationId)
         let _ = try await provider.request(.postPathHistories(requestDTO: requestDTO))
     }
-    
+
+    func postStartJourney(departureStationId: Int, arrivalStationId: Int, trainCode: String) async throws -> PostStartJourneyResponseDTO {
+        let requestDTO = PostStartJourneyRequestDTO(
+            startStationId: departureStationId,
+            endStationId: arrivalStationId,
+            trainCode: trainCode
+        )
+        let response = try await provider.request(.postStartJourney(requestDTO: requestDTO))
+        let responseDTO = try JSONDecoder().decode(PostStartJourneyResponseDTO.self, from: response)
+        return responseDTO
+    }
+
     // MARK: - Trains
     func getSeatsInTrainCar(trainCode: String, carCode: String) async throws -> GetSeatInTrainCarResponseDTO {
         let response = try await provider.request(.getSeatInfo(trainCode: trainCode, carCode: carCode))

@@ -52,27 +52,7 @@ public final class SelectTrainViewModel: ViewModel {
 
     func action(_ action: Action) {
         switch action {
-        case .viewWillAppear:
-            Task {
-                do {
-                    let incomings = try await getIncomingsUseCase.execute(departure: departure, arrival: arrival)
-                    state.incomings = incomings
-                } catch {
-                    dump(error.localizedDescription)
-                    state.errorMessage = error.localizedDescription
-                }
-            }
-        case .pulledToRefresh:
-            Task {
-                do {
-                    let incomings = try await getIncomingsUseCase.execute(departure: departure, arrival: arrival)
-                    state.incomings = incomings
-                } catch {
-                    dump(error.localizedDescription)
-                    state.errorMessage = error.localizedDescription
-                }
-            }
-        case .refreshButtonTapped:
+        case .viewWillAppear, .pulledToRefresh, .refreshButtonTapped:
             Task {
                 do {
                     let incomings = try await getIncomingsUseCase.execute(departure: departure, arrival: arrival)
@@ -91,9 +71,9 @@ public final class SelectTrainViewModel: ViewModel {
             appStore.trainCode = selectedIncoming.trainCode
             appStore.carDirection = selectedIncoming.carDirection
             if boardingState == .boarded {
-                coordinator.push(AppScene.inputCarCode)
+                coordinator.push(AppScene.inputCarCode(departure: departure, arrival: arrival))
             } else {
-                coordinator.push(AppScene.inputCarCodeGuide)
+                coordinator.push(AppScene.inputCarCodeGuide(departure: departure, arrival: arrival))
             }
         }
     }

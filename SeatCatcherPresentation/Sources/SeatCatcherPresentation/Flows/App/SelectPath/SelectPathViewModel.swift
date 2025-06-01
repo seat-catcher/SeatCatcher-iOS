@@ -126,11 +126,9 @@ public final class SelectPathViewModel: ViewModel {
         case .searchResultTapped(let station):
             switch state.searchMode {
             case .departure:
-                if state.departure == nil { state.departure = station }
-                else { state.departure = nil }
+                state.departure = station
             case .arrival:
-                if state.arrival == nil { state.arrival = station }
-                else { state.arrival = nil }
+                state.arrival = station
             }
             self.action(.searchViewBackButtonTapped)
             coordinator.pop()

@@ -27,7 +27,6 @@ public struct SelectTrainView: View {
                 style: viewModel.state.selectedIncoming == nil ? .bottomDisabled : .bottomEnabled
             )
             .disabled(viewModel.state.selectedIncoming == nil)
-            .padding(.top, 18)
             .padding(.horizontal, 18)
         }
         .withBackground(.gray900)

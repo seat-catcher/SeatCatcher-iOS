@@ -21,8 +21,8 @@ public enum AppScene: AppRoute {
         arrival: Station,
         boardingState: BoardingState
     )
-    case inputCarCodeGuide
-    case inputCarCode
+    case inputCarCodeGuide(departure: Station, arrival: Station)
+    case inputCarCode(departure: Station, arrival: Station)
 
     case mainFeature
     case mainFeatureRegisterSeat
