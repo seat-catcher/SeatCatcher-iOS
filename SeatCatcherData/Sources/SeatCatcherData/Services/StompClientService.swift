@@ -17,7 +17,7 @@ struct StompTextMessageDTO {
 }
 
 /// SwiftStomp 를 래핑한 STOMP 클라이언트 서비스
-final class StompClientService {
+public final class StompClientService {
     /// 연결 상태 변화를 외부에 발행하는 퍼블리셔
     private(set) lazy var isConnectedPublisher: AnyPublisher<Bool, Never> = {
         connectionSubject.eraseToAnyPublisher()  // CurrentValueSubject → AnyPublisher
@@ -36,7 +36,7 @@ final class StompClientService {
     private let connectionSubject = CurrentValueSubject<Bool, Never>(false) // 연결 상태를 저장·발행하는 Subject, 초기값은 false(미연결)
     private let messageSubject = PassthroughSubject<StompTextMessageDTO, Never>() // 수신 메시지를 발행하는 Subject, 초기값 없이 순수 이벤트만 발행
 
-    init() {
+    public init() {
         let url = URL(string: "ws://api.dev.seatcatcher.site/seatcatcher")! // url 생성
 
         // connectionHeader 생성
@@ -51,6 +51,8 @@ final class StompClientService {
         swiftStomp.enableLogging = true // 콘솔 로그 출력 활성화
 
         bindSwiftStomp() // SwiftStomp의 Publisher들을 StompClientService 내부 Publisher들에 Bind
+
+        connect()
     }
 
     // MARK: - 바인딩

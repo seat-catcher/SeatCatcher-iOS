@@ -23,6 +23,7 @@ enum SeatCatcherAPI: Sendable {
 
     case getPathHistories(cursor: Int?)
     case postPathHistories(requestDTO: PostPathHistoriesRequestDTO)
+    case postStartJourney(requestDTO: PostStartJourneyRequestDTO)
 
     case getSeatInfo(trainCode: String, carCode: String)
     
@@ -62,6 +63,8 @@ extension SeatCatcherAPI: TargetType {
             return "/path-histories"
         case .postPathHistories:
             return "/path-histories"
+        case .postStartJourney:
+            return "/path-histories/start-journey"
         case .getSeatInfo:
             return "/trains"
         case .postRegisterSeat:
@@ -94,6 +97,8 @@ extension SeatCatcherAPI: TargetType {
         case .getPathHistories:
             return .get
         case .postPathHistories:
+            return .post
+        case .postStartJourney:
             return .post
         case .getSeatInfo:
             return .get
@@ -134,6 +139,8 @@ extension SeatCatcherAPI: TargetType {
             if let cursor = cursor { parameters.merge(["cursor": cursor]) { _, new in new } }
             return .requestParameters(parameters: parameters, encoding: URLEncoding.default)
         case let .postPathHistories(requestDTO):
+            return .requestJSONEncodable(requestDTO)
+        case let .postStartJourney(requestDTO):
             return .requestJSONEncodable(requestDTO)
         case let .getSeatInfo(trainCode, carCode):
             return .requestParameters(parameters: ["trainCode": trainCode, "carCode": carCode], encoding: URLEncoding.default)
@@ -180,6 +187,8 @@ extension SeatCatcherAPI: TargetType {
         case .getPathHistories:
             return baseWithAuth
         case .postPathHistories:
+            return baseWithAuth
+        case .postStartJourney:
             return baseWithAuth
         case .getSeatInfo:
             return baseWithAuth

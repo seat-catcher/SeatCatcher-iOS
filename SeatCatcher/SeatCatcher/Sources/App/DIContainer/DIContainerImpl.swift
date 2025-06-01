@@ -17,6 +17,7 @@ final class DIContainerImpl {
 
     // MARK: - Service Instances
     private let networkService = NetworkService()
+    private let stompClientService = StompClientService()
 
     // MARK: - Repository Instances
     private lazy var loginRepository = LoginRepositoryImpl(networkService: networkService)
@@ -66,6 +67,7 @@ final class DIContainerImpl {
     // MARK: - PathHistories UseCase Instances
     private lazy var getPathHistoriesUseCase = GetPathHistoriesUseCaseImpl(pathHistoriesRepository: pathHistoriesRepository)
     private lazy var postPathHistoriesUseCase = PostPathHistoriesImpl(pathHistoriesRespotiry: pathHistoriesRepository)
+    private lazy var startJourneyUseCase = StartJourneyUseCaseImpl(pathHistoriesRepository: pathHistoriesRepository)
 
     // MARK: - Incomings UseCase Instances
     private lazy var getIncomingsUseCase = GetIncomingsUseCaseImpl(incomingsRepository: incomingsRepository)
@@ -91,7 +93,8 @@ extension DIContainerImpl: DIContainer {
     // MARK: - PathHistories UseCases
     func resolveGetPathHistoriesUseCase() ->  GetPathHistoriesUseCase { return getPathHistoriesUseCase }
     func resolvePostPathHistoriesUseCase() -> PostPathHistoriesUseCase { return postPathHistoriesUseCase }
-    
+    func resolveStartJourneyUseCase() -> StartJourneyUseCase { return startJourneyUseCase }
+
     // MARK: - Seat UseCases
     func resolveGetSeatInTrainCarUseCase() -> GetSeatInTrainCarUseCase { return getSeatInTrainCarUseCase }
     func resolveGetSeatInSectionUseCase() -> GetSeatInSectionUseCase { return getSeatInSectionUseCase }

@@ -7,6 +7,7 @@
 
 import Foundation
 import SeatCatcherCore
+import SeatCatcherDomain
 
 @Observable
 public final class InputCarCodeGuidingViewModel: ViewModel {
@@ -17,17 +18,20 @@ public final class InputCarCodeGuidingViewModel: ViewModel {
 
     private(set) var state = State()
 
+    let departure: Station
+    let arrival: Station
     let coordinator: Coordinator
 
-    public init(coordinator: Coordinator) {
+    public init(departure: Station, arrival: Station, coordinator: Coordinator) {
+        self.departure = departure
+        self.arrival = arrival
         self.coordinator = coordinator
     }
 
     func action(_ action: Action) {
         switch action {
         case .nextButtonTapped:
-            coordinator.push(AppScene.inputCarCode)
-            dump(#function)
+            coordinator.push(AppScene.inputCarCode(departure: departure, arrival: arrival))
         }
     }
 }

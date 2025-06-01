@@ -28,7 +28,8 @@ public protocol DIContainer {
     // MARK: - PathHistories UseCases
     func resolveGetPathHistoriesUseCase() -> GetPathHistoriesUseCase
     func resolvePostPathHistoriesUseCase() -> PostPathHistoriesUseCase
-    
+    func resolveStartJourneyUseCase() -> StartJourneyUseCase
+
     // MARK: - Seat UseCases
     func resolveGetSeatInTrainCarUseCase() -> GetSeatInTrainCarUseCase
     func resolveGetSeatInSectionUseCase() -> GetSeatInSectionUseCase
