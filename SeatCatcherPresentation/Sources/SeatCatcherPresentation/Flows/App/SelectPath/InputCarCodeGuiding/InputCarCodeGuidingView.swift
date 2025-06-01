@@ -25,7 +25,7 @@ public struct InputCarCodeGuidingView: View {
 
             Image(.inputCodeGuiding)
                 .resizable()
-                .aspectRatio(1, contentMode: .fit)
+                .scaledToFit()
                 .padding(.top, 32)
 
             Spacer()
