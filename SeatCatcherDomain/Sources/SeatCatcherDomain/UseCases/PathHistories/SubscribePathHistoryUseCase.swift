@@ -8,5 +8,5 @@
 import Combine
 
 public protocol SubscribePathHistoryUseCase {
-    func execute(pathHistoryId: Int) ->
+//    func execute(pathHistoryId: Int) ->
 }
