@@ -21,7 +21,7 @@ enum SeatCatcherAPI: Sendable {
     case getStations(requestDTO: GetStationsRequestDTO)
     case getStationInfo(stationId: Int)
 
-    case getPathHistories(cursor: Int?)
+    case getPathHistories
     case postPathHistories(requestDTO: PostPathHistoriesRequestDTO)
     case postStartJourney(requestDTO: PostStartJourneyRequestDTO)
 
@@ -60,7 +60,7 @@ extension SeatCatcherAPI: TargetType {
         case let .getStationInfo(stationId):
             return "/stations/\(stationId)"
         case .getPathHistories:
-            return "/path-histories"
+            return "/path-histories/"
         case .postPathHistories:
             return "/path-histories"
         case .postStartJourney:
@@ -134,9 +134,8 @@ extension SeatCatcherAPI: TargetType {
             return .requestParameters(parameters: parameters, encoding: URLEncoding.default)
         case .getStationInfo:
             return .requestPlain
-        case let .getPathHistories(cursor):
-            var parameters: [String: Any] = [ "size": 10 ]
-            if let cursor = cursor { parameters.merge(["cursor": cursor]) { _, new in new } }
+        case let .getPathHistories:
+            let parameters: [String: Any] = ["size": 10]
             return .requestParameters(parameters: parameters, encoding: URLEncoding.default)
         case let .postPathHistories(requestDTO):
             return .requestJSONEncodable(requestDTO)

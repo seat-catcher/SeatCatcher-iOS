@@ -5,19 +5,34 @@
 //  Created by 박현수 on 6/1/25.
 //
 
+import Foundation
 import SeatCatcherDomain
 
 struct PostStartJourneyResponseDTO {
     let pathHistoryId: Int
+    let expectedArrivalTime: String
 }
 
 extension PostStartJourneyResponseDTO: ResponseDTO {
-    typealias DomainModel = Int
+    typealias DomainModel = (pathHistoryId: Int, expectedArrivalTime: Date)
 
     static var stub: PostStartJourneyResponseDTO {
-        .init(pathHistoryId: 1)
+        .init(pathHistoryId: 1, expectedArrivalTime: Date().addingTimeInterval(600).formatted())
     }
     
-    var domainModel: Int { pathHistoryId }
+    var domainModel: (pathHistoryId: Int, expectedArrivalTime: Date) {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd HH:mm"
+        formatter.timeZone = TimeZone(identifier: "Asia/Seoul")
+        dump("string")
+        dump(expectedArrivalTime)
+        if let expectedArrivalTime = formatter.date(from: expectedArrivalTime) {
+            dump("date")
+            dump(expectedArrivalTime)
+            return (pathHistoryId: pathHistoryId, expectedArrivalTime: expectedArrivalTime)
+        } else {
+            return (pathHistoryId: pathHistoryId, expectedArrivalTime: Date().addingTimeInterval(600))
+        }
+    }
 }
 

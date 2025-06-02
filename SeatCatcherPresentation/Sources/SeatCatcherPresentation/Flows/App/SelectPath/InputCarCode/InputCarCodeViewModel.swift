@@ -24,14 +24,26 @@ public final class InputCarCodeViewModel: ViewModel {
     let departure: Station
     let arrival: Station
 
-    let startJourneyUseCase: StartJourneyUseCase
+    private let appStore: AppStore
+
+    private let startJourneyUseCase: StartJourneyUseCase
+    private let subscribeArrivalTimeUseCase: SubscribeArrivalTimeUseCase
 
     let coordinator: Coordinator
 
-    public init(departure: Station, arrival: Station, startJourneyUseCase: StartJourneyUseCase, coordinator: Coordinator) {
+    public init(
+        departure: Station,
+        arrival: Station,
+        appStore: AppStore,
+        startJourneyUseCase: StartJourneyUseCase,
+        subscribeArrivalTimeUseCase: SubscribeArrivalTimeUseCase,
+        coordinator: Coordinator
+    ) {
         self.departure = departure
         self.arrival = arrival
+        self.appStore = appStore
         self.startJourneyUseCase = startJourneyUseCase
+        self.subscribeArrivalTimeUseCase = subscribeArrivalTimeUseCase
         self.coordinator = coordinator
     }
 
@@ -42,11 +54,16 @@ public final class InputCarCodeViewModel: ViewModel {
         case .nextButtonTapped:
             let trainCode = state.carCodeDigits.joined()
             Task {
-                let pathHistoryId = try await startJourneyUseCase.execute(
+                let (pathHistoryId, expectedArrivalTime) = try await startJourneyUseCase.execute(
                     departure: departure,
                     arrival: arrival,
                     trainCode: trainCode
                 )
+                let arrivalTimePublisher = subscribeArrivalTimeUseCase.execute(pathHistoryId: pathHistoryId)
+
+                appStore.expectedArrivalTime = expectedArrivalTime
+                appStore.subscribeArrivalPublisher(arrivalTimePublisher)
+
                 await MainActor.run { coordinator.push(AppScene.selectSeatSection) }
             }
         }

@@ -93,7 +93,9 @@ final class AppCoordinator: Coordinator {
             let inputCarCodeViewModel = InputCarCodeViewModel(
                 departure: departure,
                 arrival: arrival,
+                appStore: diContainer.resolveAppStore(),
                 startJourneyUseCase: diContainer.resolveStartJourneyUseCase(),
+                subscribeArrivalTimeUseCase: diContainer.resolveSubscribeArrivalTimeUseCase(),
                 coordinator: self
             )
             InputCarCodeView(viewModel: inputCarCodeViewModel)
