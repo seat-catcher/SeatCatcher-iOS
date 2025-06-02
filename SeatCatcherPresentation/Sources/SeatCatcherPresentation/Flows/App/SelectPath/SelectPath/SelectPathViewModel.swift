@@ -80,7 +80,7 @@ public final class SelectPathViewModel: ViewModel {
         case .viewAppeared:
             Task { [getPathHistoriesUseCase] in
                 do {
-                    let histories = try await getPathHistoriesUseCase.execute(cursor: nil)
+                    let histories = try await getPathHistoriesUseCase.execute()
                     self.state.histories = histories
                 } catch {
                     self.state.histories = []
