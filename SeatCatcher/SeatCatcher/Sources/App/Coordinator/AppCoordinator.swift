@@ -103,7 +103,8 @@ final class AppCoordinator: Coordinator {
                 coordinator: self,
                 getSeatInTrainCarUseCase: diContainer.resolveGetSeatInTrainCarUseCase(),
                 getSeatInSectionUseCase: diContainer.resolveGetSeatInSectionUseCase(),
-                unlockSeatUseCase: diContainer.resolveUnlockSeatUseCase()
+                unlockSeatUseCase: diContainer.resolveUnlockSeatUseCase(),
+                subscribeTrainUseCase: diContainer.resolveSubscribeTrainUseCase()
             )
             MainFeatureView(viewModel: viewModel)
         case .mainFeatureRegisterSeat:
