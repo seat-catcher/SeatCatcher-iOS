@@ -119,7 +119,7 @@ private struct PathCardContentView: View {
         VStack(spacing: 0) {
             switch viewModel.state.userStatus {
             case .inTransit:
-                PathCardInTrainsit(viewModel: viewModel)
+                PathCardInTransit(viewModel: viewModel)
             case let .pathExists:
                 PathCardPathExists(viewModel: viewModel)
             case .pathNotExists:
@@ -198,7 +198,7 @@ private struct HomeCatchSeatButton: View {
     }
 }
 
-private struct PathCardInTrainsit: View {
+private struct PathCardInTransit: View {
     let viewModel: HomeViewModel
 
     var body: some View {
