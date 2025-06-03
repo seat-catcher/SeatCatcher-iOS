@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Combine
 import SeatCatcherCore
 import SeatCatcherDomain
 
@@ -48,6 +49,9 @@ public final class MainFeatureViewModel: ViewModel {
         var seats: SeatSection // 좌석 정보
     }
     
+    // MARK: Cancellables
+    private var cancellables = Set<AnyCancellable>()
+    
     // MARK: Dependencies
     let store: AppStore
     let coordinator: Coordinator
@@ -64,6 +68,7 @@ public final class MainFeatureViewModel: ViewModel {
     private let registerSeatUseCase: RegisterSeatUseCase?
     private let moveSeatUseCase: MoveSeatUseCase?
     private let cancelSeatUseCase: CancelSeatUseCase?
+    private let subscribeTrainUseCase: SubscribeTrainUseCase?
     
     
     // MARK: Initialize
@@ -73,6 +78,7 @@ public final class MainFeatureViewModel: ViewModel {
         getSeatInTrainCarUseCase: GetSeatInTrainCarUseCase,
         getSeatInSectionUseCase: GetSeatInSectionUseCase,
         unlockSeatUseCase: UnlockSeatUseCase,
+        subscribeTrainUseCase: SubscribeTrainUseCase? = nil,
         registerSeatUseCase: RegisterSeatUseCase? = nil,
         moveSeatUseCase: MoveSeatUseCase? = nil,
         cancelSeatUseCase: CancelSeatUseCase? = nil,
@@ -83,6 +89,7 @@ public final class MainFeatureViewModel: ViewModel {
         self.getSeatInTrainCarUseCase = getSeatInTrainCarUseCase
         self.getSeatInSectionUseCase = getSeatInSectionUseCase
         self.unlockSeatUseCase = unlockSeatUseCase
+        self.subscribeTrainUseCase = subscribeTrainUseCase
         self.registerSeatUseCase = registerSeatUseCase
         self.moveSeatUseCase = moveSeatUseCase
         self.cancelSeatUseCase = cancelSeatUseCase
@@ -108,7 +115,8 @@ public final class MainFeatureViewModel: ViewModel {
         coordinator: Coordinator,
         getSeatInTrainCarUseCase: GetSeatInTrainCarUseCase,
         getSeatInSectionUseCase: GetSeatInSectionUseCase,
-        unlockSeatUseCase: UnlockSeatUseCase
+        unlockSeatUseCase: UnlockSeatUseCase,
+        subscribeTrainUseCase: SubscribeTrainUseCase
     ) {
         self.init(
             store: store,
@@ -116,6 +124,7 @@ public final class MainFeatureViewModel: ViewModel {
             getSeatInTrainCarUseCase: getSeatInTrainCarUseCase,
             getSeatInSectionUseCase: getSeatInSectionUseCase,
             unlockSeatUseCase: unlockSeatUseCase,
+            subscribeTrainUseCase: subscribeTrainUseCase,
             userStatus: store.isSitting ? .seated : .standing
         )
     }
@@ -185,6 +194,9 @@ public final class MainFeatureViewModel: ViewModel {
         switch action {
         case .willAppear:
             fetchSeatInSection()
+            if state.userStatus == .standing || state.userStatus == .seated {
+                subscribeToTrainSeats()
+            }
         case let .manageSeatSection(seatSectionAction):
             handleSeatSectionAction(seatSectionAction)
         case .backButtonDidTap:
@@ -201,6 +213,52 @@ public final class MainFeatureViewModel: ViewModel {
             cancelSeat()
         case .backToSeatSectionPage:
             coordinator.pop()
+        }
+    }
+    
+    /// 메인피쳐 기본 상태일 시에만 수행합니다
+    /// 좌석 등록 / 이동 / 취소 시엔 STOMP 없이 REST API만 작동합니다
+    private func subscribeToTrainSeats() {
+        if let subscribeTrainUseCase {
+            /// 차량 좌석 업데이트 이벤트를 구독합니다
+            subscribeTrainUseCase.execute(trainCode: state.trainCode, carCode: state.carCode)
+                .receive(on: DispatchQueue.main)
+                .sink(
+                    receiveCompletion: { [weak self] completion in
+                        guard let self else { return }
+                        if case let .failure(error) = completion {
+                            state.showNoInformationToast = true
+                            print(error.localizedDescription)
+                        }
+                    },
+                    receiveValue: { [weak self] trainCar in
+                        /// 열차 -> 차량 필터링 된 이벤트
+                        guard let self else { return }
+                        /// 차량 -> 구역 필터링
+                        state.seatSectionState.seats = getSeatInSectionUseCase.execute(
+                            trainCar: trainCar,
+                            seatSectionType: state.seatSectionType
+                        )
+                    }
+                )
+                .store(in: &cancellables)
+            
+            /// 연결 상태를 구독합니다
+            subscribeTrainUseCase.connectionPublisher()
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] isConnected in
+                    guard let self else { return }
+                    state.showNoInformationToast = !isConnected
+                }
+                .store(in: &cancellables)
+        }
+    }
+    
+    /// 구독 해제
+    private func unsubscribe() { // TODO: scenePhase와 연결하여 호출 필요
+        if let subscribeTrainUseCase {
+            subscribeTrainUseCase.unsubscribe(trainCode: state.trainCode)
+            cancellables.removeAll()
         }
     }
     

@@ -30,6 +30,7 @@ final class DIContainerImpl {
     )
     private lazy var seatRepository = SeatRepositoryImpl(networkService: networkService)
     private lazy var incomingsRepository = IncomingsRepositoryImpl(networkService: networkService)
+    private lazy var seatStompRepository = SeatStompRepositoryImpl(stompClientService: stompClientService)
 
     // MARK: - Auth UseCase Instances
     private lazy var appleLoginUseCase = AppleLoginUseCaseImpl(
@@ -67,6 +68,7 @@ final class DIContainerImpl {
     private lazy var registerSeatUseCase: RegisterSeatUseCase = RegisterSeatUseCaseImpl(seatRepository: seatRepository)
     private lazy var moveSeatUseCase: MoveSeatUseCase = MoveSeatUseCaseImpl(seatRepository: seatRepository)
     private lazy var cancelSeatUseCase: CancelSeatUseCase = CancelSeatUseCaseImpl(seatRepository: seatRepository)
+    private lazy var subscribeTrainUseCase: SubscribeTrainUseCase = SubscribeTrainUseCaseImpl(seatStompRepository: seatStompRepository)
     
     // MARK: - PathHistories UseCase Instances
     private lazy var getPathHistoriesUseCase = GetPathHistoriesUseCaseImpl(pathHistoriesRepository: pathHistoriesRepository)
@@ -109,6 +111,7 @@ extension DIContainerImpl: DIContainer {
     func resolveRegisterSeatUseCase() -> RegisterSeatUseCase { return registerSeatUseCase }
     func resolveMoveSeatUseCase() -> MoveSeatUseCase { return moveSeatUseCase }
     func resolveCancelSeatUseCase() -> CancelSeatUseCase { return cancelSeatUseCase }
+    func resolveSubscribeTrainUseCase() -> SubscribeTrainUseCase { return subscribeTrainUseCase }
 
     // MARK: Incomings UseCases
     func resolveGetIncomingsUseCase() -> GetIncomingsUseCase { return getIncomingsUseCase }
