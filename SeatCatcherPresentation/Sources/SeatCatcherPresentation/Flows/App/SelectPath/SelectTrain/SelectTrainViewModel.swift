@@ -67,13 +67,22 @@ public final class SelectTrainViewModel: ViewModel {
             else { self.state.selectedIncoming = incoming }
         case .nextButtonTapped:
             guard let selectedIncoming = self.state.selectedIncoming else { return }
-
-            appStore.trainCode = selectedIncoming.trainCode
-            appStore.carDirection = selectedIncoming.carDirection
             if boardingState == .boarded {
-                coordinator.push(AppScene.inputCarCode(departure: departure, arrival: arrival))
+                coordinator.push(
+                    AppScene.inputCarCode(
+                        departure: departure,
+                        arrival: arrival,
+                        incoming: selectedIncoming
+                    )
+                )
             } else {
-                coordinator.push(AppScene.inputCarCodeGuide(departure: departure, arrival: arrival))
+                coordinator.push(
+                    AppScene.inputCarCodeGuide(
+                        departure: departure,
+                        arrival: arrival,
+                        incoming: selectedIncoming
+                    )
+                )
             }
         }
     }

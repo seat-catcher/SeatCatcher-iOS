@@ -33,4 +33,27 @@ extension Date {
             return "방금 전"
         }
     }
+
+    var amPmTime: String {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "ko_KR") // 한글 오전/오후
+        formatter.dateFormat = "a h:mm"
+        return formatter.string(from: self)
+    }
+
+    /// "HH:mm" 포맷 (24시간제 예: "13:11")
+    var hour24Time: String {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "ko_KR")
+        formatter.dateFormat = "HH:mm"
+        return formatter.string(from: self)
+    }
+
+    /// "h:mm" 포맷 (12시간제, 오전/오후 미표시 예: "1:11")
+    var hour12Time: String {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "ko_KR")
+        formatter.dateFormat = "h:mm"
+        return formatter.string(from: self)
+    }
 }

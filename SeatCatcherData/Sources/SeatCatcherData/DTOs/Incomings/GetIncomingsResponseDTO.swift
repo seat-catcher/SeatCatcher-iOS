@@ -33,10 +33,9 @@ extension GetIncomingsResponseDTO: ResponseDTO {
 
     var domainModel: Incoming {
         let (carDirection, trainCode, destination) = parseOrdKey(ordkey)
-        let arrivalTime = getFormattedArrivalTime(barvlDt: barvlDt)
         return Incoming(
             trainCode: trainCode,
-            arrivalTime: arrivalTime,
+            arrivalTime: Date().addingTimeInterval(TimeInterval(Int(barvlDt) ?? 0)),
             carDirection: carDirection,
             destination: destination
         )
@@ -62,18 +61,5 @@ extension GetIncomingsResponseDTO: ResponseDTO {
         let destination = String(chars[5...])
 
         return (carDirection, trainCode, destination)
-    }
-
-    private func getFormattedArrivalTime(barvlDt: String) -> String {
-        let seconds = Int(barvlDt) ?? 180
-        let baseDate = Date()
-
-        let arrivalDate = baseDate.addingTimeInterval(TimeInterval(seconds))
-
-        let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "ko_KR")
-        formatter.dateFormat = "HH:mm"
-
-        return formatter.string(from: arrivalDate)
     }
 }
