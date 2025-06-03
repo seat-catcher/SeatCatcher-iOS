@@ -205,14 +205,11 @@ private struct PathCardInTrainsit: View {
         TimelineView(.periodic(from: .now, by: 5)) { timeline in
             let now = timeline.date
             var remainingTimeString: String {
-                "\(Int(viewModel.state.expectedRemainingTime ?? 0) / 60)분 남았어요"
+                let remainingTime = max(Int(viewModel.state.expectedRemainingTime ?? 0) / 60, 0)
+                return "\(remainingTime)분 남았어요"
             }
-            var departureTimeString: String {
-                (viewModel.store.departureTime ?? now).amPmTime
-            }
-            var arrivalTimeString: String {
-                (viewModel.store.expectedArrivalTime ?? now).hour12Time ?? ""
-            }
+            var departureTimeString: String { (viewModel.store.departureTime ?? now).amPmTime }
+            var arrivalTimeString: String { (viewModel.store.expectedArrivalTime ?? now).hour12Time ?? "" }
             var elapsedTime: Double? {
                 guard let departureTime = viewModel.store.departureTime else { return nil }
                 return now.timeIntervalSince(departureTime)
