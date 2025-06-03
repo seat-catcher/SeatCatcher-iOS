@@ -64,16 +64,18 @@ public final class InputCarCodeViewModel: ViewModel {
                 )
                 let arrivalTimePublisher = subscribeArrivalTimeUseCase.execute(pathHistoryId: pathHistoryId)
 
-                appStore.trainCode = incoming.trainCode
-                appStore.carDirection = incoming.carDirection
-                appStore.incoming = incoming
-                appStore.departure = departure
-                appStore.arrival = arrival
-                appStore.departureTime = Date()
-                appStore.expectedArrivalTime = expectedArrivalTime
-                appStore.subscribeArrivalPublisher(arrivalTimePublisher)
+                await MainActor.run {
+                    appStore.trainCode = incoming.trainCode
+                    appStore.carDirection = incoming.carDirection
+                    appStore.incoming = incoming
+                    appStore.departure = departure
+                    appStore.arrival = arrival
+                    appStore.departureTime = Date()
+                    appStore.expectedArrivalTime = expectedArrivalTime
+                    appStore.subscribeArrivalPublisher(arrivalTimePublisher)
 
-                await MainActor.run { coordinator.push(AppScene.selectSeatSection) }
+                    coordinator.push(AppScene.selectSeatSection)
+                }
             }
         }
     }

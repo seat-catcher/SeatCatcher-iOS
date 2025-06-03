@@ -18,8 +18,6 @@ public final class GetPathHistoriesUseCaseImpl: GetPathHistoriesUseCase {
         self.pathHistoriesRepository = pathHistoriesRepository
     }
 
-    /// - Parameters:
-    ///   - cursor: 마지막 PathHistory의 Id를 넘기며, 첫 호출 시 nil을 넘깁니다.
     public func execute() async throws -> [PathHistory] {
         let pathHistories = try await pathHistoriesRepository.getPathHistories()
         return pathHistories
