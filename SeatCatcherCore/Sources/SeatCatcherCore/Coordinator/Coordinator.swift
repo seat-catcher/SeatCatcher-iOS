@@ -40,7 +40,7 @@ public extension Coordinator {
     }
 
     func popToRoot() {
-        if !path.isEmpty { path.removeLast(path.count - 1) }
+        if !path.isEmpty { path.removeLast(path.count) }
     }
 
     func presentSheet(_ sheet: any AppRoute, onDismiss: (() -> Void)? = nil) {

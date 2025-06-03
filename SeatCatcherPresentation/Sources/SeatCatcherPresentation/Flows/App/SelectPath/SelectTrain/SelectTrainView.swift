@@ -140,7 +140,7 @@ private struct IncomingsCell: View {
 
     var body: some View {
         HStack(spacing: 10) {
-            Text(incoming.arrivalTime)
+            Text(incoming.arrivalTime.hour24Time)
                 .font(.B02_SB)
                 .foregroundStyle(.scGreen)
                 .monospacedDigit()

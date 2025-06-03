@@ -24,6 +24,7 @@ public protocol DIContainer {
 
     // MARK: - Station UseCases
     func resolveSearchStationsUseCase() -> SearchStationsUseCase
+    func resolveGetStationUseCase() -> GetStationUseCase
 
     // MARK: - PathHistories UseCases
     func resolveGetPathHistoriesUseCase() -> GetPathHistoriesUseCase

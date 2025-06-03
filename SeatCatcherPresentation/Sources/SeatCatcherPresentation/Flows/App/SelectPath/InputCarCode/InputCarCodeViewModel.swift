@@ -23,6 +23,7 @@ public final class InputCarCodeViewModel: ViewModel {
 
     let departure: Station
     let arrival: Station
+    let incoming: Incoming
 
     private let appStore: AppStore
 
@@ -34,6 +35,7 @@ public final class InputCarCodeViewModel: ViewModel {
     public init(
         departure: Station,
         arrival: Station,
+        incoming: Incoming,
         appStore: AppStore,
         startJourneyUseCase: StartJourneyUseCase,
         subscribeArrivalTimeUseCase: SubscribeArrivalTimeUseCase,
@@ -41,6 +43,7 @@ public final class InputCarCodeViewModel: ViewModel {
     ) {
         self.departure = departure
         self.arrival = arrival
+        self.incoming = incoming
         self.appStore = appStore
         self.startJourneyUseCase = startJourneyUseCase
         self.subscribeArrivalTimeUseCase = subscribeArrivalTimeUseCase
@@ -61,6 +64,12 @@ public final class InputCarCodeViewModel: ViewModel {
                 )
                 let arrivalTimePublisher = subscribeArrivalTimeUseCase.execute(pathHistoryId: pathHistoryId)
 
+                appStore.trainCode = incoming.trainCode
+                appStore.carDirection = incoming.carDirection
+                appStore.incoming = incoming
+                appStore.departure = departure
+                appStore.arrival = arrival
+                appStore.departureTime = Date()
                 appStore.expectedArrivalTime = expectedArrivalTime
                 appStore.subscribeArrivalPublisher(arrivalTimePublisher)
 

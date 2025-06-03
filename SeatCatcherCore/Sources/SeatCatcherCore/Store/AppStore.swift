@@ -23,10 +23,11 @@ public final class AppStore {
     public var carDirection: CarDirection? // 하행 상행 구분
     public var isSitting: Bool // 앉아있음 여부
 
+    public var departure: Station?
+    public var arrival: Station?
+    public var incoming: Incoming?
+    public var departureTime: Date?
     public var expectedArrivalTime: Date?
-    public var expectedRemainingTime: TimeInterval? {
-         expectedArrivalTime?.timeIntervalSinceNow
-    }
 
     public init(
         user: User,

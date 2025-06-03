@@ -58,7 +58,8 @@ final class DIContainerImpl {
 
     // MARK: - Stations UseCase Instances
     private lazy var searchStationsUseCase = SearchStationsUseCaseImpl(stationsRepository: stationsRepository)
-    
+    private lazy var getStationUseCase = GetStationUseCaseImpl(stationsRepository: stationsRepository)
+
     // MARK: - Seat UseCases Instances
     private lazy var getSeatInTrainCarUseCase = GetSeatInTrainCarUseCaseImpl(seatRepository: seatRepository)
     private lazy var getSeatInSectionUseCase = GetSeatInSectionUseCaseImpl()
@@ -93,6 +94,7 @@ extension DIContainerImpl: DIContainer {
 
     // MARK: - Station UseCases
     func resolveSearchStationsUseCase() -> SearchStationsUseCase { return searchStationsUseCase }
+    func resolveGetStationUseCase() -> GetStationUseCase { return getStationUseCase }
 
     // MARK: - PathHistories UseCases
     func resolveGetPathHistoriesUseCase() ->  GetPathHistoriesUseCase { return getPathHistoriesUseCase }

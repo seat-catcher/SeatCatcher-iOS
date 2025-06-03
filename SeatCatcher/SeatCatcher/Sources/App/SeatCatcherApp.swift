@@ -92,7 +92,6 @@ struct SeatCatcherApp: App {
                 }
             }
             .onOpenURL { handleURL($0) }
-            .environment(appStore)
         }
     }
 }

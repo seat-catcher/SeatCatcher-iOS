@@ -23,12 +23,9 @@ extension PostStartJourneyResponseDTO: ResponseDTO {
     var domainModel: (pathHistoryId: Int, expectedArrivalTime: Date) {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd HH:mm"
-        formatter.timeZone = TimeZone(identifier: "Asia/Seoul")
-        dump("string")
+        formatter.timeZone = TimeZone(abbreviation: "UTC")
         dump(expectedArrivalTime)
         if let expectedArrivalTime = formatter.date(from: expectedArrivalTime) {
-            dump("date")
-            dump(expectedArrivalTime)
             return (pathHistoryId: pathHistoryId, expectedArrivalTime: expectedArrivalTime)
         } else {
             return (pathHistoryId: pathHistoryId, expectedArrivalTime: Date().addingTimeInterval(600))
