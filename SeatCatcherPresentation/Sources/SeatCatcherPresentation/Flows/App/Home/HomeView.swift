@@ -35,6 +35,15 @@ public struct HomeView: View {
                 viewModel.action(.notificationButtonTapped)
             })
         )
+        .alert(
+            viewModel.state.isCreditStoreAlertPresented,
+            alert: .init(
+                title: "아직 준비 중이에요",
+                subtitle: "곧 크레딧스토어가 열려요",
+                buttonTitle: "돌아가기",
+                buttonAction: { viewModel.action(.alertPrimaryButtonTapped) }
+            )
+        )
     }
 }
 
@@ -44,7 +53,7 @@ private struct UserInfoCardView: View {
 
     var body: some View {
         Button {
-
+            viewModel.action(.userInfoCardTapped)
         } label: {
             HStack(alignment: .center, spacing: 12) {
                 Image(viewModel.store.user.profileImage.image)
@@ -106,7 +115,7 @@ private struct ActionPanelView: View {
 
     var body: some View {
         HStack(spacing: 11) {
-            HomeCreditStoreButton()
+            HomeCreditStoreButton(viewModel: viewModel)
             HomeCatchSeatButton(viewModel: viewModel)
         }
     }
@@ -137,8 +146,12 @@ private struct PathCardContentView: View {
 }
 
 private struct HomeCreditStoreButton: View {
+    let viewModel: HomeViewModel
+
     var body: some View {
-        Button {} label: {
+        Button {
+            viewModel.action(.creditStoreButtonTapped)
+        } label: {
             VStack {
                 HStack {
                     Text("크레딧스토어")

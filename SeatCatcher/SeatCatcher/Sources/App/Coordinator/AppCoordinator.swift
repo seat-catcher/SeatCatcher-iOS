@@ -48,6 +48,13 @@ final class AppCoordinator: Coordinator {
                 coordinator: self
             )
             HomeView(viewModel: homeViewModel)
+        case .mypage:
+            let mypageViewModel = MyPageViewModel(
+                appStore: diContainer.resolveAppStore(),
+                logoutUseCase: diContainer.resolveLogoutUseCase(),
+                coordinator: self
+            )
+            MyPageView(viewModel: mypageViewModel)
         case .notifications:
             let notificationsViewModel = NotificationsViewModel(
                 coordinator: self

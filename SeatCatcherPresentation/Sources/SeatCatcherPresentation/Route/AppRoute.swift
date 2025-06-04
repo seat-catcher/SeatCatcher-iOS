@@ -11,6 +11,7 @@ import SeatCatcherDomain
 
 public enum AppScene: AppRoute {
     case home
+    case mypage
     case notifications
     case selectBoardingState
     case selectLine(boardingState: BoardingState)
@@ -34,6 +35,7 @@ public enum AppScene: AppRoute {
     public var id: String {
         switch self {
         case .home: return "home"
+        case .mypage: return "mypage"
         case .notifications: return "notifications"
         case .selectBoardingState: return "selectBoardingState"
         case .selectLine: return "selectLine"
