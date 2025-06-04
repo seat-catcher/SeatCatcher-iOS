@@ -9,7 +9,7 @@ import Foundation
 
 /// 좌석점유자 - 좌석 요청 거절 시 호출
 public protocol RejectRequestSeatUseCase {
-    func execute(_ seat: Seat, requesterId: Int, creditAmount: Int) async throws
+    func execute(_ seat: Seat, requester: SeatRequester) async throws
 }
 
 public final class RejectRequestSeatUseCaseImpl: RejectRequestSeatUseCase {
@@ -20,7 +20,9 @@ public final class RejectRequestSeatUseCaseImpl: RejectRequestSeatUseCase {
         self.seatRepository = seatRepository
     }
     
-    public func execute(_ seat: Seat, requesterId: Int, creditAmount: Int) async throws {
-        try await seatRepository.rejectRequestSeat(seat, requesterId: requesterId, creditAmount: creditAmount)
+    public func execute(_ seat: Seat, requester: SeatRequester) async throws {
+        if let creditAmount = requester.creditAmount {
+            try await seatRepository.rejectRequestSeat(seat, requesterId: requester.requesterId, creditAmount: creditAmount)
+        }
     }
 }

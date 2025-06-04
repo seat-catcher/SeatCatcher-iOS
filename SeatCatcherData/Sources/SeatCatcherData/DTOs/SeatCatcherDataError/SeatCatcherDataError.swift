@@ -12,6 +12,7 @@ enum SeatCatcherDataError: Error {
     case FailedToGetRowCount // 좌석 개수 파싱 오류
     case InvalidSeatType // 좌석 타입 파싱 오류
     case nullValue // 빈 데이터 수신 오류
+    case invalidTopic // 잘못된 토픽 오류
     
     var description: String {
         switch self {
@@ -19,6 +20,7 @@ enum SeatCatcherDataError: Error {
         case .FailedToGetRowCount: "좌석 개수 파싱 오류"
         case .InvalidSeatType: "좌석 타입 파싱 오류"
         case .nullValue: "빈 데이터 수신 오류"
+        case .invalidTopic: "잘못된 토픽 오류"
         }
     }
 }

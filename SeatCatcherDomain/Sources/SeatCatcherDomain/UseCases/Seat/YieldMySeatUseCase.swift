@@ -1,5 +1,5 @@
 //
-//  AcceptRequestSeatUseCase.swift
+//  YieldMySeatUseCase.swift
 //  SeatCatcherDomain
 //
 //  Created by 황채웅 on 6/4/25.
@@ -7,12 +7,12 @@
 
 import Foundation
 
-/// 좌석점유자 - 좌석 요청 수락 시 호출
-public protocol AcceptRequestSeatUseCase {
+/// 좌석점유자 - 좌석 교환 성공 시 호출
+public protocol YieldMySeatUseCase {
     func execute(_ seat: Seat, requester: SeatRequester) async throws
 }
 
-public final class AcceptRequestSeatUseCaseImpl: AcceptRequestSeatUseCase {
+public final class YieldMySeatUseCaseImpl: YieldMySeatUseCase {
     
     private let seatRepository: SeatRepository
     private let seatStompRepository: SeatStompRepository
@@ -23,7 +23,7 @@ public final class AcceptRequestSeatUseCaseImpl: AcceptRequestSeatUseCase {
     }
     
     public func execute(_ seat: Seat, requester: SeatRequester) async throws {
-        /// 좌석 요청을 수락합니다
-        try await seatRepository.acceptRequestSeat(seat, requesterId: requester.requesterId)
+        /// 좌석 요청을 수신하는 STOMP 구독을 취소합니다
+        try await seatStompRepository.unsubscribeFromSeatRequest(seat, requesterId: requester.requesterId)
     }
 }
