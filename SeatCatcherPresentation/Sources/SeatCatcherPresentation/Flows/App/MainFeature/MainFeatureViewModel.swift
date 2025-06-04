@@ -25,6 +25,7 @@ public final class MainFeatureViewModel: ViewModel {
         case willCancelSeat // 좌석 취소
         case backToSeatSectionPage // 좌석 구역 페이지로 이동
         case manageSeatSection(SeatSectionAction)
+        case unsubscribe // STOMP 연결 해제
     }
     
     enum SeatSectionAction {
@@ -213,6 +214,8 @@ public final class MainFeatureViewModel: ViewModel {
             cancelSeat()
         case .backToSeatSectionPage:
             coordinator.pop()
+        case .unsubscribe:
+            unsubscribe()
         }
     }
     
