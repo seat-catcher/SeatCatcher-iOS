@@ -25,7 +25,6 @@ public final class MainFeatureViewModel: ViewModel {
         case willCancelSeat // 좌석 취소
         case backToSeatSectionPage // 좌석 구역 페이지로 이동
         case manageSeatSection(SeatSectionAction)
-        case unsubscribe // STOMP 연결 해제
     }
     
     enum SeatSectionAction {
@@ -215,8 +214,6 @@ public final class MainFeatureViewModel: ViewModel {
             cancelSeat()
         case .backToSeatSectionPage:
             coordinator.pop()
-        case .unsubscribe:
-            unsubscribe()
         }
     }
     
@@ -260,7 +257,7 @@ public final class MainFeatureViewModel: ViewModel {
     }
     
     /// 구독 해제
-    private func unsubscribe() { // TODO: AppDelegate와 연결하여 호출 필요
+    private func unsubscribe() { // TODO: - 백그라운드에서도 연결 유지해야하므로 추후 검토 후 삭제
         if let subscribeTrainUseCase {
             subscribeTrainUseCase.unsubscribe(trainCode: state.trainCode)
             cancellables.removeAll()
