@@ -23,15 +23,30 @@ public final class InputCarCodeViewModel: ViewModel {
 
     let departure: Station
     let arrival: Station
+    let incoming: Incoming
 
-    let startJourneyUseCase: StartJourneyUseCase
+    private let appStore: AppStore
+
+    private let startJourneyUseCase: StartJourneyUseCase
+    private let subscribeArrivalTimeUseCase: SubscribeArrivalTimeUseCase
 
     let coordinator: Coordinator
 
-    public init(departure: Station, arrival: Station, startJourneyUseCase: StartJourneyUseCase, coordinator: Coordinator) {
+    public init(
+        departure: Station,
+        arrival: Station,
+        incoming: Incoming,
+        appStore: AppStore,
+        startJourneyUseCase: StartJourneyUseCase,
+        subscribeArrivalTimeUseCase: SubscribeArrivalTimeUseCase,
+        coordinator: Coordinator
+    ) {
         self.departure = departure
         self.arrival = arrival
+        self.incoming = incoming
+        self.appStore = appStore
         self.startJourneyUseCase = startJourneyUseCase
+        self.subscribeArrivalTimeUseCase = subscribeArrivalTimeUseCase
         self.coordinator = coordinator
     }
 
@@ -42,12 +57,25 @@ public final class InputCarCodeViewModel: ViewModel {
         case .nextButtonTapped:
             let trainCode = state.carCodeDigits.joined()
             Task {
-                let pathHistoryId = try await startJourneyUseCase.execute(
+                let (pathHistoryId, expectedArrivalTime) = try await startJourneyUseCase.execute(
                     departure: departure,
                     arrival: arrival,
                     trainCode: trainCode
                 )
-                await MainActor.run { coordinator.push(AppScene.selectSeatSection) }
+                let arrivalTimePublisher = subscribeArrivalTimeUseCase.execute(pathHistoryId: pathHistoryId)
+
+                await MainActor.run {
+                    appStore.trainCode = incoming.trainCode
+                    appStore.carDirection = incoming.carDirection
+                    appStore.incoming = incoming
+                    appStore.departure = departure
+                    appStore.arrival = arrival
+                    appStore.departureTime = Date()
+                    appStore.expectedArrivalTime = expectedArrivalTime
+                    appStore.subscribeArrivalPublisher(arrivalTimePublisher)
+
+                    coordinator.push(AppScene.selectSeatSection)
+                }
             }
         }
     }

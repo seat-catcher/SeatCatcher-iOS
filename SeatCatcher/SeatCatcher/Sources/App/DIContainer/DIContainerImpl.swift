@@ -24,7 +24,10 @@ final class DIContainerImpl {
     private lazy var tokenRepository = TokenRepositoryImpl(networkService: networkService)
     private lazy var userRepository = UserRepositoryImpl(networkService: networkService)
     private lazy var stationsRepository = StationsRepositoryImpl(networkService: networkService)
-    private lazy var pathHistoriesRepository = PathHistoriesRepositoryImpl(networkService: networkService)
+    private lazy var pathHistoriesRepository = PathHistoriesRepositoryImpl(
+        networkService: networkService,
+        stompClientService: stompClientService
+    )
     private lazy var seatRepository = SeatRepositoryImpl(networkService: networkService)
     private lazy var incomingsRepository = IncomingsRepositoryImpl(networkService: networkService)
     private lazy var seatStompRepository = SeatStompRepositoryImpl(stompClientService: stompClientService)
@@ -56,7 +59,8 @@ final class DIContainerImpl {
 
     // MARK: - Stations UseCase Instances
     private lazy var searchStationsUseCase = SearchStationsUseCaseImpl(stationsRepository: stationsRepository)
-    
+    private lazy var getStationUseCase = GetStationUseCaseImpl(stationsRepository: stationsRepository)
+
     // MARK: - Seat UseCases Instances
     private lazy var getSeatInTrainCarUseCase = GetSeatInTrainCarUseCaseImpl(seatRepository: seatRepository)
     private lazy var getSeatInSectionUseCase = GetSeatInSectionUseCaseImpl()
@@ -74,6 +78,7 @@ final class DIContainerImpl {
     private lazy var getPathHistoriesUseCase = GetPathHistoriesUseCaseImpl(pathHistoriesRepository: pathHistoriesRepository)
     private lazy var postPathHistoriesUseCase = PostPathHistoriesImpl(pathHistoriesRespotiry: pathHistoriesRepository)
     private lazy var startJourneyUseCase = StartJourneyUseCaseImpl(pathHistoriesRepository: pathHistoriesRepository)
+    private lazy var subscribeArrivalTimeUseCase = SubscribeArrivalTimeUseCaseImpl(pathHistoriesRepository: pathHistoriesRepository)
 
     // MARK: - Incomings UseCase Instances
     private lazy var getIncomingsUseCase = GetIncomingsUseCaseImpl(incomingsRepository: incomingsRepository)
@@ -95,11 +100,13 @@ extension DIContainerImpl: DIContainer {
 
     // MARK: - Station UseCases
     func resolveSearchStationsUseCase() -> SearchStationsUseCase { return searchStationsUseCase }
+    func resolveGetStationUseCase() -> GetStationUseCase { return getStationUseCase }
 
     // MARK: - PathHistories UseCases
     func resolveGetPathHistoriesUseCase() ->  GetPathHistoriesUseCase { return getPathHistoriesUseCase }
     func resolvePostPathHistoriesUseCase() -> PostPathHistoriesUseCase { return postPathHistoriesUseCase }
     func resolveStartJourneyUseCase() -> StartJourneyUseCase { return startJourneyUseCase }
+    func resolveSubscribeArrivalTimeUseCase() ->  SubscribeArrivalTimeUseCase { return subscribeArrivalTimeUseCase }
 
     // MARK: - Seat UseCases
     func resolveGetSeatInTrainCarUseCase() -> GetSeatInTrainCarUseCase { return getSeatInTrainCarUseCase }

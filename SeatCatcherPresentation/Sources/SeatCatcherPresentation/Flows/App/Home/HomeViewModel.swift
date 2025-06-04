@@ -12,25 +12,109 @@ import SeatCatcherDomain
 @Observable
 public final class HomeViewModel: ViewModel {
     enum Action {
+        case viewWillAppear
+        case quickBoardingButtonTapped
         case catchSeatButtonTapped
+        case notificationButtonTapped
     }
 
-    struct State {}
+    struct State {
+        let store: AppStore
+        enum UserStatus {
+            case inTransit
+            case pathExists
+            case pathNotExists
+        }
+
+        var pathHistory: PathHistory?
+        var incoming: Incoming?
+        var guidingText: String {
+            switch userStatus {
+            case .inTransit: "현재 이용중인 경로"
+            case .pathExists, .pathNotExists: "자주 이용한 경로"
+            }
+        }
+
+        var userStatus: UserStatus {
+            if store.expectedArrivalTime != nil { .inTransit }
+            else if pathHistory == nil { .pathNotExists }
+            else { .pathExists }
+        }
+
+        var expectedRemainingTime: TimeInterval? {
+            store.expectedArrivalTime?.timeIntervalSinceNow
+        }
+
+        var totalTimeInterval: TimeInterval? {
+            store.expectedArrivalTime?.timeIntervalSince(store.departureTime ?? Date())
+        }
+    }
 
     let store: AppStore
+    let getPathHistoriesUseCase: GetPathHistoriesUseCase
+    let getStationUseCase: GetStationUseCase
+    let getIncomingsUseCase: GetIncomingsUseCase
     let coordinator: Coordinator
 
-    public init(store: AppStore, coordinator: Coordinator) {
-        self.store = store
-        self.coordinator = coordinator
-    }
+    private(set) var state: State
 
-    private(set) var state = State()
+    @MainActor
+    public init(
+        store: AppStore,
+        getPathHistoriesUseCase: GetPathHistoriesUseCase,
+        getStationUseCase: GetStationUseCase,
+        getIncomingsUseCase: GetIncomingsUseCase,
+        coordinator: Coordinator
+    ) {
+        self.store = store
+        self.getPathHistoriesUseCase = getPathHistoriesUseCase
+        self.getStationUseCase = getStationUseCase
+        self.getIncomingsUseCase = getIncomingsUseCase
+        self.coordinator = coordinator
+
+        self.state = State(store: store)
+    }
 
     func action(_ action: Action) {
         switch action {
+        case .viewWillAppear:
+            Task {
+                guard let pathHistories = try? await getPathHistoriesUseCase.execute(),
+                      let firstHistory = pathHistories.first,
+                      let departure = try? await getStationUseCase.execute(id: firstHistory.departureStationId),
+                      let arrival = try? await getStationUseCase.execute(id: firstHistory.arrivalStationId),
+                      let incoming = try? await getIncomingsUseCase.execute(departure: departure, arrival: arrival),
+                      let firstIncoming = incoming.first
+                else { return }
+
+                await MainActor.run {
+                    state.pathHistory = firstHistory
+                    state.incoming = firstIncoming
+                }
+            }
+        case .quickBoardingButtonTapped:
+            Task { [getStationUseCase] in
+                guard let pathHistory = state.pathHistory,
+                      let departure = try? await getStationUseCase.execute(id: pathHistory.departureStationId),
+                      let arrival = try? await getStationUseCase.execute(id: pathHistory.arrivalStationId),
+                      let incoming = state.incoming
+                else { return }
+                
+                await MainActor.run {
+                    coordinator.push(
+                        AppScene.inputCarCode(
+                            departure: departure,
+                            arrival: arrival,
+                            incoming: incoming
+                        )
+                    )
+                }
+            }
+
         case .catchSeatButtonTapped:
             coordinator.push(AppScene.selectBoardingState)
+        case .notificationButtonTapped:
+            coordinator.push(AppScene.notifications)
         }
     }
 }

@@ -91,8 +91,7 @@ public final class MainFeatureViewModel: ViewModel {
     private let cancelSeatRequestUseCase : CancelRequestSeatUseCase?
     /// 옵셔널 유즈케이스 - 좌석 점유자
     private let acceptSeatRequestUseCase : AcceptRequestSeatUseCase?
-    private let rejectSeatRequestUseCase : RejectRequestSeatUseCase?
-    
+    private let rejectSeatRequestUseCase : RejectRequestSeatUseCase?    
     
     // MARK: Initialize
     @MainActor
@@ -243,7 +242,8 @@ public final class MainFeatureViewModel: ViewModel {
         switch action {
         case .willAppear:
             fetchSeatInSection()
-            if state.userStatus == .standing || state.userStatus == .seated {
+            if state.userStatus 
+          .standing || state.userStatus == .seated {
                 subscribeToTrain(trainCode: state.trainCode, carCode: state.carCode)
                 setupStoreObservers()
             }
@@ -391,6 +391,7 @@ public final class MainFeatureViewModel: ViewModel {
                         state.seatSectionState.selectedSeat = state.seatSectionState.mySeat
                     }
                 }
+
             } catch {
                 print(error.localizedDescription)
             }

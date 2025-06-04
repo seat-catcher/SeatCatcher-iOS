@@ -42,6 +42,9 @@ final class AppCoordinator: Coordinator {
             let store = diContainer.resolveAppStore()
             let homeViewModel = HomeViewModel(
                 store: store,
+                getPathHistoriesUseCase: diContainer.resolveGetPathHistoriesUseCase(),
+                getStationUseCase: diContainer.resolveGetStationUseCase(),
+                getIncomingsUseCase: diContainer.resolveGetIncomingsUseCase(),
                 coordinator: self
             )
             HomeView(viewModel: homeViewModel)
@@ -82,18 +85,22 @@ final class AppCoordinator: Coordinator {
                 coordinator: self
             )
             SelectTrainView(viewModel: selectTrainViewModel)
-        case let .inputCarCodeGuide(departure, arrival):
+        case let .inputCarCodeGuide(departure, arrival, incoming):
             let inputCarCodeGuidingViewModel = InputCarCodeGuidingViewModel(
                 departure: departure,
                 arrival: arrival,
+                incoming: incoming,
                 coordinator: self
             )
             InputCarCodeGuidingView(viewModel: inputCarCodeGuidingViewModel)
-        case let .inputCarCode(departure, arrival):
+        case let .inputCarCode(departure, arrival, incoming):
             let inputCarCodeViewModel = InputCarCodeViewModel(
                 departure: departure,
                 arrival: arrival,
+                incoming: incoming,
+                appStore: diContainer.resolveAppStore(),
                 startJourneyUseCase: diContainer.resolveStartJourneyUseCase(),
+                subscribeArrivalTimeUseCase: diContainer.resolveSubscribeArrivalTimeUseCase(),
                 coordinator: self
             )
             InputCarCodeView(viewModel: inputCarCodeViewModel)

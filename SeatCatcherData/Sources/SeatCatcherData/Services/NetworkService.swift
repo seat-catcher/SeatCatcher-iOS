@@ -201,8 +201,8 @@ public struct NetworkService: Sendable {
     }
 
     // MARK: - PathHistories
-    func getPathHistories(cursor: Int?) async throws -> GetPathHistoriesResponseDTO {
-        let response = try await provider.request(.getPathHistories(cursor: cursor))
+    func getPathHistories() async throws -> GetPathHistoriesResponseDTO {
+        let response = try await provider.request(.getPathHistories)
         let responseDTO = try JSONDecoder().decode(GetPathHistoriesResponseDTO.self, from: response)
         return responseDTO
     }

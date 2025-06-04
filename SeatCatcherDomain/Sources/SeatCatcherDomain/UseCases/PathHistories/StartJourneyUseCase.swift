@@ -8,7 +8,14 @@
 import Foundation
 
 public protocol StartJourneyUseCase {
-    func execute(departure: Station, arrival: Station, trainCode: String) async throws -> Int
+    func execute(
+        departure: Station,
+        arrival: Station,
+        trainCode: String
+    ) async throws -> (
+        pathHistoryId: Int,
+        expectedArrivalTime: Date
+    )
 }
 
 public final class StartJourneyUseCaseImpl: StartJourneyUseCase {
@@ -18,12 +25,19 @@ public final class StartJourneyUseCaseImpl: StartJourneyUseCase {
         self.pathHistoriesRepository = pathHistoriesRepository
     }
 
-    public func execute(departure: Station, arrival: Station, trainCode: String) async throws -> Int {
-        let pathHistoriesID = try await pathHistoriesRepository.startJourney(
+    public func execute(
+        departure: Station,
+        arrival: Station,
+        trainCode: String
+    ) async throws -> (
+        pathHistoryId: Int,
+        expectedArrivalTime: Date
+    ) {
+        let (pathHistoryId, expectedArrivalTime) = try await pathHistoriesRepository.startJourney(
             departureStationId: departure.id,
             arrivalStationId: arrival.id,
             trainCode: trainCode
         )
-        return pathHistoriesID
+        return (pathHistoryId, expectedArrivalTime)
     }
 }

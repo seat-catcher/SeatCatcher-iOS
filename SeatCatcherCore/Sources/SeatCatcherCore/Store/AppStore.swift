@@ -5,12 +5,15 @@
 //  Created by 박현수 on 4/14/25.
 //
 
+import Combine
 import Foundation
 import Combine
 import SeatCatcherDomain
 
 @Observable
 public final class AppStore {
+    private var arrivalTimeCancellables = Set<AnyCancellable>()
+
     public var user: User
     
     // MARK: - 메인피쳐
@@ -61,6 +64,12 @@ public final class AppStore {
     private var cancellables = Set<AnyCancellable>() // subscriber 저장
     private var subscribedTopics: Set<String> = [] // 구독한 토픽
     
+    public var departure: Station?
+    public var arrival: Station?
+    public var incoming: Incoming?
+    public var departureTime: Date?
+    public var expectedArrivalTime: Date?
+
     public init(
         user: User,
         trainCode: String? = nil,
@@ -68,7 +77,8 @@ public final class AppStore {
         seatSectionType: SeatSectionType? = nil,
         isBlocked: Bool = true,
         carDirection: CarDirection? = nil,
-        isSitting: Bool = false
+        isSitting: Bool = false,
+        expectedArrivalTime: Date? = nil
     ) {
         self.user = user
         self.trainCode = trainCode
@@ -77,6 +87,7 @@ public final class AppStore {
         self.isBlocked = isBlocked
         self.carDirection = carDirection
         self.isSitting = isSitting
+        self.expectedArrivalTime = expectedArrivalTime
     }
 
     public func setUser(_ user: User) {
@@ -143,5 +154,17 @@ public final class AppStore {
     public func unsubscribeAll() {
         cancellables.removeAll()
         subscribedTopics.removeAll()
+
+    public func subscribeArrivalPublisher(_ publisher: AnyPublisher<Date, Never>) {
+        arrivalTimeCancellables.removeAll()
+
+        publisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] newDate in
+                dump("appStore Received new Date")
+                dump(newDate)
+                self?.expectedArrivalTime = newDate
+            }
+            .store(in: &arrivalTimeCancellables)
     }
 }

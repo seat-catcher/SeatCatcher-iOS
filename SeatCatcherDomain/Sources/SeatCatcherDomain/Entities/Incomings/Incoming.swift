@@ -10,7 +10,7 @@ import Foundation
 public struct Incoming: Equatable, Identifiable, Sendable {
     public var id: String { trainCode }
     public let trainCode: String
-    public let arrivalTime: String
+    public let arrivalTime: Date
     public let carDirection: CarDirection
     public let destination: String
 
@@ -18,7 +18,7 @@ public struct Incoming: Equatable, Identifiable, Sendable {
         lhs.trainCode == rhs.trainCode
     }
 
-    public init(trainCode: String, arrivalTime: String, carDirection: CarDirection, destination: String) {
+    public init(trainCode: String, arrivalTime: Date, carDirection: CarDirection, destination: String) {
         self.trainCode = trainCode
         self.arrivalTime = arrivalTime
         self.carDirection = carDirection

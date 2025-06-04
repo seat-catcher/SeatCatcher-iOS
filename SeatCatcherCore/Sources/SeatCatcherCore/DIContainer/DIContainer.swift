@@ -24,11 +24,13 @@ public protocol DIContainer {
 
     // MARK: - Station UseCases
     func resolveSearchStationsUseCase() -> SearchStationsUseCase
+    func resolveGetStationUseCase() -> GetStationUseCase
 
     // MARK: - PathHistories UseCases
     func resolveGetPathHistoriesUseCase() -> GetPathHistoriesUseCase
     func resolvePostPathHistoriesUseCase() -> PostPathHistoriesUseCase
     func resolveStartJourneyUseCase() -> StartJourneyUseCase
+    func resolveSubscribeArrivalTimeUseCase() -> SubscribeArrivalTimeUseCase
 
     // MARK: - Seat UseCases
     func resolveGetSeatInTrainCarUseCase() -> GetSeatInTrainCarUseCase
