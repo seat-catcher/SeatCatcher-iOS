@@ -24,6 +24,7 @@ public protocol SeatRepository: Sendable {
     func cancelRequestSeat(seatId: Int, creditAmount: Int) async throws
     /// 좌석점유자 - 요청 수락
     func acceptRequestSeat(seatId: Int, requesterId: Int) async throws
+    func changeSeatOccupant(seatId: Int, creditAmount: Int) async throws
     /// 좌석점유자 - 요청 거절
     func rejectRequestSeat(seatId: Int, requesterId: Int, creditAmount: Int) async throws
 }

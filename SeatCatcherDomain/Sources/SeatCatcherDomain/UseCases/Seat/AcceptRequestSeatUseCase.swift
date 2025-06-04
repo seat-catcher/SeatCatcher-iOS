@@ -9,7 +9,7 @@ import Foundation
 
 /// 좌석점유자 - 좌석 요청 수락 시 호출
 public protocol AcceptRequestSeatUseCase {
-    func execute(seat: Seat, requesterId: Int) async throws 
+    func execute(seat: Seat, requesterId: Int, creditAmount: Int) async throws
 }
 
 public final class AcceptRequestSeatUseCaseImpl: AcceptRequestSeatUseCase {
@@ -20,7 +20,8 @@ public final class AcceptRequestSeatUseCaseImpl: AcceptRequestSeatUseCase {
         self.seatRepository = seatRepository
     }
     
-    public func execute(seat: Seat, requesterId: Int) async throws {
-        try await seatRepository.acceptRequestSeat(seatId: seat.id, requesterId: requesterId)
+    public func execute(seat: Seat, requesterId: Int, creditAmount: Int) async throws {
+        try await seatRepository.acceptRequestSeat(seatId: seat.id, requesterId: requesterId) // 요청 수락
+        try await seatRepository.changeSeatOccupant(seatId: seat.id, creditAmount: creditAmount) // 좌석 교환
     }
 }

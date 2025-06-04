@@ -247,6 +247,10 @@ public struct NetworkService: Sendable {
     func acceptSeatRequest(seatId: Int, requesterId: Int) async throws {
         try await provider.request(.acceptSeatRequest(seatId: seatId, requesterId: requesterId))
     }
+    func patchSeatOccupant(seatId: Int, creditAmount: Int) async throws {
+        let requestDTO = PatchSeatOccupantDTO(seatId: seatId, creditAmount: creditAmount)
+        try await provider.request(.patchSeatOccupant(requestDTO: requestDTO))
+    }
     func rejectSeatRequest(seatId: Int, requesterId: Int, creditAmount: Int) async throws {
         try await provider.request(.rejectSeatRequest(seatId: seatId, requesterId: requesterId, creditAmount: creditAmount))
     }

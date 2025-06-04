@@ -33,6 +33,7 @@ enum SeatCatcherAPI: Sendable {
     case postSeatRequest(seatId: Int, creditAmount: Int)
     case cancelSeatRequest(seatId: Int, creditAmount: Int)
     case acceptSeatRequest(seatId: Int, requesterId: Int)
+    case patchSeatOccupant(requestDTO: PatchSeatOccupantDTO)
     case rejectSeatRequest(seatId: Int, requesterId: Int, creditAmount: Int)
 
     case getIncomings(requestDTO: GetIncomingsRequestDTO)
@@ -86,6 +87,8 @@ extension SeatCatcherAPI: TargetType {
             return "/user/seats/\(seatId)/yield"
         case let .rejectSeatRequest(seatId):
             return "/user/seats/\(seatId)/yield"
+        case .patchSeatOccupant:
+            return "/user/seats"
         }
     }
     
@@ -129,6 +132,8 @@ extension SeatCatcherAPI: TargetType {
             return .post
         case .rejectSeatRequest:
             return .post
+        case .patchSeatOccupant:
+            return .patch
         }
     }
     
@@ -201,6 +206,8 @@ extension SeatCatcherAPI: TargetType {
                 "creditAmount": creditAmount
             ]
             return .requestParameters(parameters: parameters, encoding: URLEncoding.default)
+        case let .patchSeatOccupant(requestDTO):
+            return .requestJSONEncodable(requestDTO)
         }
     }
 
@@ -251,6 +258,8 @@ extension SeatCatcherAPI: TargetType {
         case .acceptSeatRequest:
             return baseWithAuth
         case .rejectSeatRequest:
+            return baseWithAuth
+        case .patchSeatOccupant:
             return baseWithAuth
         }
     }

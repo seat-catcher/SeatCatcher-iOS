@@ -50,6 +50,10 @@ public final class SeatRepositoryImpl: SeatRepository, Sendable {
         try await networkService.acceptSeatRequest(seatId: seatId, requesterId: requesterId)
     }
     
+    public func changeSeatOccupant(seatId: Int, creditAmount: Int) async throws {
+        try await networkService.patchSeatOccupant(seatId: seatId, creditAmount: creditAmount)
+    }
+    
     public func rejectRequestSeat(seatId: Int, requesterId: Int, creditAmount: Int) async throws {
         try await networkService.rejectSeatRequest(seatId: seatId, requesterId: requesterId, creditAmount: creditAmount)
     }

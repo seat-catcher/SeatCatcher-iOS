@@ -36,7 +36,7 @@ public final class MainFeatureViewModel: ViewModel {
     enum SeatRequestAction {
         case willRequestSeat(_ seat: Seat, creditAmount: Int) // 좌석 요청
         case willCancelRequestSeat(_ seat: Seat, creditAmount: Int) // 좌석 요청 취소
-        case willAcceptSeatRequest(_ seat: Seat, requesterId: Int) // 좌석 요청 수락
+        case willAcceptSeatRequest(_ seat: Seat, requesterId: Int, creditAmount: Int) // 좌석 요청 수락
         case willRejectSeatRequest(_ seat: Seat, requesterId: Int, creditAmount: Int) // 좌석 요청 거절
     }
     
@@ -253,8 +253,8 @@ public final class MainFeatureViewModel: ViewModel {
                 postSeatRequest(seat, creditAmount: creditAmount)
             case let .willCancelRequestSeat(seat, creditAmount):
                 cancelSeatRequest(seat, creditAmount: creditAmount)
-            case let .willAcceptSeatRequest(seat, requesterId):
-                acceptSeatRequest(seat, requesterId: requesterId)
+            case let .willAcceptSeatRequest(seat, requesterId, creditAmount):
+                acceptSeatRequest(seat, requesterId: requesterId, creditAmount: creditAmount)
             case let .willRejectSeatRequest(seat, requesterId, creditAmount):
                 rejectSeatRequest(seat, requesterId: requesterId, creditAmount: creditAmount)
             }
@@ -425,12 +425,12 @@ public final class MainFeatureViewModel: ViewModel {
         }
     }
     
-    private func acceptSeatRequest(_ seat: Seat, requesterId: Int) {
+    private func acceptSeatRequest(_ seat: Seat, requesterId: Int, creditAmount: Int) {
         /// 좌석 요청을 수락합니다
         if let acceptSeatRequestUseCase {
             Task {
                 do {
-                    try await acceptSeatRequestUseCase.execute(seat: seat, requesterId: requesterId)
+                    try await acceptSeatRequestUseCase.execute(seat: seat, requesterId: requesterId, creditAmount: creditAmount)
                 } catch {
                     print(error.localizedDescription)
                 }
