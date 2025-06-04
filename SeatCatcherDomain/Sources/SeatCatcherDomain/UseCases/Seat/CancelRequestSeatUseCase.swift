@@ -11,3 +11,16 @@ import Foundation
 public protocol CancelRequestSeatUseCase {
     func execute(seat: Seat, creditAmount: Int)
 }
+
+final class CancelRequestSeatUseCaseImpl: CancelRequestSeatUseCase {
+    
+    private let seatRepository: SeatRepository
+    
+    public init(seatRepository: SeatRepository) {
+        self.seatRepository = seatRepository
+    }
+    
+    func execute(seat: Seat, creditAmount: Int) {
+        try await seatRepository.cancelRequestSeat(seatId: seat.id, creditAmount: creditAmount)
+    }
+}

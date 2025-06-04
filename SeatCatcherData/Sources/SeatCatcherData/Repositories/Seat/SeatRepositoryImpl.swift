@@ -29,12 +29,29 @@ public final class SeatRepositoryImpl: SeatRepository, Sendable {
     }
         
     public func registerSeat(_ seat: Seat) async throws {
-        // 새로운 좌석 등록
+        /// 새로운 좌석 등록
         try await networkService.registerSeat(seatId: seat.id, creditAmount: 0) // FIXME: 유저 데이터와 연결
     }
     
     public func cancelSeat() async throws {
-        // 기존 좌석 취소
+        /// 기존 좌석 취소
         try await networkService.cancelSeat()
     }
+    
+    public func postRequestSeat(seatId: Int, creditAmount: Int) async throws {
+        try await networkService.postSeatRequest(seatId: seatId, creditAmount: creditAmount)
+    }
+    
+    public func cancelRequestSeat(seatId: Int, creditAmount: Int) async throws {
+        try await networkService.cancelSeatRequest(seatId: seatId, creditAmount: creditAmount)
+    }
+    
+    public func acceptRequestSeat(seatId: Int, requesterId: Int) async throws {
+        try await networkService.acceptSeatRequest(seatId: seatId, requesterId: requesterId)
+    }
+    
+    public func rejectRequestSeat(seatId: Int, requesterId: Int, creditAmount: Int) async throws {
+        try await networkService.rejectSeatRequest(seatId: seatId, requesterId: requesterId, creditAmount: creditAmount)
+    }
+    
 }

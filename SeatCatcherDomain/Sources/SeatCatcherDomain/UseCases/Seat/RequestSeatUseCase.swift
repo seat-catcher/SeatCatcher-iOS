@@ -11,3 +11,16 @@ import Foundation
 public protocol RequestSeatUseCase {
     func execute(seat: Seat, creditAmount: Int)
 }
+
+final class RequestSeatUseCaseImpl: RequestSeatUseCase {
+    
+    private let seatRepository: SeatRepository
+    
+    public init(seatRepository: SeatRepository) {
+        self.seatRepository = seatRepository
+    }
+    
+    func execute(seat: Seat, creditAmount: Int) {
+        try await seatRepository.postRequestSeat(seatId: seat.id, creditAmount: creditAmount)
+    }
+}

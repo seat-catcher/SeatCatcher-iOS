@@ -238,7 +238,19 @@ public struct NetworkService: Sendable {
     func cancelSeat() async throws {
         try await provider.request(.deleteSeat)
     }
-
+    func postSeatRequest(seatId: Int, creditAmount: Int) async throws {
+        try await provider.request(.postSeatRequest(seatId: seatId, creditAmount: creditAmount))
+    }
+    func cancelSeatRequest(seatId: Int, creditAmount: Int) async throws {
+        try await provider.request(.cancelSeatRequest(seatId: seatId, creditAmount: creditAmount))
+    }
+    func acceptSeatRequest(seatId: Int, requesterId: Int) async throws {
+        try await provider.request(.acceptSeatRequest(seatId: seatId, requesterId: requesterId))
+    }
+    func rejectSeatRequest(seatId: Int, requesterId: Int, creditAmount: Int) async throws {
+        try await provider.request(.rejectSeatRequest(seatId: seatId, requesterId: requesterId, creditAmount: creditAmount))
+    }
+    
     // MARK: - Incomings
     func getIncomings(departure: String, arrival: String, line: String) async throws -> [GetIncomingsResponseDTO] {
         let requestDTO = GetIncomingsRequestDTO(lineNumber: line, dep: departure, dest: arrival)
