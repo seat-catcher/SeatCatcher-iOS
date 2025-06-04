@@ -69,4 +69,25 @@ public final class SeatStompRepositoryImpl: SeatStompRepository {
         let topic = "/train/\(trainCode)"
         stompClientService.unsubscribe(topic: topic)
     }
+    
+    public func subscribeToSeatRequest(_ seat: Seat, requesterId: Int) {
+        let topic = "/topic/seat.\(seat.id).requester.\(requesterId)"
+        stompClientService.subscribe(topic: topic)
+    }
+    
+    public func unsubscribeFromSeatRequest(_ seat: Seat, requesterId: Int) {
+        let topic = "/topic/seat.\(seat.id).requester.\(requesterId)"
+        stompClientService.unsubscribe(topic: topic)
+    }
+    
+    public func subscribeToSeatOccupied(_ seat: Seat) {
+        let topic = "/topic/seat.\(seat.id).owner"
+        stompClientService.subscribe(topic: topic)
+    }
+    
+    public func unsubscribeFromSeatOccupied(_ seat: Seat) {
+        let topic = "/topic/seat.\(seat.id).owner"
+        stompClientService.unsubscribe(topic: topic)
+    }
+    
 }

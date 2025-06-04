@@ -38,24 +38,24 @@ public final class SeatRepositoryImpl: SeatRepository, Sendable {
         try await networkService.cancelSeat()
     }
     
-    public func postRequestSeat(seatId: Int, creditAmount: Int) async throws {
-        try await networkService.postSeatRequest(seatId: seatId, creditAmount: creditAmount)
+    public func postRequestSeat(_ seat: Seat, creditAmount: Int) async throws {
+        try await networkService.postSeatRequest(seatId: seat.id, creditAmount: creditAmount)
     }
     
-    public func cancelRequestSeat(seatId: Int, creditAmount: Int) async throws {
-        try await networkService.cancelSeatRequest(seatId: seatId, creditAmount: creditAmount)
+    public func cancelRequestSeat(_ seat: Seat, creditAmount: Int) async throws {
+        try await networkService.cancelSeatRequest(seatId: seat.id, creditAmount: creditAmount)
     }
     
-    public func acceptRequestSeat(seatId: Int, requesterId: Int) async throws {
-        try await networkService.acceptSeatRequest(seatId: seatId, requesterId: requesterId)
+    public func acceptRequestSeat(_ seat: Seat, requesterId: Int) async throws {
+        try await networkService.acceptSeatRequest(seatId: seat.id, requesterId: requesterId)
     }
     
-    public func changeSeatOccupant(seatId: Int, creditAmount: Int) async throws {
-        try await networkService.patchSeatOccupant(seatId: seatId, creditAmount: creditAmount)
+    public func changeSeatOccupant(_ seat: Seat, creditAmount: Int) async throws {
+        try await networkService.patchSeatOccupant(seatId: seat.id, creditAmount: creditAmount)
     }
     
-    public func rejectRequestSeat(seatId: Int, requesterId: Int, creditAmount: Int) async throws {
-        try await networkService.rejectSeatRequest(seatId: seatId, requesterId: requesterId, creditAmount: creditAmount)
+    public func rejectRequestSeat(_ seat: Seat, requesterId: Int, creditAmount: Int) async throws {
+        try await networkService.rejectSeatRequest(seatId: seat.id, requesterId: requesterId, creditAmount: creditAmount)
     }
     
 }

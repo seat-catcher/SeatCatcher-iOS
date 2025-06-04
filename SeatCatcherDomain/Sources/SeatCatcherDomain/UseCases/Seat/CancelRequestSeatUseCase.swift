@@ -9,18 +9,23 @@ import Foundation
 
 /// 좌석요청자 - 좌석 요청 취소 시 호출
 public protocol CancelRequestSeatUseCase {
-    func execute(seat: Seat, creditAmount: Int) async throws
+    func execute(_ seat: Seat, requesterId: Int, creditAmount: Int) async throws
 }
 
 public final class CancelRequestSeatUseCaseImpl: CancelRequestSeatUseCase {
     
     private let seatRepository: SeatRepository
+    private let seatStompRepository: SeatStompRepository
     
-    public init(seatRepository: SeatRepository) {
+    public init(seatRepository: SeatRepository, seatStompRepository: SeatStompRepository) {
         self.seatRepository = seatRepository
+        self.seatStompRepository = seatStompRepository
     }
     
-    public func execute(seat: Seat, creditAmount: Int) async throws {
-        try await seatRepository.cancelRequestSeat(seatId: seat.id, creditAmount: creditAmount)
+    public func execute(_ seat: Seat, requesterId: Int, creditAmount: Int) async throws {
+        /// 좌석 요청을 취소합니다
+        try await seatRepository.cancelRequestSeat(seat, creditAmount: creditAmount)
+        /// 좌석 요청에 대한 응답 구독을 취소합니다
+        try await seatStompRepository.unsubscribeFromSeatRequest(seat, requesterId: requesterId)
     }
 }

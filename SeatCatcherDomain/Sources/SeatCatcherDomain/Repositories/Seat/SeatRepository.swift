@@ -19,12 +19,12 @@ public protocol SeatRepository: Sendable {
     func cancelSeat() async throws
     // MARK: - 좌석 요청 관련
     /// 좌석요청자 - 요청
-    func postRequestSeat(seatId: Int, creditAmount: Int) async throws
+    func postRequestSeat(_ seat: Seat, creditAmount: Int) async throws
     /// 좌석요청자 - 요청 취소
-    func cancelRequestSeat(seatId: Int, creditAmount: Int) async throws
+    func cancelRequestSeat(_ seat: Seat, creditAmount: Int) async throws
     /// 좌석점유자 - 요청 수락
-    func acceptRequestSeat(seatId: Int, requesterId: Int) async throws
-    func changeSeatOccupant(seatId: Int, creditAmount: Int) async throws
+    func acceptRequestSeat(_ seat: Seat, requesterId: Int) async throws
+    func changeSeatOccupant(_ seat: Seat, creditAmount: Int) async throws
     /// 좌석점유자 - 요청 거절
-    func rejectRequestSeat(seatId: Int, requesterId: Int, creditAmount: Int) async throws
+    func rejectRequestSeat(_ seat: Seat, requesterId: Int, creditAmount: Int) async throws
 }

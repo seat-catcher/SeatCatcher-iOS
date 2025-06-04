@@ -22,7 +22,7 @@ public final class MainFeatureViewModel: ViewModel {
         case manageMySeatButtonDidTap // 좌석 관리 버튼
         case willRegisterSeat(Seat) // 좌석 등록
         case willMoveSeat(Seat) // 좌석 이동
-        case willCancelSeat // 좌석 취소
+        case willCancelSeat(Seat) // 좌석 취소
         case backToSeatSectionPage // 좌석 구역 페이지로 이동
         case manageSeatSection(SeatSectionAction) // 좌석 관리 액션 수행
         case manageSeatRequest(SeatRequestAction) // 좌석 요청 관련 액션 수행
@@ -243,8 +243,8 @@ public final class MainFeatureViewModel: ViewModel {
             registerSeat(seat)
         case let .willMoveSeat(seat):
             moveSeat(seat)
-        case .willCancelSeat:
-            cancelSeat()
+        case let .willCancelSeat(seat):
+            cancelSeat(seat)
         case .backToSeatSectionPage:
             coordinator.pop()
         case let .manageSeatRequest(type):
@@ -373,12 +373,12 @@ public final class MainFeatureViewModel: ViewModel {
         }
     }
     
-    private func moveSeat(_ seat: Seat) {
+    private func moveSeat(_ newSeat: Seat) {
         /// 좌석 정보를 이동합니다
-        if let moveSeatUseCase {
+        if let moveSeatUseCase, let oldSeat = state.seatSectionState.mySeat {
             Task {
                 do {
-                    try await moveSeatUseCase.execute(seat)
+                    try await moveSeatUseCase.execute(from: oldSeat, to: newSeat)
                 } catch {
                     print(error.localizedDescription)
                 }
@@ -386,12 +386,12 @@ public final class MainFeatureViewModel: ViewModel {
         }
     }
     
-    private func cancelSeat() {
+    private func cancelSeat(_ seat: Seat) {
         /// 좌석 정보를 취소합니다
         if let cancelSeatUseCase {
             Task {
                 do {
-                    try await cancelSeatUseCase.execute()
+                    try await cancelSeatUseCase.execute(seat)
                 } catch {
                     print(error.localizedDescription)
                 }
@@ -404,7 +404,7 @@ public final class MainFeatureViewModel: ViewModel {
         if let postSeatRequestUseCase {
             Task {
                 do {
-                    try await postSeatRequestUseCase.execute(seat: seat, creditAmount: creditAmount)
+                    try await postSeatRequestUseCase.execute(seat, requesterId: store.user.id, creditAmount: creditAmount)
                 } catch {
                     print(error.localizedDescription)
                 }
@@ -417,7 +417,7 @@ public final class MainFeatureViewModel: ViewModel {
         if let cancelSeatRequestUseCase {
             Task {
                 do {
-                    try await cancelSeatRequestUseCase.execute(seat: seat, creditAmount: creditAmount)
+                    try await cancelSeatRequestUseCase.execute(seat, requesterId: store.user.id, creditAmount: creditAmount)
                 } catch {
                     print(error.localizedDescription)
                 }
@@ -430,7 +430,7 @@ public final class MainFeatureViewModel: ViewModel {
         if let acceptSeatRequestUseCase {
             Task {
                 do {
-                    try await acceptSeatRequestUseCase.execute(seat: seat, requesterId: requesterId, creditAmount: creditAmount)
+                    try await acceptSeatRequestUseCase.execute(seat, requesterId: requesterId, creditAmount: creditAmount)
                 } catch {
                     print(error.localizedDescription)
                 }
@@ -443,7 +443,7 @@ public final class MainFeatureViewModel: ViewModel {
         if let rejectSeatRequestUseCase {
             Task {
                 do {
-                    try await rejectSeatRequestUseCase.execute(seat: seat, requesterId: requesterId, creditAmount: creditAmount)
+                    try await rejectSeatRequestUseCase.execute(seat, requesterId: requesterId, creditAmount: creditAmount)
                 } catch {
                     print(error.localizedDescription)
                 }

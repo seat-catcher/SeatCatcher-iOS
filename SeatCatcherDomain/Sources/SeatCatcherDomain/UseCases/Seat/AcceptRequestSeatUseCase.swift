@@ -9,19 +9,25 @@ import Foundation
 
 /// 좌석점유자 - 좌석 요청 수락 시 호출
 public protocol AcceptRequestSeatUseCase {
-    func execute(seat: Seat, requesterId: Int, creditAmount: Int) async throws
+    func execute(_ seat: Seat, requesterId: Int, creditAmount: Int) async throws
 }
 
 public final class AcceptRequestSeatUseCaseImpl: AcceptRequestSeatUseCase {
     
     private let seatRepository: SeatRepository
+    private let seatStompRepository: SeatStompRepository
     
-    public init(seatRepository: SeatRepository) {
+    public init(seatRepository: SeatRepository, seatStompRepository: SeatStompRepository) {
         self.seatRepository = seatRepository
+        self.seatStompRepository = seatStompRepository
     }
     
-    public func execute(seat: Seat, requesterId: Int, creditAmount: Int) async throws {
-        try await seatRepository.acceptRequestSeat(seatId: seat.id, requesterId: requesterId) // 요청 수락
-        try await seatRepository.changeSeatOccupant(seatId: seat.id, creditAmount: creditAmount) // 좌석 교환
+    public func execute(_ seat: Seat, requesterId: Int, creditAmount: Int) async throws {
+        /// 좌석 요청을 수락합니다
+        try await seatRepository.acceptRequestSeat(seat, requesterId: requesterId)
+        /// 좌석 요청자를 점유자로 좌석 상태를 업데이트합니다
+        try await seatRepository.changeSeatOccupant(seat, creditAmount: creditAmount)
+        /// 좌석 요청을 수신하는 STOMP 구독을 취소합니다
+        try await seatStompRepository.unsubscribeFromSeatOccupied(seat)
     }
 }
