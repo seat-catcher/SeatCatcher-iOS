@@ -272,8 +272,7 @@ public final class MainFeatureViewModel: ViewModel {
                     receiveCompletion: { [weak self] completion in
                         guard let self else { return }
                         if case let .failure(error) = completion {
-                            state.showNoInformationToast = true
-                            print(error.localizedDescription)
+                            dump("좌석 업데이트 실패 \(error.localizedDescription) - \(Date())")
                         }
                     },
                     receiveValue: { [weak self] trainCar in
