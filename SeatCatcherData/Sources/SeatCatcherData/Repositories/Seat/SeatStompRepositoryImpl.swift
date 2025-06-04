@@ -30,7 +30,7 @@ public final class SeatStompRepositoryImpl: SeatStompRepository {
             .filter { $0.destination == "/topic/seat/\(trainCode)" }
             .tryMap { message in
                 guard let data = message.text.data(using: .utf8) else {
-                    throw SeatCatcherDataError.nullValue
+                    throw SeatCatcherDataError.NullValue
                 }
                 let dto = try self.decoder.decode(GetSeatInTrainCarResponseDTO.self, from: data)
                 return dto.domainModel
@@ -45,7 +45,7 @@ public final class SeatStompRepositoryImpl: SeatStompRepository {
             .filter { $0.destination.contains("/topic/seat.") && $0.destination.contains(".owner") }
             .tryMap { message in
                 guard let data = message.text.data(using: .utf8) else {
-                    throw SeatCatcherDataError.nullValue
+                    throw SeatCatcherDataError.NullValue
                 }
                 do {
                     // creditAmount가 있으면 SeatRequestResponseDTO로 디코딩 성공
@@ -67,7 +67,7 @@ public final class SeatStompRepositoryImpl: SeatStompRepository {
             .filter { $0.destination.contains("/topic/seat.") && $0.destination.contains(".requester") }
             .tryMap { message in
                 guard let data = message.text.data(using: .utf8) else {
-                    throw SeatCatcherDataError.nullValue
+                    throw SeatCatcherDataError.NullValue
                 }
                 let dto = try self.decoder.decode(SeatRequestReplyResponseDTO.self, from: data)
                 return dto.domainModel
