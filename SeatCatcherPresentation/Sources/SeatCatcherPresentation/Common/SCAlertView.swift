@@ -39,9 +39,9 @@ struct SCAlertView: View {
             }
             .frame(maxWidth: .infinity)
         }
-        .background(.gray500)
         .frame(width: 266)
         .frame(minHeight: 178)
+        .background(.gray500)
         .clipShape(.rect(cornerRadius: 20))
     }
 }
