@@ -7,12 +7,10 @@
 
 import Combine
 import Foundation
-import Combine
 import SeatCatcherDomain
 
 @Observable
 public final class AppStore {
-    private var arrivalTimeCancellables = Set<AnyCancellable>()
 
     public var user: User
     
@@ -61,8 +59,10 @@ public final class AppStore {
 
     // MARK: - Combine 및 STOMP 구독
     /// 구독 관리에 필요한 변수 및 퍼블리셔입니다
-    private var cancellables = Set<AnyCancellable>() // subscriber 저장
-    private var subscribedTopics: Set<String> = [] // 구독한 토픽
+    private var trainCarCancellables = Set<AnyCancellable>()
+    private var seatRequesterCancellables = Set<AnyCancellable>()
+    private var seatRequesteeCancellables = Set<AnyCancellable>()
+    private var arrivalTimeCancellables = Set<AnyCancellable>()
     
     public var departure: Station?
     public var arrival: Station?
@@ -94,9 +94,8 @@ public final class AppStore {
         self.user = user
     }
     
-    public func subscribeToTrainPublisher(_ publisher: AnyPublisher<TrainCar, Error>?, trainCode: String) {
-        guard let publisher, !subscribedTopics.contains(trainCode) else { return }
-        subscribedTopics.insert(trainCode) // 실제 topic destination 대신 열차 번호로 관리해도 동일
+    public func subscribeToTrainPublisher(_ publisher: AnyPublisher<TrainCar, Error>, trainCode: String) {
+        trainCarCancellables.removeAll()
         publisher
             .receive(on: DispatchQueue.main)
             .sink(
@@ -110,13 +109,11 @@ public final class AppStore {
                     self?.trainCar = trainCar
                 }
             )
-            .store(in: &cancellables)
+            .store(in: &trainCarCancellables)
     }
     
-    public func subscribeToSeatRequesterPublisher(_ publisher: AnyPublisher<SeatRequester, Error>?, seatId: Int) {
-        let seatId = String(seatId)
-        guard let publisher, !subscribedTopics.contains(seatId) else { return }
-        subscribedTopics.insert(seatId) // 실제 topic destination 대신 seatId로 관리해도 동일
+    public func subscribeToSeatRequesterPublisher(_ publisher: AnyPublisher<SeatRequester, Error>, seatId: Int) {
+        seatRequesterCancellables.removeAll()
         publisher
             .receive(on: DispatchQueue.main)
             .sink(
@@ -129,13 +126,11 @@ public final class AppStore {
                     self?.seatRequester = requester
                 }
             )
-            .store(in: &cancellables)
+            .store(in: &seatRequesterCancellables)
     }
     
-    public func subscribeToSeatRequesteePublisher(_ publisher: AnyPublisher<SeatRequestee, Error>?, seatId: Int) {
-        let seatId = String(seatId)
-        guard let publisher, !subscribedTopics.contains(seatId) else { return }
-        subscribedTopics.insert(seatId) // 실제 topic destination 대신 seatId로 관리해도 동일
+    public func subscribeToSeatRequesteePublisher(_ publisher: AnyPublisher<SeatRequestee, Error>, seatId: Int) {
+        seatRequesteeCancellables.removeAll()
         publisher
             .receive(on: DispatchQueue.main)
             .sink(
@@ -148,13 +143,9 @@ public final class AppStore {
                     self?.seatRequestee = requestee
                 }
             )
-            .store(in: &cancellables)
+            .store(in: &seatRequesteeCancellables)
     }
     
-    public func unsubscribeAll() {
-        cancellables.removeAll()
-        subscribedTopics.removeAll()
-
     public func subscribeArrivalPublisher(_ publisher: AnyPublisher<Date, Never>) {
         arrivalTimeCancellables.removeAll()
 

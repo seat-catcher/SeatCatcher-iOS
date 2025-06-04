@@ -242,8 +242,7 @@ public final class MainFeatureViewModel: ViewModel {
         switch action {
         case .willAppear:
             fetchSeatInSection()
-            if state.userStatus 
-          .standing || state.userStatus == .seated {
+            if state.userStatus == .standing || state.userStatus == .seated {
                 subscribeToTrain(trainCode: state.trainCode, carCode: state.carCode)
                 setupStoreObservers()
             }
