@@ -9,7 +9,13 @@ import SwiftUI
 import SeatCatcherDomain
 
 public struct ProfileConfig {
-    let name: String
-    let profileImage: ImageResource
-    let tag: UserTag
+    public let name: String
+    public let profileImage: ImageResource
+    public let tag: UserTag
+
+    public init(name: String, profileImage: ImageResource, tag: UserTag) {
+        self.name = name
+        self.profileImage = profileImage
+        self.tag = tag
+    }
 }

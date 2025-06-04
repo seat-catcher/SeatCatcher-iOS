@@ -120,7 +120,7 @@ private struct PathCardContentView: View {
             switch viewModel.state.userStatus {
             case .inTransit:
                 PathCardInTransit(viewModel: viewModel)
-            case let .pathExists:
+            case .pathExists:
                 PathCardPathExists(viewModel: viewModel)
             case .pathNotExists:
                 PathCardPathNotExists()
@@ -209,7 +209,7 @@ private struct PathCardInTransit: View {
                 return "\(remainingTime)분 남았어요"
             }
             var departureTimeString: String { (viewModel.store.departureTime ?? now).amPmTime }
-            var arrivalTimeString: String { (viewModel.store.expectedArrivalTime ?? now).hour12Time ?? "" }
+            var arrivalTimeString: String { (viewModel.store.expectedArrivalTime ?? now).hour12Time }
             var elapsedTime: Double? {
                 guard let departureTime = viewModel.store.departureTime else { return nil }
                 return now.timeIntervalSince(departureTime)
