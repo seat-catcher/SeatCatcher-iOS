@@ -46,6 +46,7 @@ public final class MainFeatureViewModel: ViewModel {
     
     struct SeatSectionState {
         var selectedSeat: Seat? // 선택한 좌석
+        var mySeat: Seat? // 내가 앉은 좌석
         var isBlocked: Bool // 좌석 정보 잠금 상태
         var seats: SeatSection // 좌석 정보
     }
@@ -242,6 +243,7 @@ public final class MainFeatureViewModel: ViewModel {
                             trainCar: trainCar,
                             seatSectionType: state.seatSectionType
                         )
+                        self.state.seatSectionState.mySeat = self.findMySeat()
                     }
                 )
                 .store(in: &cancellables)
@@ -251,14 +253,14 @@ public final class MainFeatureViewModel: ViewModel {
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] isConnected in
                     guard let self else { return }
-                    state.showNoInformationToast = !isConnected
+                    dump("구독 상태 \(isConnected) - \(Date())")
                 }
                 .store(in: &cancellables)
         }
     }
     
     /// 구독 해제
-    private func unsubscribe() { // TODO: scenePhase와 연결하여 호출 필요
+    private func unsubscribe() { // TODO: AppDelegate와 연결하여 호출 필요
         if let subscribeTrainUseCase {
             subscribeTrainUseCase.unsubscribe(trainCode: state.trainCode)
             cancellables.removeAll()
@@ -292,21 +294,29 @@ public final class MainFeatureViewModel: ViewModel {
     private func fetchSeatInSection() {
         Task {
             do {
-                // 모든 구역의 좌석 데이터
+                /// 모든 구역의 좌석 데이터
                 let trainCar = try await getSeatInTrainCarUseCase.execute(trainCode: state.trainCode, carCode: state.carCode)
                 
-                // 현재 구역의 좌석 데이터만 필터링
+                /// 현재 구역의 좌석 데이터만 필터링
                 state.seatSectionState.seats = getSeatInSectionUseCase.execute(trainCar: trainCar, seatSectionType: state.seatSectionType)
                 
-                // 본인이 앉고 있는 좌석을 선택상태로 처리
+                /// 나의 좌석 반영
+                self.state.seatSectionState.mySeat = self.findMySeat()
+                
+                /// 나의 좌석 선택 처리 (좌석 등록 / 이동 시)
                 if state.userStatus == .registering || state.userStatus == .moving {
-                    state.seatSectionState.selectedSeat = state.seatSectionState.seats.topSeats.values.first { $0.isMySeat }
-                    ?? state.seatSectionState.seats.bottomSeats.values.first { $0.isMySeat }
+                    self.state.seatSectionState.selectedSeat = self.state.seatSectionState.mySeat
                 }
+
             } catch {
                 print(error.localizedDescription)
             }
         }
+    }
+    
+    private func findMySeat() -> Seat? {
+        return state.seatSectionState.seats.topSeats.values.first { $0.occupant?.id == store.user.id }
+        ?? state.seatSectionState.seats.bottomSeats.values.first { $0.occupant?.id == store.user.id }
     }
     
     private func registerSeat(_ seat: Seat) {

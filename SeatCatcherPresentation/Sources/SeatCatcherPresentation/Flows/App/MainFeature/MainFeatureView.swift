@@ -26,6 +26,7 @@ public struct MainFeatureView: View {
             SeatSectionView(
                 selectedSeat: viewModel.state.seatSectionState.selectedSeat,
                 isBlocked: viewModel.state.seatSectionState.isBlocked,
+                mySeat: viewModel.state.seatSectionState.mySeat,
                 seats: viewModel.state.seatSectionState.seats,
                 userStatus: viewModel.state.userStatus,
                 onTap: { seat in
@@ -66,7 +67,7 @@ public struct MainFeatureView: View {
         .onChange(of: scenePhase) { _, newValue in
             if newValue == .background {
                 viewModel.action(.unsubscribe) // STOMP 연결 해제
-                // FIXME: AppDelegate 앱 종료 시로 수정 필요 
+                // FIXME: AppDelegate 앱 종료 시로 수정 필요
             }
         }
     }
