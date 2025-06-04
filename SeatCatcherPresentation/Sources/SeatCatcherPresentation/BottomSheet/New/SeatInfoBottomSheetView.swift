@@ -19,7 +19,7 @@ public struct SeatInfoBottomSheetView: View {
     let yieldButtonAction: () -> Void
 
     var remainingMinutes: Int {
-        Int(expectedArrivalTime.timeIntervalSinceNow / 60)
+        max(Int(expectedArrivalTime.timeIntervalSinceNow / 60), 0)
     }
 
     public init(
