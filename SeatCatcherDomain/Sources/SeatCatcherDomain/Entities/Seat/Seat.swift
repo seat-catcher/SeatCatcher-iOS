@@ -10,20 +10,17 @@ import Foundation
 public struct Seat: Sendable, Identifiable {
     
     public var id: Int // 좌석 식별자 (서버에서 제공)
-    public var isMySeat: Bool // 내가 앉아있는지 여부
     public var seatType: SeatType // 좌석 구분
     public var seatDirection: SeatDirection // UI 기준 좌석 방향
     public var occupant: Occupant? // 착석 유저 정보
 
     public init(
         id: Int,
-        isSeated: Bool,
         seatType: SeatType,
         seatDirection: SeatDirection,
         occupant: Occupant?
     ) {
         self.id = id
-        self.isMySeat = isSeated
         self.seatType = seatType
         self.seatDirection = seatDirection
         self.occupant = occupant
