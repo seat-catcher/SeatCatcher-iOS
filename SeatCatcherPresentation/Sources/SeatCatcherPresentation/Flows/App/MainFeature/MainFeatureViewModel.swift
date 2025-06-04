@@ -249,7 +249,7 @@ public final class MainFeatureViewModel: ViewModel {
             subscribeTrainUseCase.connectionPublisher()
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] isConnected in
-                    guard let self else { return }
+                    guard let self = self else { return }
                     dump("구독 상태 \(isConnected) - \(Date())")
                 }
                 .store(in: &cancellables)

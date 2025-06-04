@@ -61,6 +61,7 @@ public enum AppScene: AppRoute {
 }
 
 public enum AppSheet: AppRoute {
+    // MARK: - Legacy
     case askRequestDeclineBottomSheetView(
         yesButtonAction: () -> Void,
         noButtonAction: () -> Void
@@ -110,7 +111,47 @@ public enum AppSheet: AppRoute {
         coinCount: Int,
         reportAction: () -> Void
     )
-    
+    // MARK: - New
+    case checkAcceptSeatRequest(
+        name: String,
+        userImage: UserImage,
+        tags: [UserTag],
+        creditAmount: Int,
+        reportButtonAction: () -> Void,
+        confirmationButtonAction: () -> Void,
+        cancelButtonAction: () -> Void
+    )
+    case checkRejectSeatRequest(
+        confirmationButtonAction: () -> Void,
+        cancelButtonAction: () -> Void
+    )
+    case checkSeatExchange(
+        confirmationButtonAction: () -> Void,
+        cancelButtonAction: () -> Void
+    )
+    case checkSeatOccupancy(
+        confirmationButtonAction: () -> Void,
+        cancelButtonAction: () -> Void
+    )
+    case exchangeGuiding(
+        confirmationButtonAction: () -> Void
+    )
+    case notifyWaiting(
+        confirmationButtonAction: () -> Void
+    )
+    case requestRejected(
+        confirmationButtonAction: () -> Void
+    )
+    case seatInfo(
+        name: String,
+        userImage: UserImage,
+        tags: [UserTag],
+        arrivalStationName: String,
+        expectedArrivalTime: Date,
+        reportButtonAction: () -> Void,
+        yieldButtonAction: () -> Void
+    )
+
     
     public var id: String {
         switch self {
@@ -138,6 +179,22 @@ public enum AppSheet: AppRoute {
             return "seatInformationBottomSheetView"
         case .sendRequestBottomSheetView:
             return "sendRequestBottomSheetView"
+        case .checkAcceptSeatRequest:
+            return "checkAcceptSeatRequest"
+        case .checkRejectSeatRequest:
+            return "checkRejectSeatRequest"
+        case .checkSeatExchange:
+            return "checkSeatExchange"
+        case .checkSeatOccupancy:
+            return "checkSeatOccupancy"
+        case .exchangeGuiding:
+            return "exchangeGuiding"
+        case .notifyWaiting:
+            return "notifyWaiting"
+        case .requestRejected:
+            return "requestRejected"
+        case .seatInfo:
+            return "seatInfo"
         }
     }
     

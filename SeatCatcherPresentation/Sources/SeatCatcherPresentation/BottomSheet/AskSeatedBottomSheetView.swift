@@ -25,3 +25,4 @@ public struct AskSeatedBottomSheetView: View {
             .background(.gray900)
     }
 }
+
