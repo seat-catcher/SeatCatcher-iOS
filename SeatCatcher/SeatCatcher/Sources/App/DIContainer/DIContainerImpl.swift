@@ -67,7 +67,7 @@ final class DIContainerImpl {
     private lazy var subscribeTrainUseCase: SubscribeTrainUseCase = SubscribeTrainUseCaseImpl(seatStompRepository: seatStompRepository)
     private lazy var requestSeatUseCase: RequestSeatUseCase = RequestSeatUseCaseImpl(seatRepository: seatRepository, seatStompRepository: seatStompRepository)
     private lazy var cancelRequestSeatUseCase: CancelRequestSeatUseCase = CancelRequestSeatUseCaseImpl(seatRepository: seatRepository, seatStompRepository: seatStompRepository)
-    private lazy var acceptRequestSeatUseCase: AcceptRequestSeatUseCase = AcceptRequestSeatUseCaseImpl(seatRepository: seatRepository, seatStompRepository: seatStompRepository)
+    private lazy var acceptRequestSeatUseCase: AcceptRequestSeatUseCase = AcceptRequestSeatUseCaseImpl(seatRepository: seatRepository)
     private lazy var rejectRequestSeatUseCase: RejectRequestSeatUseCase = RejectRequestSeatUseCaseImpl(seatRepository: seatRepository)
     
     // MARK: - PathHistories UseCase Instances

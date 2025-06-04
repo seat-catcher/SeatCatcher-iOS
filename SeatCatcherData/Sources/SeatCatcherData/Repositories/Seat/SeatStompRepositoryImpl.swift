@@ -27,7 +27,7 @@ public final class SeatStompRepositoryImpl: SeatStompRepository {
     public func trainCarPublisher(trainCode: String, carCode: String) -> AnyPublisher<TrainCar, Error> {
         stompClientService.messagePublisher
             .receive(on: DispatchQueue.main)
-            .filter { $0.destination.hasPrefix("/topic/seat/") && $0.destination.contains(trainCode) }
+            .filter { $0.destination == "/topic/seat/\(trainCode)" }
             .tryMap { message in
                 guard let data = message.text.data(using: .utf8) else {
                     throw SeatCatcherDataError.nullValue
@@ -47,14 +47,12 @@ public final class SeatStompRepositoryImpl: SeatStompRepository {
                 guard let data = message.text.data(using: .utf8) else {
                     throw SeatCatcherDataError.nullValue
                 }
-                // JSON을 임시로 파싱하여 creditAmount 필드 확인
-                let jsonObject = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
-                if jsonObject?["creditAmount"] != nil {
-                    // creditAmount가 있으면 SeatRequestResponseDTO로 디코딩
+                do {
+                    // creditAmount가 있으면 SeatRequestResponseDTO로 디코딩 성공
                     let dto = try self.decoder.decode(SeatRequestResponseDTO.self, from: data)
                     return dto.domainModel
-                } else {
-                    // creditAmount가 없으면 CancelSeatRequestResponseDTO로 디코딩
+                } catch {
+                    // creditAmount가 없어서 디코딩 실패 시 CancelSeatRequestResponseDTO로 디코딩
                     let dto = try self.decoder.decode(CancelSeatRequestResponseDTO.self, from: data)
                     return dto.domainModel
                 }

@@ -26,6 +26,6 @@ public final class CancelRequestSeatUseCaseImpl: CancelRequestSeatUseCase {
         /// 좌석 요청을 취소합니다
         try await seatRepository.cancelRequestSeat(seat, creditAmount: creditAmount)
         /// 좌석 요청에 대한 응답 구독을 취소합니다
-        try await seatStompRepository.unsubscribeFromSeatRequest(seat, requesterId: requesterId)
+        seatStompRepository.unsubscribeFromSeatRequest(seat, requesterId: requesterId)
     }
 }

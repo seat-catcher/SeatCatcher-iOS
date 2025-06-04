@@ -244,6 +244,7 @@ public final class MainFeatureViewModel: ViewModel {
         case .willAppear:
             fetchSeatInSection()
             if state.userStatus == .standing || state.userStatus == .seated {
+                subscribeToTrain(trainCode: state.trainCode, carCode: state.carCode)
                 setupStoreObservers()
             }
         case let .manageSeatSection(seatSectionAction):
@@ -297,16 +298,18 @@ public final class MainFeatureViewModel: ViewModel {
         store.seatRequesterPublisher
             .sink { [weak self] requester in
                 if let requester = requester {
-                    /// 동일한 유저의 기존 요청이 있다면 제거합니다
-                    self?.state.seatRequestState.requesters?.removeAll {
-                        $0.requesterId == requester.requesterId
-                    }
                     if let creditAmount = requester.creditAmount {
+                        /// 동일한 유저의 기존 요청이 있다면 제거합니다
+                        self?.state.seatRequestState.requesters?.removeAll {
+                            $0.requesterId == requester.requesterId
+                        }
                         /// creditAmount가 포함되어있으므로 새로운 요청을 추가합니다
                         self?.state.seatRequestState.requesters?.append(requester)
                     } else {
                         /// creditAmount가 없으므로 기존 요청 취소만 수행합니다
-                        return
+                        self?.state.seatRequestState.requesters?.removeAll {
+                            $0.requesterId == requester.requesterId
+                        }
                     }
                 }
             }
@@ -321,9 +324,18 @@ public final class MainFeatureViewModel: ViewModel {
             .store(in: &cancellables)
     }
     
+    @MainActor
+    private func subscribeToTrain(trainCode: String, carCode: String) {
+        if let subscribeTrainUseCase {
+            let trainCarPublisher = subscribeTrainUseCase.execute(trainCode: trainCode, carCode: carCode)
+            store.subscribeToTrainPublisher(trainCarPublisher, trainCode: trainCode)
+        }
+    }
+    
+    
     /// 구독 해제
     @MainActor
-    private func unsubscribe() { // TODO: - 백그라운드에서도 연결 유지해야하므로 추후 검토 후 삭제
+    private func unsubscribeFromTrain() { // TODO: - 백그라운드에서도 연결 유지해야하므로 추후 검토 후 삭제
         if let subscribeTrainUseCase {
             subscribeTrainUseCase.unsubscribe(trainCode: state.trainCode)
             cancellables.removeAll()
@@ -366,6 +378,8 @@ public final class MainFeatureViewModel: ViewModel {
             do {
                 let trainCar = try await getSeatInTrainCarUseCase.execute(trainCode: currentTrainCode, carCode: currentCarCode)
                 await MainActor.run {
+                    guard state.trainCode == currentTrainCode,
+                    state.carCode == currentCarCode else { return }
                     /// 현재 구역의 좌석 데이터만 필터링
                     state.seatSectionState.seats = getSeatInSectionUseCase.execute(trainCar: trainCar, seatSectionType: currentSeatSectionType)
                     
@@ -396,7 +410,7 @@ public final class MainFeatureViewModel: ViewModel {
             Task {
                 do {
                     let requesterPublisher = try await registerSeatUseCase.execute(seat)
-                    self.store.subscribeToSeatRequesterPublisher(requesterPublisher)
+                    self.store.subscribeToSeatRequesterPublisher(requesterPublisher, seatId: seat.id)
                 } catch {
                     print(error.localizedDescription)
                 }
@@ -411,7 +425,7 @@ public final class MainFeatureViewModel: ViewModel {
             Task {
                 do {
                     let requesterPublisher = try await moveSeatUseCase.execute(from: oldSeat, to: newSeat)
-                    self.store.subscribeToSeatRequesterPublisher(requesterPublisher)
+                    self.store.subscribeToSeatRequesterPublisher(requesterPublisher, seatId: newSeat.id)
                 } catch {
                     print(error.localizedDescription)
                 }
@@ -440,7 +454,7 @@ public final class MainFeatureViewModel: ViewModel {
             Task {
                 do {
                     let requesteePublisher = try await postSeatRequestUseCase.execute(seat, requesterId: store.user.id, creditAmount: creditAmount)
-                    store.subscribeToSeatRequesteePublisher(requesteePublisher)
+                    store.subscribeToSeatRequesteePublisher(requesteePublisher, seatId: seat.id)
                 } catch {
                     print(error.localizedDescription)
                 }

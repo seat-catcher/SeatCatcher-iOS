@@ -22,8 +22,9 @@ public final class CancelSeatUseCaseImpl: CancelSeatUseCase {
     }
     
     public func execute(_ seat: Seat) async throws {
-        /// 좌석 점유를 해제하고 구독을 취소합니다
+        /// 좌석 점유를 해제합니다
         try await seatRepository.cancelSeat()
-        try await seatStompRepository.unsubscribeFromSeatOccupied(seat)
+        /// 좌석 요청에 대한 구독을 취소합니다
+        seatStompRepository.unsubscribeFromSeatOccupied(seat)
     }
 }

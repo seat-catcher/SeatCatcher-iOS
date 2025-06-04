@@ -22,14 +22,13 @@ public final class RegisterSeatUseCaseImpl: RegisterSeatUseCase {
         self.seatStompRepository = seatStompRepository
     }
     
+    @MainActor
     public func execute(_ seat: Seat) async throws -> AnyPublisher<SeatRequester, Error> {
         /// 좌석 점유 상태를 업데이트합니다
         try await seatRepository.registerSeat(seat)
         /// 좌석 요청 수신에 대한 구독을 시작합니다
-        try await seatStompRepository.subscribeToSeatOccupied(seat)
+        seatStompRepository.subscribeToSeatOccupied(seat)
         /// 해당 퍼블리셔를 리턴합니다
-        return try await seatStompRepository.getSeatRequesterPublisher()
-            .receive(on: DispatchQueue.main)
-            .eraseToAnyPublisher()
+        return seatStompRepository.getSeatRequesterPublisher()
     }
 }

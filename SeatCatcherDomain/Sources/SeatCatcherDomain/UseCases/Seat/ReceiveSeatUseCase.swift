@@ -27,10 +27,10 @@ public final class ReceiveSeatUseCaseImpl: ReceiveSeatUseCase {
         /// 좌석 요청자를 점유자로 좌석 상태를 업데이트합니다
         try await seatRepository.changeSeatOccupant(seat, creditAmount: creditAmount)
         /// 좌석 요청을 수신하는 STOMP 구독을 취소합니다
-        try await seatStompRepository.unsubscribeFromSeatRequest(seat, requesterId: requesterId)
+        seatStompRepository.unsubscribeFromSeatRequest(seat, requesterId: requesterId)
         /// 앉은 좌석에 대한 요청 구독을 시작합니다
-        try await seatStompRepository.subscribeToSeatOccupied(seat)
+        seatStompRepository.subscribeToSeatOccupied(seat)
         /// 해당 퍼블리셔를 리턴합니다
-        return try await seatStompRepository.getSeatRequesterPublisher()
+        return seatStompRepository.getSeatRequesterPublisher()
     }
 }

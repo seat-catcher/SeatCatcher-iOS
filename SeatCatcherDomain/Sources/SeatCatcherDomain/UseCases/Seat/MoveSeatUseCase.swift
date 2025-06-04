@@ -22,16 +22,17 @@ public final class MoveSeatUseCaseImpl: MoveSeatUseCase {
         self.seatStompRepository = seatStompRepository
     }
     
+    @MainActor
     public func execute(from oldSeat: Seat, to newSeat: Seat) async throws -> AnyPublisher<SeatRequester, Error> {
         /// 기존 좌석 정보를 삭제합니다
         try await seatRepository.cancelSeat()
         /// 기존 앉은 좌석에 대한 요청 구독을 해제합니다
-        try await seatStompRepository.unsubscribeFromSeatOccupied(oldSeat)
+        seatStompRepository.unsubscribeFromSeatOccupied(oldSeat)
         /// 이후 새로운 좌석 정보를 등록합니다
         try await seatRepository.registerSeat(newSeat)
         /// 앉은 좌석에 대한 요청 구독을 시작합니다
-        try await seatStompRepository.subscribeToSeatOccupied(newSeat)
+        seatStompRepository.subscribeToSeatOccupied(newSeat)
         /// 해당 퍼블리셔를 리턴합니다
-        return try await seatStompRepository.getSeatRequesterPublisher()
+        return seatStompRepository.getSeatRequesterPublisher()
     }
 }

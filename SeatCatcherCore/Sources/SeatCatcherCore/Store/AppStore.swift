@@ -60,16 +60,6 @@ public final class AppStore {
     /// 구독 관리에 필요한 변수 및 퍼블리셔입니다
     private var cancellables = Set<AnyCancellable>() // subscriber 저장
     private var subscribedTopics: Set<String> = [] // 구독한 토픽
-    /// STOMP 연결 상태
-    private var isStompConnected: Bool? {
-        didSet {
-            _isStompConnectedPublisher.send(isStompConnected)
-        }
-    }
-    private let _isStompConnectedPublisher = PassthroughSubject<Bool?, Never>()
-    public var isStompConnectedPublisher: AnyPublisher<Bool?, Never> {
-        _isStompConnectedPublisher.eraseToAnyPublisher()
-    }
     
     public init(
         user: User,
@@ -93,9 +83,9 @@ public final class AppStore {
         self.user = user
     }
     
-    public func subscribeToTrainPublisher(_ publisher: AnyPublisher<TrainCar, Error>?, topic: String) {
-        guard let publisher, !subscribedTopics.contains(topic) else { return }
-        subscribedTopics.insert(topic)
+    public func subscribeToTrainPublisher(_ publisher: AnyPublisher<TrainCar, Error>?, trainCode: String) {
+        guard let publisher, !subscribedTopics.contains(trainCode) else { return }
+        subscribedTopics.insert(trainCode) // 실제 topic destination 대신 열차 번호로 관리해도 동일
         publisher
             .receive(on: DispatchQueue.main)
             .sink(
@@ -112,8 +102,10 @@ public final class AppStore {
             .store(in: &cancellables)
     }
     
-    public func subscribeToSeatRequesterPublisher(_ publisher: AnyPublisher<SeatRequester, Error>?) {
-        guard let publisher else { return }
+    public func subscribeToSeatRequesterPublisher(_ publisher: AnyPublisher<SeatRequester, Error>?, seatId: Int) {
+        let seatId = String(seatId)
+        guard let publisher, !subscribedTopics.contains(seatId) else { return }
+        subscribedTopics.insert(seatId) // 실제 topic destination 대신 seatId로 관리해도 동일
         publisher
             .receive(on: DispatchQueue.main)
             .sink(
@@ -129,8 +121,10 @@ public final class AppStore {
             .store(in: &cancellables)
     }
     
-    public func subscribeToSeatRequesteePublisher(_ publisher: AnyPublisher<SeatRequestee, Error>?) {
-        guard let publisher else { return }
+    public func subscribeToSeatRequesteePublisher(_ publisher: AnyPublisher<SeatRequestee, Error>?, seatId: Int) {
+        let seatId = String(seatId)
+        guard let publisher, !subscribedTopics.contains(seatId) else { return }
+        subscribedTopics.insert(seatId) // 실제 topic destination 대신 seatId로 관리해도 동일
         publisher
             .receive(on: DispatchQueue.main)
             .sink(
@@ -143,15 +137,6 @@ public final class AppStore {
                     self?.seatRequestee = requestee
                 }
             )
-            .store(in: &cancellables)
-    }
-    
-    public func subscribeToStompConnection(_ publisher: AnyPublisher<Bool, Never>) {
-        publisher
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] isConnected in
-                self?.isStompConnected = isConnected
-            }
             .store(in: &cancellables)
     }
     

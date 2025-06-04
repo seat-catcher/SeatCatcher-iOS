@@ -15,11 +15,9 @@ public protocol AcceptRequestSeatUseCase {
 public final class AcceptRequestSeatUseCaseImpl: AcceptRequestSeatUseCase {
     
     private let seatRepository: SeatRepository
-    private let seatStompRepository: SeatStompRepository
     
-    public init(seatRepository: SeatRepository, seatStompRepository: SeatStompRepository) {
+    public init(seatRepository: SeatRepository) {
         self.seatRepository = seatRepository
-        self.seatStompRepository = seatStompRepository
     }
     
     public func execute(_ seat: Seat, requester: SeatRequester) async throws {

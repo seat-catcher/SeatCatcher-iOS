@@ -9,18 +9,6 @@ import Foundation
 import SwiftStomp
 import Combine
 
-protocol StompClientServiceProtocol {
-    var isConnectedPublisher: AnyPublisher<Bool, Never> { get }
-    var messagePublisher: AnyPublisher<StompTextMessageDTO, Never> { get }
-    func connect()
-    func disconnect()
-    func subscribe(topic: String)
-    func unsubscribe(topic: String)
-    func send(topic: String, message: String)
-}
-
-extension StompClientService: StompClientServiceProtocol {}
-
 /// 수신된 텍스트 메시지를 단순화한 데이터 모델
 struct StompTextMessageDTO {
     let text: String // 메시지 본문
