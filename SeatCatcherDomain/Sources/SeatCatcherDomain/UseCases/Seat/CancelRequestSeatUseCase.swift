@@ -9,10 +9,10 @@ import Foundation
 
 /// 좌석요청자 - 좌석 요청 취소 시 호출
 public protocol CancelRequestSeatUseCase {
-    func execute(seat: Seat, creditAmount: Int)
+    func execute(seat: Seat, creditAmount: Int) async throws
 }
 
-final class CancelRequestSeatUseCaseImpl: CancelRequestSeatUseCase {
+public final class CancelRequestSeatUseCaseImpl: CancelRequestSeatUseCase {
     
     private let seatRepository: SeatRepository
     
@@ -20,7 +20,7 @@ final class CancelRequestSeatUseCaseImpl: CancelRequestSeatUseCase {
         self.seatRepository = seatRepository
     }
     
-    func execute(seat: Seat, creditAmount: Int) {
+    public func execute(seat: Seat, creditAmount: Int) async throws {
         try await seatRepository.cancelRequestSeat(seatId: seat.id, creditAmount: creditAmount)
     }
 }
