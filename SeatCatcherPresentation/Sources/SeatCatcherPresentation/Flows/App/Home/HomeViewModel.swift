@@ -32,17 +32,18 @@ public final class HomeViewModel: ViewModel {
         var isCreditStoreAlertPresented = false
         var pathHistory: PathHistory?
         var incoming: Incoming?
+
+        var userStatus: UserStatus {
+            if store.isOnJourney { .inTransit }
+            else if pathHistory == nil { .pathNotExists }
+            else { .pathExists }
+        }
+
         var guidingText: String {
             switch userStatus {
             case .inTransit: "현재 이용중인 경로"
             case .pathExists, .pathNotExists: "자주 이용한 경로"
             }
-        }
-
-        var userStatus: UserStatus {
-            if store.expectedArrivalTime != nil { .inTransit }
-            else if pathHistory == nil { .pathNotExists }
-            else { .pathExists }
         }
 
         var expectedRemainingTime: TimeInterval? {

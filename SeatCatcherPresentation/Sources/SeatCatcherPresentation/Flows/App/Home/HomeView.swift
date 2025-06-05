@@ -218,8 +218,8 @@ private struct PathCardInTransit: View {
         TimelineView(.periodic(from: .now, by: 5)) { timeline in
             let now = timeline.date
             var remainingTimeString: String {
-                let remainingTime = max(Int(viewModel.state.expectedRemainingTime ?? 0) / 60, 0)
-                return "\(remainingTime)분 남았어요"
+                let remainingTime = Int((viewModel.state.expectedRemainingTime ?? 0) / 60)
+                return remainingTime <= 0 ? "곧 도착해요" : "\(remainingTime)분 남았어요"
             }
             var departureTimeString: String { (viewModel.store.departureTime ?? now).amPmTime }
             var arrivalTimeString: String { (viewModel.store.expectedArrivalTime ?? now).hour12Time }

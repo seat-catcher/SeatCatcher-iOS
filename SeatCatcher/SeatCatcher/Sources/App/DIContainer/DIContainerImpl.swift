@@ -13,7 +13,10 @@ import SeatCatcherData
 
 final class DIContainerImpl {
     // MARK: - Store Instances
-    private let appStore = AppStore(user: User(hasOnBoarded: true))
+    private lazy var appStore = AppStore(
+        user: User(hasOnBoarded: true),
+        endJourneyUseCase: endJourneyUseCase
+    )
 
     // MARK: - Service Instances
     private let networkService = NetworkService()
@@ -79,6 +82,7 @@ final class DIContainerImpl {
     private lazy var postPathHistoriesUseCase = PostPathHistoriesImpl(pathHistoriesRespotiry: pathHistoriesRepository)
     private lazy var startJourneyUseCase = StartJourneyUseCaseImpl(pathHistoriesRepository: pathHistoriesRepository)
     private lazy var subscribeArrivalTimeUseCase = SubscribeArrivalTimeUseCaseImpl(pathHistoriesRepository: pathHistoriesRepository)
+    private lazy var endJourneyUseCase = EndJourneyUseCaseImpl(pathHistoriesRepository: pathHistoriesRepository)
 
     // MARK: - Incomings UseCase Instances
     private lazy var getIncomingsUseCase = GetIncomingsUseCaseImpl(incomingsRepository: incomingsRepository)

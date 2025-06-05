@@ -37,48 +37,29 @@ public final class PathHistoriesRepositoryImpl: PathHistoriesRepository {
     }
 
     // FIXME: - 백엔드 이슈 해결 시 실제 구현으로 교체
-    public func subscribeArrivalTime(pathHistoryId: Int) -> AnyPublisher<Date, Never> {
+    public func subscribeArrivalTime(pathHistoryId: Int) -> AnyPublisher<PathArrivalTime, Never> {
         let topic = "/topic/path-histories.\(pathHistoryId)"
         stompClientService.subscribe(topic: topic)
 
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm"
-        dateFormatter.timeZone = TimeZone(identifier: "Asia/Seoul")
+        dateFormatter.timeZone = TimeZone(abbreviation: "UTC")
 
         let arrivalTimePublisher = stompClientService
             .messagePublisher
-            .filter { $0.destination == topic }
-            .compactMap { message -> Date? in
+            .compactMap { message -> PathArrivalTime? in
                 guard let data = message.text.data(using: .utf8),
-                      let dto = try? JSONDecoder().decode(ArrivalTimeDTO.self, from: data)
+                      let dto = try? JSONDecoder().decode(ArrivalTimeDTO.self, from: data),
+                      let date = dateFormatter.date(from: dto.expectedArrivalTime)
                 else { return nil }
-
-                let date = dateFormatter.date(from: dto.expectedArrivalTime)
-                dump(date)
-                return date
+                return PathArrivalTime(pathHistoryId: dto.pathHistoryId, expectedArrivalTime: date, arrived: dto.arrived)
             }
             .eraseToAnyPublisher()
 
         return arrivalTimePublisher
-//        return makeMockArrivalTimePublisher()
     }
 
-    /// 5초마다 `Date`를 발행하다가 15분이 지나면 자동으로 완료하는 퍼블리셔를 리턴합니다.
-    private func makeMockArrivalTimePublisher() -> AnyPublisher<Date, Never> {
-        let now = Date()
-        let initialExpectedArrival = now.addingTimeInterval(60 * 15)
-
-        let timer = Timer
-            .publish(every: 5.0, on: .main, in: .common)
-            .autoconnect()
-
-        let publisher = timer
-            .map { _ -> Date in
-                return initialExpectedArrival.addingTimeInterval((0...5).compactMap { Double($0) }.randomElement()! )
-            }
-            .prefix(180)
-            .eraseToAnyPublisher()
-
-        return publisher
+    public func unsubscribeAll() {
+        stompClientService.unsubscribeAll()
     }
 }

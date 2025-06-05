@@ -139,6 +139,10 @@ public final class StompClientService {
         swiftStomp.unsubscribe(from: topic) // UNSUBSCRIBE 프레임 전송
     }
 
+    func unsubscribeAll() {
+        activeTopics.forEach { unsubscribe(topic: $0) }
+    }
+
     /// 특정 토픽으로 메시지 전송
     func send(topic: String, message: String) {
         swiftStomp.send(body: message, to: topic, receiptId: nil, headers: ["content-type": "application/json"])

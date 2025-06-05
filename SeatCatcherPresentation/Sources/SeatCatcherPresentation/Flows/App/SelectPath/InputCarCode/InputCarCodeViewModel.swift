@@ -55,25 +55,24 @@ public final class InputCarCodeViewModel: ViewModel {
         case let .digitChanged(digit, idx):
             state.carCodeDigits[idx] = digit
         case .nextButtonTapped:
-            let trainCode = state.carCodeDigits.joined()
+            let carCode = state.carCodeDigits.joined()
             Task {
                 let (pathHistoryId, expectedArrivalTime) = try await startJourneyUseCase.execute(
                     departure: departure,
                     arrival: arrival,
-                    trainCode: trainCode
+                    trainCode: incoming.trainCode
                 )
                 let arrivalTimePublisher = subscribeArrivalTimeUseCase.execute(pathHistoryId: pathHistoryId)
 
                 await MainActor.run {
-                    appStore.trainCode = incoming.trainCode
-                    appStore.carDirection = incoming.carDirection
-                    appStore.incoming = incoming
-                    appStore.departure = departure
-                    appStore.arrival = arrival
-                    appStore.departureTime = Date()
-                    appStore.expectedArrivalTime = expectedArrivalTime
-                    appStore.subscribeArrivalPublisher(arrivalTimePublisher)
-
+                    appStore.startJourney(
+                        carCode: carCode,
+                        incoming: incoming,
+                        departure: departure,
+                        arrival: arrival,
+                        expectedArrivalTime: expectedArrivalTime,
+                        arrivalTimePublisher: arrivalTimePublisher
+                    )
                     coordinator.push(AppScene.selectSeatSection)
                 }
             }
