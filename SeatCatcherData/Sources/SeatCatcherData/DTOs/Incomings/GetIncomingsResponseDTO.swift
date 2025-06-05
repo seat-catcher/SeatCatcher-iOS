@@ -32,9 +32,9 @@ extension GetIncomingsResponseDTO: ResponseDTO {
     }
 
     var domainModel: Incoming {
-        let (carDirection, trainCode, destination) = parseOrdKey(ordkey)
+        let (carDirection, destination) = parseOrdKey(ordkey)
         return Incoming(
-            trainCode: trainCode,
+            trainCode: btrainNo,
             arrivalTime: Date().addingTimeInterval(TimeInterval(Int(barvlDt) ?? 0)),
             carDirection: carDirection,
             destination: destination
@@ -45,14 +45,11 @@ extension GetIncomingsResponseDTO: ResponseDTO {
         _ ordkey: String
     ) -> (
         carDirection: CarDirection,
-        trainCode: String,
         destination: String
     ) {
         var chars = Array(ordkey)
 
         let carDirection: CarDirection = String(chars[0]) == "0" ? .up : .down
-
-        let trainCode = String(chars[2...4])
 
         while let last = chars.last, last.isNumber {
             chars.removeLast()
@@ -60,6 +57,6 @@ extension GetIncomingsResponseDTO: ResponseDTO {
 
         let destination = String(chars[5...])
 
-        return (carDirection, trainCode, destination)
+        return (carDirection, destination)
     }
 }

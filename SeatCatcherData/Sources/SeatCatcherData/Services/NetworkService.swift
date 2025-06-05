@@ -260,7 +260,6 @@ public struct NetworkService: Sendable {
         let requestDTO = GetIncomingsRequestDTO(lineNumber: line, dep: departure, dest: arrival)
         let response = try await provider.request(.getIncomings(requestDTO: requestDTO))
         let responseDTO = try JSONDecoder().decode([GetIncomingsResponseDTO].self, from: response)
-        dump(responseDTO)
         return responseDTO
     }
 }

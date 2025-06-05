@@ -6,12 +6,8 @@
 //
 
 struct ArrivalTimeDTO: Decodable {
-    let id: Int
-    let userId: Int
-    let startStationId: Int
-    let startStationName: String
-    let endStationId: Int
-    let endStationName: String
+    let pathHistoryId: Int
     let expectedArrivalTime: String
-    let createdTime: String
+    let nextScheduleTime: String?
+    let arrived: Bool
 }

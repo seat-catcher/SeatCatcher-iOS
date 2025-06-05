@@ -11,16 +11,22 @@ import SeatCatcherDomain
 
 @Observable
 public final class AppStore {
-
     public var user: User
-    
+
+    public var isOnJourney: Bool { expectedArrivalTime != nil }
+
     // MARK: - 메인피쳐
     /// 메인피쳐 승/하차 플로우에 필요한 상태 변수입니다
-    public var trainCode: String? // 열차 번호
+    public var departure: Station?
+    public var arrival: Station?
+    public var incoming: Incoming?
+    public var departureTime: Date?
+    public var expectedArrivalTime: Date?
+    public var trainCode: String? { incoming?.trainCode } // 열차 번호
     public var carCode: String? // 차량 번호
     public var seatSectionType: SeatSectionType? // 열차 구역
     public var isBlocked: Bool // 좌석 잠금 상태
-    public var carDirection: CarDirection? // 하행 상행 구분
+    public var carDirection: CarDirection? { incoming?.carDirection } // 하행 상행 구분
     public var isSitting: Bool // 앉아있음 여부
     /// 메인피쳐 좌석 정보 업데이트에 필요한 열차 좌석 정보 퍼블리셔입니다
     private var trainCar: TrainCar? {
@@ -63,31 +69,25 @@ public final class AppStore {
     private var seatRequesterCancellables = Set<AnyCancellable>()
     private var seatRequesteeCancellables = Set<AnyCancellable>()
     private var arrivalTimeCancellables = Set<AnyCancellable>()
-    
-    public var departure: Station?
-    public var arrival: Station?
-    public var incoming: Incoming?
-    public var departureTime: Date?
-    public var expectedArrivalTime: Date?
+
+    private let endJourneyUseCase: EndJourneyUseCase
 
     public init(
         user: User,
-        trainCode: String? = nil,
         carCode: String? = nil,
         seatSectionType: SeatSectionType? = nil,
         isBlocked: Bool = true,
-        carDirection: CarDirection? = nil,
         isSitting: Bool = false,
-        expectedArrivalTime: Date? = nil
+        expectedArrivalTime: Date? = nil,
+        endJourneyUseCase: EndJourneyUseCase
     ) {
         self.user = user
-        self.trainCode = trainCode
         self.carCode = carCode
         self.seatSectionType = seatSectionType
         self.isBlocked = isBlocked
-        self.carDirection = carDirection
         self.isSitting = isSitting
         self.expectedArrivalTime = expectedArrivalTime
+        self.endJourneyUseCase = endJourneyUseCase
     }
 
     public func setUser(_ user: User) {
@@ -145,16 +145,50 @@ public final class AppStore {
             )
             .store(in: &seatRequesteeCancellables)
     }
-    
-    public func subscribeArrivalPublisher(_ publisher: AnyPublisher<Date, Never>) {
+
+    public func startJourney(
+        carCode: String,
+        incoming: Incoming,
+        departure: Station,
+        arrival: Station,
+        expectedArrivalTime: Date,
+        arrivalTimePublisher: AnyPublisher<PathArrivalTime, Never>
+    ) {
+        self.carCode = carCode
+        self.incoming = incoming
+        self.departure = departure
+        self.arrival = arrival
+        self.departureTime = Date()
+        self.expectedArrivalTime = expectedArrivalTime
+        subscribeArrivalPublisher(arrivalTimePublisher)
+    }
+
+    private func endJourney() {
+        self.carCode = nil
+        self.incoming = nil
+        self.departure = nil
+        self.arrival = nil
+        self.departureTime = nil
+        self.expectedArrivalTime = nil
+
+        trainCarCancellables.removeAll()
+        seatRequesterCancellables.removeAll()
+        seatRequesteeCancellables.removeAll()
+        arrivalTimeCancellables.removeAll()
+
+        endJourneyUseCase.execute()
+    }
+
+    private func subscribeArrivalPublisher(_ publisher: AnyPublisher<PathArrivalTime, Never>) {
         arrivalTimeCancellables.removeAll()
 
         publisher
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] newDate in
-                dump("appStore Received new Date")
-                dump(newDate)
-                self?.expectedArrivalTime = newDate
+            .sink { [weak self] pathArrivalTime in
+                guard let self = self else { return }
+                self.expectedArrivalTime = pathArrivalTime.expectedArrivalTime
+
+                if pathArrivalTime.arrived { endJourney() }
             }
             .store(in: &arrivalTimeCancellables)
     }

@@ -9,7 +9,7 @@ import Combine
 import Foundation
 
 public protocol SubscribeArrivalTimeUseCase {
-    func execute(pathHistoryId: Int) -> AnyPublisher<Date, Never>
+    func execute(pathHistoryId: Int) -> AnyPublisher<PathArrivalTime, Never>
 }
 
 public final class SubscribeArrivalTimeUseCaseImpl: SubscribeArrivalTimeUseCase {
@@ -19,7 +19,7 @@ public final class SubscribeArrivalTimeUseCaseImpl: SubscribeArrivalTimeUseCase 
         self.pathHistoriesRepository = pathHistoriesRepository
     }
     
-    public func execute(pathHistoryId: Int) -> AnyPublisher<Date, Never> {
+    public func execute(pathHistoryId: Int) -> AnyPublisher<PathArrivalTime, Never> {
         let publisher = pathHistoriesRepository.subscribeArrivalTime(pathHistoryId: pathHistoryId)
         return publisher
     }

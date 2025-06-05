@@ -12,5 +12,6 @@ public protocol PathHistoriesRepository {
     func getPathHistories() async throws -> [PathHistory]
     func postPathHistories(departureStationId: Int, arrivalStationId: Int) async throws
     func startJourney(departureStationId: Int, arrivalStationId: Int, trainCode: String) async throws -> (pathHistoryId: Int, expectedArrivalTime: Date)
-    func subscribeArrivalTime(pathHistoryId: Int) -> AnyPublisher<Date, Never>
+    func subscribeArrivalTime(pathHistoryId: Int) -> AnyPublisher<PathArrivalTime, Never>
+    func unsubscribeAll()
 }
