@@ -16,6 +16,9 @@ public final class HomeViewModel: ViewModel {
         case quickBoardingButtonTapped
         case catchSeatButtonTapped
         case notificationButtonTapped
+        case userInfoCardTapped
+        case creditStoreButtonTapped
+        case alertPrimaryButtonTapped
     }
 
     struct State {
@@ -26,6 +29,7 @@ public final class HomeViewModel: ViewModel {
             case pathNotExists
         }
 
+        var isCreditStoreAlertPresented = false
         var pathHistory: PathHistory?
         var incoming: Incoming?
         var guidingText: String {
@@ -110,11 +114,17 @@ public final class HomeViewModel: ViewModel {
                     )
                 }
             }
-
+            
         case .catchSeatButtonTapped:
             coordinator.push(AppScene.selectBoardingState)
         case .notificationButtonTapped:
             coordinator.push(AppScene.notifications)
+        case .userInfoCardTapped:
+            coordinator.push(AppScene.mypage)
+        case .creditStoreButtonTapped:
+            state.isCreditStoreAlertPresented = true
+        case .alertPrimaryButtonTapped:
+            state.isCreditStoreAlertPresented = false
         }
     }
 }

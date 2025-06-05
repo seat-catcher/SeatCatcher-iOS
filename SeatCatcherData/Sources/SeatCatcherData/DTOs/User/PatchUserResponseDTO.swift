@@ -19,7 +19,9 @@ struct PatchUserResponseDTO {
 extension PatchUserResponseDTO: ResponseDTO {
     typealias DomainModel = User
 
-    static var stub: Self { .init(userId: 0, name: "Stub", profileImageNum: "Image_1", tags: ["USERTAG_NULL"], credit: 0, hasOnBoarded: true) }
+    static var stub: Self {
+        .init(userId: 0, name: "Stub", profileImageNum: "Image_1", tags: ["USERTAG_NULL"], credit: 0, hasOnBoarded: true)
+    }
 
     var domainModel: User {
         User(

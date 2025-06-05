@@ -48,6 +48,13 @@ final class AppCoordinator: Coordinator {
                 coordinator: self
             )
             HomeView(viewModel: homeViewModel)
+        case .mypage:
+            let mypageViewModel = MyPageViewModel(
+                appStore: diContainer.resolveAppStore(),
+                logoutUseCase: diContainer.resolveLogoutUseCase(),
+                coordinator: self
+            )
+            MyPageView(viewModel: mypageViewModel)
         case .notifications:
             let notificationsViewModel = NotificationsViewModel(
                 coordinator: self
@@ -167,32 +174,95 @@ final class AppCoordinator: Coordinator {
 
     @ViewBuilder
     func buildSheet(_ sheet: AppSheet) -> some View {
-        switch sheet {
-        case let .askRequestDeclineBottomSheetView(yesButtonAction, noButtonAction):
-            AskRequestDeclineBottomSheetView(yesButtonAction: yesButtonAction, noButtonAction: noButtonAction)
-        case let .askSeatChangedBottomSheetView(action):
-            AskSeatChangedBottomSheetView(action: action)
-        case let .askSeatedBottomSheetView(action):
-            AskSeatedBottomSheetView(action: action)
-        case let .changeSeatNowBottomSheetView(action):
-            ChangeSeatNowBottomSheetView(action: action)
-        case .dibsBottomSheetView:
-            DibsBottomSheetView()
-        case let .noticeChangeSeatBottomSheetView(minutesLeft):
-            NoticeChangeSeatBottomSheetView(minutesLeft: minutesLeft)
-        case .noticeGetOffBottomSheetView:
-            NoticeGetOffBottomSheetView()
-        case let .receiveRequestBottomSheetView(profileConfig, leftButtonAction, rightButtonAction, coinCount, reportAction):
-            ReceiveRequestBottomSheetView(profileConfig: profileConfig, leftButtonAction: leftButtonAction, rightButtonAction: rightButtonAction, coinCount: coinCount, reportAction: reportAction)
-        case let .rejectRequestBottomSheetView(action):
-            RejectRequestBottomSheetView(action: action)
-        case let .requestDeclinedBottomSheetView(action):
-            RequestDeclinedBottomSheetView(action: action)
-        case let .seatInformationBottomSheetView(profileConfig, station, minutesLeft, leftButtonAction, heartFilled, heartCount, rightButtonAction, coinCount, reportAction):
-            SeatInformationBottomSheetView(profileConfig: profileConfig, station: station, minutesLeft: minutesLeft, leftButtonAction: leftButtonAction, heartFilled: heartFilled, heartCount: heartCount, rightButtonAction: rightButtonAction, coinCount: coinCount, reportAction: reportAction)
-        case let .sendRequestBottomSheetView(profileConfig, leftButtonAction, rightButtonAction, coinCount, reportAction):
-            SendRequestBottomSheetView(profileConfig: profileConfig, leftButtonAction: leftButtonAction, rightButtonAction: rightButtonAction, coinCount: coinCount, reportAction: reportAction)
+        Group {
+            switch sheet {
+            // MARK: - Legacy
+            case let .askRequestDeclineBottomSheetView(yesButtonAction, noButtonAction):
+                AskRequestDeclineBottomSheetView(yesButtonAction: yesButtonAction, noButtonAction: noButtonAction)
+            case let .askSeatChangedBottomSheetView(action):
+                AskSeatChangedBottomSheetView(action: action)
+            case let .askSeatedBottomSheetView(action):
+                AskSeatedBottomSheetView(action: action)
+            case let .changeSeatNowBottomSheetView(action):
+                ChangeSeatNowBottomSheetView(action: action)
+            case .dibsBottomSheetView:
+                DibsBottomSheetView()
+            case let .noticeChangeSeatBottomSheetView(minutesLeft):
+                NoticeChangeSeatBottomSheetView(minutesLeft: minutesLeft)
+            case .noticeGetOffBottomSheetView:
+                NoticeGetOffBottomSheetView()
+            case let .receiveRequestBottomSheetView(profileConfig, leftButtonAction, rightButtonAction, coinCount, reportAction):
+                ReceiveRequestBottomSheetView(profileConfig: profileConfig, leftButtonAction: leftButtonAction, rightButtonAction: rightButtonAction, coinCount: coinCount, reportAction: reportAction)
+            case let .rejectRequestBottomSheetView(action):
+                RejectRequestBottomSheetView(action: action)
+            case let .requestDeclinedBottomSheetView(action):
+                RequestDeclinedBottomSheetView(action: action)
+            case let .seatInformationBottomSheetView(profileConfig, station, minutesLeft, leftButtonAction, heartFilled, heartCount, rightButtonAction, coinCount, reportAction):
+                SeatInformationBottomSheetView(profileConfig: profileConfig, station: station, minutesLeft: minutesLeft, leftButtonAction: leftButtonAction, heartFilled: heartFilled, heartCount: heartCount, rightButtonAction: rightButtonAction, coinCount: coinCount, reportAction: reportAction)
+            case let .sendRequestBottomSheetView(profileConfig, leftButtonAction, rightButtonAction, coinCount, reportAction):
+                SendRequestBottomSheetView(profileConfig: profileConfig, leftButtonAction: leftButtonAction, rightButtonAction: rightButtonAction, coinCount: coinCount, reportAction: reportAction)
+            // MARK: - New
+            case let .checkAcceptSeatRequest(
+                name,
+                userImage,
+                tags,
+                creditAmount,
+                reportButtonAction,
+                confirmationButtonAction,
+                cancelButtonAction
+            ):
+                CheckAcceptSeatRequestBottomSheetView(
+                    name: name,
+                    userImage: userImage,
+                    tags: tags,
+                    creditAmount: creditAmount,
+                    reportButtonAction: reportButtonAction,
+                    confirmationButtonAction: confirmationButtonAction,
+                    cancelButtonAction: cancelButtonAction
+                )
+            case let .checkRejectSeatRequest(confirmationButtonAction, cancelButtonAction):
+                CheckRejectSeatRequestBottomSheetView(
+                    confirmationButtonAction: confirmationButtonAction,
+                    cancelButtonAction: cancelButtonAction
+                )
+            case let .checkSeatExchange(confirmationButtonAction, cancelButtonAction):
+                CheckSeatExchangeStatusBottomSheetView(
+                    confirmationButtonAction: confirmationButtonAction,
+                    cancelButtonAction: cancelButtonAction
+                )
+            case let .checkSeatOccupancy(confirmationButtonAction, cancelButtonAction):
+                CheckSeatOccupancyStatusBottomSheetView(
+                    confirmationButtonAction: confirmationButtonAction,
+                    cancelButtonAction: cancelButtonAction
+                )
+            case let .exchangeGuiding(confirmationButtonAction):
+                ExchangeGuidingBottomSheetView(confirmationButtonAction: confirmationButtonAction)
+            case let .notifyWaiting(confirmationButtonAction):
+                NotifyWaitingBottomSheetView(confirmationButtonAction: confirmationButtonAction)
+            case let .requestRejected(confirmationButtonAction):
+                RequestRejectedBottomSheetView(confirmationButtonAction: confirmationButtonAction)
+            case let .seatInfo(
+                name,
+                userImage,
+                tags,
+                arrivalStationName,
+                expectedArrivalTime,
+                reportButtonAction,
+                yieldButtonAction
+            ):
+                SeatInfoBottomSheetView(
+                    name: name,
+                    userImage: userImage,
+                    tags: tags,
+                    arrivalStationName: arrivalStationName,
+                    expectedArrivalTime: expectedArrivalTime,
+                    reportButtonAction: reportButtonAction,
+                    yieldButtonAction: yieldButtonAction
+                )
+            }
         }
+        .presentationDragIndicator(.visible)
+        .presentationDetents([.height(300)])
     }
 
     @ViewBuilder
