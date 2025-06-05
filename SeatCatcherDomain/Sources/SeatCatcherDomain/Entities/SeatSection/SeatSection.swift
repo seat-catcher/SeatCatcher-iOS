@@ -7,7 +7,12 @@
 
 import Foundation
 
-public struct SeatSection: Sendable {
+public struct SeatSection: Sendable, Equatable {
+    public static func == (lhs: SeatSection, rhs: SeatSection) -> Bool {
+        lhs.topSeats == rhs.topSeats
+        && lhs.bottomSeats == rhs.bottomSeats 
+    }
+    
     public init(topSeats: [Int:Seat], bottomSeats: [Int:Seat]) {
         self.topSeats = topSeats
         self.bottomSeats = bottomSeats

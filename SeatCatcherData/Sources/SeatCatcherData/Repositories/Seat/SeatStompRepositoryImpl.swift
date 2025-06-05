@@ -14,7 +14,6 @@ import SeatCatcherData
 public final class SeatStompRepositoryImpl: SeatStompRepository {
     private let stompClientService: StompClientService
     private let decoder = JSONDecoder()
-    private let messageSubject = PassthroughSubject<TrainCar, Error>()
     private var cancellables = Set<AnyCancellable>()
     
     public var isConnectedPublisher: AnyPublisher<Bool, Never> {
@@ -23,50 +22,86 @@ public final class SeatStompRepositoryImpl: SeatStompRepository {
     
     public init(stompClientService: StompClientService) {
         self.stompClientService = stompClientService
-        bindStompMessages()
     }
     
-    public func trainCarPublisher(carCode: String) -> AnyPublisher<TrainCar, Error> {
-        messageSubject
-            .filter { $0.carCode == carCode }
+    public func trainCarPublisher(trainCode: String, carCode: String) -> AnyPublisher<TrainCar, Error> {
+        stompClientService.messagePublisher
+            .receive(on: DispatchQueue.main)
+            .filter { $0.destination == "/topic/seat/\(trainCode)" }
+            .tryMap { message in
+                guard let data = message.text.data(using: .utf8) else {
+                    throw SeatCatcherDataError.NullValue
+                }
+                let dto = try self.decoder.decode(GetSeatInTrainCarResponseDTO.self, from: data)
+                return dto.domainModel
+            }
             .eraseToAnyPublisher()
     }
     
-    private func bindStompMessages() {
+    /// 좌석 점유자 - 좌석 요청 수신
+    public func getSeatRequesterPublisher() -> AnyPublisher<SeatRequester, Error> {
         stompClientService.messagePublisher
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                if case let .failure(error) = completion {
-                    self?.messageSubject.send(completion: .failure(error))
+            .filter { $0.destination.contains("/topic/seat.") && $0.destination.contains(".owner") }
+            .tryMap { message in
+                guard let data = message.text.data(using: .utf8) else {
+                    throw SeatCatcherDataError.NullValue
                 }
-            }, receiveValue: { [weak self] stompMessage in
-                self?.handleStompMessage(stompMessage)
-            })
-            .store(in: &cancellables)
+                do {
+                    // creditAmount가 있으면 SeatRequestResponseDTO로 디코딩 성공
+                    let dto = try self.decoder.decode(SeatRequestResponseDTO.self, from: data)
+                    return dto.domainModel
+                } catch {
+                    // creditAmount가 없어서 디코딩 실패 시 CancelSeatRequestResponseDTO로 디코딩
+                    let dto = try self.decoder.decode(CancelSeatRequestResponseDTO.self, from: data)
+                    return dto.domainModel
+                }
+            }
+            .eraseToAnyPublisher()
     }
     
-    private func handleStompMessage(_ message: StompTextMessageDTO) {
-        guard let data = message.text.data(using: .utf8) else {
-            messageSubject.send(completion: .failure(SeatCatcherDataError.nullValue))
-            return
-        }
-        
-        do {
-            let responseDTO = try decoder.decode(GetSeatInTrainCarResponseDTO.self, from: data)
-            let trainCar = responseDTO.domainModel
-            messageSubject.send(trainCar)
-        } catch {
-            messageSubject.send(completion: .failure(error))
-        }
+    /// 좌석 요청자 - 점유자의 응답 수신
+    public func getSeatRequesteePublisher() -> AnyPublisher<SeatRequestee, Error> {
+        stompClientService.messagePublisher
+            .receive(on: DispatchQueue.main)
+            .filter { $0.destination.contains("/topic/seat.") && $0.destination.contains(".requester") }
+            .tryMap { message in
+                guard let data = message.text.data(using: .utf8) else {
+                    throw SeatCatcherDataError.NullValue
+                }
+                let dto = try self.decoder.decode(SeatRequestReplyResponseDTO.self, from: data)
+                return dto.domainModel
+            }
+            .eraseToAnyPublisher()
     }
     
     public func subscribeToTrainCarSeats(trainCode: String) {
-        let topic = "/train/\(trainCode)"
+        let topic = "/topic/seat/\(trainCode)"
         stompClientService.subscribe(topic: topic)
     }
     
     public func unsubscribeFromTrainCarSeats(trainCode: String) {
-        let topic = "/train/\(trainCode)"
+        let topic = "/topic/seat/\(trainCode)"
+        stompClientService.unsubscribe(topic: topic)
+    }
+    
+    public func subscribeToSeatRequest(_ seat: Seat, requesterId: Int) {
+        let topic = "/topic/seat.\(seat.id).requester.\(requesterId)"
+        stompClientService.subscribe(topic: topic)
+    }
+    
+    public func unsubscribeFromSeatRequest(_ seat: Seat, requesterId: Int) {
+        let topic = "/topic/seat.\(seat.id).requester.\(requesterId)"
+        stompClientService.unsubscribe(topic: topic)
+    }
+    
+    public func subscribeToSeatOccupied(_ seat: Seat) {
+        let topic = "/topic/seat.\(seat.id).owner"
+        stompClientService.subscribe(topic: topic)
+    }
+    
+    public func unsubscribeFromSeatOccupied(_ seat: Seat) {
+        let topic = "/topic/seat.\(seat.id).owner"
         stompClientService.unsubscribe(topic: topic)
     }
 }

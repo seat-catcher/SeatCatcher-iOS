@@ -29,6 +29,12 @@ enum SeatCatcherAPI: Sendable {
     
     case postRegisterSeat(requestDTO: PostRegisterSeatRequestDTO)
     case deleteSeat
+    
+    case postSeatRequest(seatId: Int, creditAmount: Int)
+    case cancelSeatRequest(seatId: Int, creditAmount: Int)
+    case acceptSeatRequest(seatId: Int, requesterId: Int)
+    case patchSeatOccupant(requestDTO: PatchSeatOccupantDTO)
+    case rejectSeatRequest(seatId: Int, requesterId: Int, creditAmount: Int)
 
     case getIncomings(requestDTO: GetIncomingsRequestDTO)
 }
@@ -73,6 +79,16 @@ extension SeatCatcherAPI: TargetType {
             return "/user/seats"
         case .getIncomings:
             return "/trains/incomings"
+        case let .postSeatRequest(seatId):
+            return "/user/seats/\(seatId)/yield"
+        case let .cancelSeatRequest(seatId):
+            return "/user/seats/\(seatId)/yield"
+        case let .acceptSeatRequest(seatId):
+            return "/user/seats/\(seatId)/yield"
+        case let .rejectSeatRequest(seatId):
+            return "/user/seats/\(seatId)/yield"
+        case .patchSeatOccupant:
+            return "/user/seats"
         }
     }
     
@@ -108,6 +124,16 @@ extension SeatCatcherAPI: TargetType {
             return .delete
         case .getIncomings:
             return .get
+        case .postSeatRequest:
+            return .post
+        case .cancelSeatRequest:
+            return .post
+        case .acceptSeatRequest:
+            return .post
+        case .rejectSeatRequest:
+            return .post
+        case .patchSeatOccupant:
+            return .patch
         }
     }
     
@@ -154,6 +180,33 @@ extension SeatCatcherAPI: TargetType {
                 "dest": requestDTO.dest
             ]
             return .requestParameters(parameters: parameters, encoding: URLEncoding.default)
+        case let .postSeatRequest(_, creditAmount):
+            let parameters: [String: Any] = [
+                "type": "REQUEST",
+                "creditAmount": creditAmount
+            ]
+            return .requestParameters(parameters: parameters, encoding: URLEncoding.default)
+        case let .cancelSeatRequest(_, creditAmount):
+            let parameters: [String: Any] = [
+                "type": "CANCEL",
+                "creditAmount": creditAmount
+            ]
+            return .requestParameters(parameters: parameters, encoding: URLEncoding.default)
+        case let .acceptSeatRequest(_, requesterId):
+            let parameters: [String: Any] = [
+                "type": "ACCEPT",
+                "oppositeUserId": requesterId
+            ]
+            return .requestParameters(parameters: parameters, encoding: URLEncoding.default)
+        case let .rejectSeatRequest(_, requesterId, creditAmount):
+            let parameters: [String: Any] = [
+                "type": "REJECT",
+                "oppositeUserId": requesterId,
+                "creditAmount": creditAmount
+            ]
+            return .requestParameters(parameters: parameters, encoding: URLEncoding.default)
+        case let .patchSeatOccupant(requestDTO):
+            return .requestJSONEncodable(requestDTO)
         }
     }
 
@@ -196,6 +249,16 @@ extension SeatCatcherAPI: TargetType {
         case .deleteSeat:
             return baseWithAuth
         case .getIncomings:
+            return baseWithAuth
+        case .postSeatRequest:
+            return baseWithAuth
+        case .cancelSeatRequest:
+            return baseWithAuth
+        case .acceptSeatRequest:
+            return baseWithAuth
+        case .rejectSeatRequest:
+            return baseWithAuth
+        case .patchSeatOccupant:
             return baseWithAuth
         }
     }

@@ -65,10 +65,14 @@ final class DIContainerImpl {
     private lazy var getSeatInTrainCarUseCase = GetSeatInTrainCarUseCaseImpl(seatRepository: seatRepository)
     private lazy var getSeatInSectionUseCase = GetSeatInSectionUseCaseImpl()
     private lazy var unlockSeatUseCase = UnlockSeatUseCaseImpl(seatRepository: seatRepository)
-    private lazy var registerSeatUseCase: RegisterSeatUseCase = RegisterSeatUseCaseImpl(seatRepository: seatRepository)
-    private lazy var moveSeatUseCase: MoveSeatUseCase = MoveSeatUseCaseImpl(seatRepository: seatRepository)
-    private lazy var cancelSeatUseCase: CancelSeatUseCase = CancelSeatUseCaseImpl(seatRepository: seatRepository)
+    private lazy var registerSeatUseCase: RegisterSeatUseCase = RegisterSeatUseCaseImpl(seatRepository: seatRepository, seatStompRepository: seatStompRepository)
+    private lazy var moveSeatUseCase: MoveSeatUseCase = MoveSeatUseCaseImpl(seatRepository: seatRepository, seatStompRepository: seatStompRepository)
+    private lazy var cancelSeatUseCase: CancelSeatUseCase = CancelSeatUseCaseImpl(seatRepository: seatRepository, seatStompRepository: seatStompRepository)
     private lazy var subscribeTrainUseCase: SubscribeTrainUseCase = SubscribeTrainUseCaseImpl(seatStompRepository: seatStompRepository)
+    private lazy var requestSeatUseCase: RequestSeatUseCase = RequestSeatUseCaseImpl(seatRepository: seatRepository, seatStompRepository: seatStompRepository)
+    private lazy var cancelRequestSeatUseCase: CancelRequestSeatUseCase = CancelRequestSeatUseCaseImpl(seatRepository: seatRepository, seatStompRepository: seatStompRepository)
+    private lazy var acceptRequestSeatUseCase: AcceptRequestSeatUseCase = AcceptRequestSeatUseCaseImpl(seatRepository: seatRepository)
+    private lazy var rejectRequestSeatUseCase: RejectRequestSeatUseCase = RejectRequestSeatUseCaseImpl(seatRepository: seatRepository)
     
     // MARK: - PathHistories UseCase Instances
     private lazy var getPathHistoriesUseCase = GetPathHistoriesUseCaseImpl(pathHistoriesRepository: pathHistoriesRepository)
@@ -112,6 +116,10 @@ extension DIContainerImpl: DIContainer {
     func resolveMoveSeatUseCase() -> MoveSeatUseCase { return moveSeatUseCase }
     func resolveCancelSeatUseCase() -> CancelSeatUseCase { return cancelSeatUseCase }
     func resolveSubscribeTrainUseCase() -> SubscribeTrainUseCase { return subscribeTrainUseCase }
+    func resolveRequestSeatUseCase() -> RequestSeatUseCase { return requestSeatUseCase }
+    func resolveCancelRequestSeatUseCase() -> CancelRequestSeatUseCase { return cancelRequestSeatUseCase }
+    func resolveAcceptRequestSeatUseCase() -> AcceptRequestSeatUseCase { return acceptRequestSeatUseCase }
+    func resolveRejectRequestSeatUseCase() -> RejectRequestSeatUseCase { return rejectRequestSeatUseCase }
 
     // MARK: Incomings UseCases
     func resolveGetIncomingsUseCase() -> GetIncomingsUseCase { return getIncomingsUseCase }

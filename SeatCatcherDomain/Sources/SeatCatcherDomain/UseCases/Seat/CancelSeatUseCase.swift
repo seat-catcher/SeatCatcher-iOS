@@ -7,19 +7,24 @@
 
 import Foundation
 
-public protocol CancelSeatUseCase: Sendable {
-    func execute() async throws
+public protocol CancelSeatUseCase {
+    func execute(_ seat: Seat) async throws
 }
 
 public final class CancelSeatUseCaseImpl: CancelSeatUseCase {
     
     private let seatRepository: SeatRepository
+    private let seatStompRepository: SeatStompRepository
     
-    public init(seatRepository: SeatRepository) {
+    public init(seatRepository: SeatRepository, seatStompRepository: SeatStompRepository) {
         self.seatRepository = seatRepository
+        self.seatStompRepository = seatStompRepository
     }
     
-    public func execute() async throws {
+    public func execute(_ seat: Seat) async throws {
+        /// 좌석 점유를 해제합니다
         try await seatRepository.cancelSeat()
+        /// 좌석 요청에 대한 구독을 취소합니다
+        seatStompRepository.unsubscribeFromSeatOccupied(seat)
     }
 }

@@ -6,20 +6,29 @@
 //
 
 import Foundation
+import Combine
 
-public protocol RegisterSeatUseCase: Sendable {
-    func execute(_ seat: Seat) async throws
+public protocol RegisterSeatUseCase {
+    @MainActor func execute(_ seat: Seat) async throws -> AnyPublisher<SeatRequester, Error>
 }
 
 public final class RegisterSeatUseCaseImpl: RegisterSeatUseCase {
     
     private let seatRepository: SeatRepository
+    private let seatStompRepository: SeatStompRepository
     
-    public init(seatRepository: SeatRepository) {
+    public init(seatRepository: SeatRepository, seatStompRepository: SeatStompRepository) {
         self.seatRepository = seatRepository
+        self.seatStompRepository = seatStompRepository
     }
     
-    public func execute(_ seat: Seat) async throws {
+    @MainActor
+    public func execute(_ seat: Seat) async throws -> AnyPublisher<SeatRequester, Error> {
+        /// 좌석 점유 상태를 업데이트합니다
         try await seatRepository.registerSeat(seat)
+        /// 좌석 요청 수신에 대한 구독을 시작합니다
+        seatStompRepository.subscribeToSeatOccupied(seat)
+        /// 해당 퍼블리셔를 리턴합니다
+        return seatStompRepository.getSeatRequesterPublisher()
     }
 }
