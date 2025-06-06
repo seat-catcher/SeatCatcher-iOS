@@ -120,8 +120,8 @@ public final class HomeViewModel: ViewModel {
                 }
             }
         case .catchSeatButtonTapped:
-            if store.isOnJourney { coordinator.push(AppScene.selectBoardingState) }
-            else { coordinator.push(AppScene.mainFeature) }
+            if store.isOnJourney { coordinator.push(AppScene.mainFeature) }
+            else { coordinator.push(AppScene.selectBoardingState) }
         case .notificationButtonTapped:
             coordinator.push(AppScene.notifications)
         case .userInfoCardTapped:
