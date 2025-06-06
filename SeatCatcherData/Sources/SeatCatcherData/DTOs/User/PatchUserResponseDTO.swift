@@ -8,7 +8,7 @@
 import SeatCatcherDomain
 
 struct PatchUserResponseDTO {
-    let userId: Int?
+    let userId: Int
     let name: String
     let profileImageNum: String
     let tags: [String]
@@ -25,7 +25,7 @@ extension PatchUserResponseDTO: ResponseDTO {
 
     var domainModel: User {
         User(
-            id: userId ?? -1,
+            id: userId,
             name: name,
             profileImage: UserImage(rawValue: profileImageNum) ?? .catchy1,
             tags: tags.compactMap { UserTag(rawValue: $0) },
