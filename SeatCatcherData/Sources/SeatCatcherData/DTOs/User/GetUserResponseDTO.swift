@@ -8,7 +8,7 @@
 import SeatCatcherDomain
 
 struct GetUserResponseDTO {
-    let userId: Int
+    let userId: Int?
     let name: String
     let profileImageNum: String
     let tags: [String]
@@ -25,7 +25,7 @@ extension GetUserResponseDTO: ResponseDTO {
 
     var domainModel: User {
         User(
-            id: userId,
+            id: userId ?? (0...1000).randomElement()!,
             name: name,
             profileImage: UserImage(rawValue: profileImageNum) ?? .catchy1,
             tags: tags.compactMap { UserTag(rawValue: $0) },

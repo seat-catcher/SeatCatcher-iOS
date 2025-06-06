@@ -193,7 +193,7 @@ extension OccupantInfo {
             id: userId,
             name: nickname,
             profileImage: UserImage(rawValue: profileImage) ?? .catchy1,
-            tags: tags.map { UserTag(rawValue: $0) ?? .none },
+            tags: tags.compactMap { UserTag(rawValue: $0) },
             minutesLeftToGetOff: getOffRemainingCount,
             stationToGetOff: getOffStation
         )

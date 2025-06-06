@@ -26,11 +26,8 @@ extension PostStartJourneyResponseDTO: ResponseDTO {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd HH:mm"
         formatter.timeZone = TimeZone(abbreviation: "UTC")
-        guard let expectedArrivalTime = formatter.date(from: expectedArrivalTime),
-              let nextScheduleTime = formatter.date(from: nextScheduleTime)
-        else {
-            return (pathHistoryId: pathHistoryId, expectedArrivalTime: Date().addingTimeInterval(600))
-        }
+        guard let expectedArrivalTime = formatter.date(from: expectedArrivalTime)
+        else { return (pathHistoryId: pathHistoryId, expectedArrivalTime: Date().addingTimeInterval(600)) }
         return (pathHistoryId: pathHistoryId, expectedArrivalTime: expectedArrivalTime)
     }
 }
