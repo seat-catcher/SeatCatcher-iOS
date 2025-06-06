@@ -25,7 +25,7 @@ extension GetUserResponseDTO: ResponseDTO {
 
     var domainModel: User {
         User(
-            id: userId ?? (0...1000).randomElement()!,
+            id: userId ?? -1,
             name: name,
             profileImage: UserImage(rawValue: profileImageNum) ?? .catchy1,
             tags: tags.compactMap { UserTag(rawValue: $0) },
