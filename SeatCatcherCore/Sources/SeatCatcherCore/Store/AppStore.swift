@@ -164,12 +164,18 @@ public final class AppStore {
     }
 
     private func endJourney() {
-        self.carCode = nil
-        self.incoming = nil
-        self.departure = nil
-        self.arrival = nil
-        self.departureTime = nil
-        self.expectedArrivalTime = nil
+        departure = nil
+        arrival = nil
+        incoming = nil
+        departureTime = nil
+        expectedArrivalTime = nil
+        carCode = nil
+        seatSectionType = nil
+        isBlocked = true
+        isSitting = true
+        trainCar = nil
+        seatRequester = nil
+        seatRequestee = nil
 
         trainCarCancellables.removeAll()
         seatRequesterCancellables.removeAll()
