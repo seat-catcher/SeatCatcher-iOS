@@ -11,7 +11,6 @@ import SeatCatcherDomain
 
 public struct MainFeatureView: View {
     @State private var viewModel: MainFeatureViewModel
-    @Environment(\.scenePhase) private var scenePhase
 
     public init(viewModel: MainFeatureViewModel) {
         self._viewModel = State(initialValue: viewModel)
