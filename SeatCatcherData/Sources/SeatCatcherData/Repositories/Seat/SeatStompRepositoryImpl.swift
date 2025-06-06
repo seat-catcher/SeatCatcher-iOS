@@ -27,7 +27,7 @@ public final class SeatStompRepositoryImpl: SeatStompRepository {
     public func trainCarPublisher(trainCode: String, carCode: String) -> AnyPublisher<TrainCar, Error> {
         stompClientService.messagePublisher
             .receive(on: DispatchQueue.main)
-            .filter { $0.destination == "/topic/seat/\(trainCode)" }
+            .filter { $0.destination == "/topic/seat.\(trainCode)" }
             .tryMap { message in
                 guard let data = message.text.data(using: .utf8) else {
                     throw SeatCatcherDataError.NullValue
@@ -76,12 +76,12 @@ public final class SeatStompRepositoryImpl: SeatStompRepository {
     }
     
     public func subscribeToTrainCarSeats(trainCode: String) {
-        let topic = "/topic/seat/\(trainCode)"
+        let topic = "/topic/seat.\(trainCode)"
         stompClientService.subscribe(topic: topic)
     }
     
     public func unsubscribeFromTrainCarSeats(trainCode: String) {
-        let topic = "/topic/seat/\(trainCode)"
+        let topic = "/topic/seat.\(trainCode)"
         stompClientService.unsubscribe(topic: topic)
     }
     
