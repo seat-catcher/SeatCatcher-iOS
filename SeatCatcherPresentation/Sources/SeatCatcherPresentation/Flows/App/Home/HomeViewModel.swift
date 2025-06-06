@@ -98,26 +98,30 @@ public final class HomeViewModel: ViewModel {
                 }
             }
         case .quickBoardingButtonTapped:
-            Task { [getStationUseCase] in
-                guard let pathHistory = state.pathHistory,
-                      let departure = try? await getStationUseCase.execute(id: pathHistory.departureStationId),
-                      let arrival = try? await getStationUseCase.execute(id: pathHistory.arrivalStationId),
-                      let incoming = state.incoming
-                else { return }
-                
-                await MainActor.run {
-                    coordinator.push(
-                        AppScene.inputCarCode(
-                            departure: departure,
-                            arrival: arrival,
-                            incoming: incoming
+            if store.isOnJourney {
+                coordinator.push(AppScene.mainFeature)
+            } else {
+                Task { [getStationUseCase] in
+                    guard let pathHistory = state.pathHistory,
+                          let departure = try? await getStationUseCase.execute(id: pathHistory.departureStationId),
+                          let arrival = try? await getStationUseCase.execute(id: pathHistory.arrivalStationId),
+                          let incoming = state.incoming
+                    else { return }
+
+                    await MainActor.run {
+                        coordinator.push(
+                            AppScene.inputCarCode(
+                                departure: departure,
+                                arrival: arrival,
+                                incoming: incoming
+                            )
                         )
-                    )
+                    }
                 }
             }
-            
         case .catchSeatButtonTapped:
-            coordinator.push(AppScene.selectBoardingState)
+            if store.isOnJourney { coordinator.push(AppScene.selectBoardingState) }
+            else { coordinator.push(AppScene.mainFeature) }
         case .notificationButtonTapped:
             coordinator.push(AppScene.notifications)
         case .userInfoCardTapped:
