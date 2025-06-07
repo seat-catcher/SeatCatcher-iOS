@@ -58,7 +58,6 @@ public final class SelectTrainViewModel: ViewModel {
                     let incomings = try await getIncomingsUseCase.execute(departure: departure, arrival: arrival)
                     state.incomings = incomings
                 } catch {
-                    dump(error.localizedDescription)
                     state.errorMessage = error.localizedDescription
                 }
             }
