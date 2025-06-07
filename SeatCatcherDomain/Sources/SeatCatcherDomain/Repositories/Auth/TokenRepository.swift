@@ -5,7 +5,11 @@
 //  Created by 박현수 on 3/24/25.
 //
 
+import Combine
+
 public protocol TokenRepository: AnyObject {
+    var accessTokenPublisher: AnyPublisher<String, Never> { get }
+
     func reissue() async throws -> Token
     func getTokenValidStatus() async throws
 
