@@ -88,13 +88,12 @@ public final class HomeViewModel: ViewModel {
                       let firstHistory = pathHistories.first,
                       let departure = try? await getStationUseCase.execute(id: firstHistory.departureStationId),
                       let arrival = try? await getStationUseCase.execute(id: firstHistory.arrivalStationId),
-                      let incoming = try? await getIncomingsUseCase.execute(departure: departure, arrival: arrival),
-                      let firstIncoming = incoming.first
+                      let incoming = try? await getIncomingsUseCase.execute(departure: departure, arrival: arrival)
                 else { return }
 
                 await MainActor.run {
                     state.pathHistory = firstHistory
-                    state.incoming = firstIncoming
+                    if let firstIncoming = incoming.first { state.incoming = firstIncoming }
                 }
             }
         case .quickBoardingButtonTapped:

@@ -27,9 +27,7 @@ extension MoyaProvider {
                 case let .failure(error):
                     dump(error.response?.statusCode)
                     dump(error.response?.request?.url)
-                    if let data = error.response?.data {
-                        dump(String(data: data, encoding: .utf8))
-                    }
+                    if let data = error.response?.data { dump(String(data: data, encoding: .utf8)) }
                     continuation.resume(throwing: error)
                 }
             }

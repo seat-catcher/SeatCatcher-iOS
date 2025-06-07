@@ -227,12 +227,14 @@ public struct NetworkService: Sendable {
     func getSeatsInTrainCar(trainCode: String, carCode: String) async throws -> GetSeatInTrainCarResponseDTO {
         let response = try await provider.request(.getSeatInfo(trainCode: trainCode, carCode: carCode))
         let responseDTO = try JSONDecoder().decode(GetSeatInTrainCarResponseDTO.self, from: response)
+        dump(responseDTO)
         return responseDTO
     }
     
     // MARK: - Seats
     func registerSeat(seatId: Int, creditAmount: Int) async throws {
         let requestDTO = PostRegisterSeatRequestDTO(seatId: seatId, creditAmount: creditAmount)
+        dump(requestDTO)
         try await provider.request(.postRegisterSeat(requestDTO: requestDTO))
     }
     func cancelSeat() async throws {
