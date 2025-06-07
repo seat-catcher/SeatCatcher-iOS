@@ -23,11 +23,11 @@ final class DIContainerImpl {
     private let stompClientService = StompClientService()
 
     // MARK: - Provider Instances
-    private lazy var accessTokenProvider = AccessTokenProvider(tokenRepository: tokenRepository, stompService: stompClientService)
+    private let accessTokenProvider: AccessTokenProvider
 
     // MARK: - Repository Instances
     private lazy var loginRepository = LoginRepositoryImpl(networkService: networkService)
-    private lazy var tokenRepository = TokenRepositoryImpl(networkService: networkService)
+    private let tokenRepository: TokenRepository
     private lazy var userRepository = UserRepositoryImpl(networkService: networkService)
     private lazy var stationsRepository = StationsRepositoryImpl(networkService: networkService)
     private lazy var pathHistoriesRepository = PathHistoriesRepositoryImpl(
@@ -89,6 +89,15 @@ final class DIContainerImpl {
 
     // MARK: - Incomings UseCase Instances
     private lazy var getIncomingsUseCase = GetIncomingsUseCaseImpl(incomingsRepository: incomingsRepository)
+
+    init() {
+        self.tokenRepository = TokenRepositoryImpl(networkService: networkService)
+
+        self.accessTokenProvider = AccessTokenProvider(
+            tokenRepository: tokenRepository,
+            stompService: stompClientService
+        )
+    }
 }
 
 // MARK: - DIContainer 프로토콜 구현
