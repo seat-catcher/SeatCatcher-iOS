@@ -40,7 +40,9 @@ public final class StompClientService {
         messageSubject.eraseToAnyPublisher()     // PassthroughSubject → AnyPublisher
     }()
 
-    private let swiftStomp: SwiftStomp // 실제 WebSocket + STOMP 엔진
+    private let url = URL(string: "ws://api.dev.seatcatcher.site/seatcatcher")! // url 생성
+
+    private var swiftStomp: SwiftStomp // 실제 WebSocket + STOMP 엔진
     private var activeTopics = Set<String>() // 현재 구독 중인 토픽 집합
 
     private var cancellables = Set<AnyCancellable>() // Combine 구독 해제 저장소
@@ -49,8 +51,6 @@ public final class StompClientService {
     private let messageSubject = PassthroughSubject<StompTextMessageDTO, Never>() // 수신 메시지를 발행하는 Subject, 초기값 없이 순수 이벤트만 발행
 
     public init() {
-        let url = URL(string: "ws://api.dev.seatcatcher.site/seatcatcher")! // url 생성
-
         // connectionHeader 생성
         let accessToken = try? KeychainService.get(key: "accessToken")
         let connectionHeaders: [String: String] = ["Authorization": "Bearer \(accessToken ?? "")"]
@@ -147,4 +147,19 @@ public final class StompClientService {
     func send(topic: String, message: String) {
         swiftStomp.send(body: message, to: topic, receiptId: nil, headers: ["content-type": "application/json"])
     }
+
+    public func resetHeadersAndReconnect(_ headers: [String: String]) {
+        swiftStomp.disconnect()
+        cancellables.removeAll()
+
+        swiftStomp = SwiftStomp(host: url, headers: headers, httpConnectionHeaders: headers)
+        swiftStomp.autoReconnect = true // 네트워크 연결 끊길 시 자동 재연결 활성화
+        swiftStomp.enableAutoPing() // WebSocket ping(heartbeat) 자동 전송 활성화
+        swiftStomp.enableLogging = true // 콘솔 로그 출력 활성화
+
+        bindSwiftStomp()
+        connect()
+    }
 }
+
+
