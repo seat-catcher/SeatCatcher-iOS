@@ -22,6 +22,9 @@ final class DIContainerImpl {
     private let networkService = NetworkService()
     private let stompClientService = StompClientService()
 
+    // MARK: - Provider Instances
+    private lazy var accessTokenProvider = AccessTokenProvider(tokenRepository: tokenRepository, stompService: stompClientService)
+
     // MARK: - Repository Instances
     private lazy var loginRepository = LoginRepositoryImpl(networkService: networkService)
     private lazy var tokenRepository = TokenRepositoryImpl(networkService: networkService)

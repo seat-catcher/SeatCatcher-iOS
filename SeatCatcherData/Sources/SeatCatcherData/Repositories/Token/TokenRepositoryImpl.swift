@@ -5,6 +5,7 @@
 //  Created by 박현수 on 3/24/25.
 //
 
+import Combine
 import SeatCatcherDomain
 
 public final class TokenRepositoryImpl: TokenRepository {
@@ -18,6 +19,12 @@ public final class TokenRepositoryImpl: TokenRepository {
     private let refreshToken = "refreshToken"
 
     private let networkService: NetworkService
+
+    private let accessTokenSubject = PassthroughSubject<String, Never>()
+
+    public var accessTokenPublisher: AnyPublisher<String, Never> {
+        accessTokenSubject.eraseToAnyPublisher()
+    }
 
     public init(networkService: NetworkService) {
         self.networkService = networkService
@@ -41,6 +48,7 @@ public final class TokenRepositoryImpl: TokenRepository {
     public func saveAccessToken(_ token: String) throws {
         // Swagger Authorize를 위해 액세스토큰 저장 시 로그 출력하도록 남겨놓았습니다.
         try KeychainService.save(token: token, key: accessToken)
+        accessTokenSubject.send(token)
     }
     public func getAccessToken() throws -> String? {
         return try KeychainService.get(key: accessToken)

@@ -380,18 +380,19 @@ private struct PathCardPathExists: View {
                 .frame(width: 1.4, height: 60)
                 .foregroundStyle(.gray600)
                 .padding(EdgeInsets(top: -3, leading: 5.2, bottom: -2, trailing: 46))
-            Group {
-                Text("\(viewModel.state.incoming?.arrivalTime.hour24Time ?? "")")
-                    .font(.C01_SB)
-                    .foregroundStyle(.scGreen)
-                    .padding(.trailing, 4)
+            if let incoming = viewModel.state.incoming {
+                Group {
+                    Text("\(viewModel.state.incoming?.arrivalTime.hour24Time ?? "")")
+                        .font(.C01_SB)
+                        .foregroundStyle(.scGreen)
+                        .padding(.trailing, 4)
 
-                Text("\(viewModel.state.incoming?.destination ?? "")행")
-                    .font(.C01_R)
-                    .foregroundStyle(.gray300)
+                    Text("\(viewModel.state.incoming?.destination ?? "")행")
+                        .font(.C01_R)
+                        .foregroundStyle(.gray300)
+                }
+                .padding(.top, 6)
             }
-            .padding(.top, 6)
-
             Spacer()
         }
         HStack(spacing: 0) {
