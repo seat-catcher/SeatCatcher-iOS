@@ -242,20 +242,12 @@ final class AppCoordinator: Coordinator {
             case let .requestRejected(confirmationButtonAction):
                 RequestRejectedBottomSheetView(confirmationButtonAction: confirmationButtonAction)
             case let .seatInfo(
-                name,
-                userImage,
-                tags,
-                arrivalStationName,
-                expectedArrivalTime,
+                occupant,
                 reportButtonAction,
                 yieldButtonAction
             ):
                 SeatInfoBottomSheetView(
-                    name: name,
-                    userImage: userImage,
-                    tags: tags,
-                    arrivalStationName: arrivalStationName,
-                    expectedArrivalTime: expectedArrivalTime,
+                    occupant: occupant,
                     reportButtonAction: reportButtonAction,
                     yieldButtonAction: yieldButtonAction
                 )

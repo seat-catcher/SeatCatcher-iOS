@@ -48,6 +48,7 @@ public final class PathHistoriesRepositoryImpl: PathHistoriesRepository {
         let arrivalTimePublisher = stompClientService
             .messagePublisher
             .compactMap { message -> PathArrivalTime? in
+                dump(message)
                 guard let data = message.text.data(using: .utf8),
                       let dto = try? JSONDecoder().decode(ArrivalTimeDTO.self, from: data),
                       let date = dateFormatter.date(from: dto.expectedArrivalTime)

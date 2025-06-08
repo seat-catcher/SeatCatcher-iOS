@@ -170,7 +170,16 @@ extension SeatCatcherAPI: TargetType {
         case let .getSeatInfo(trainCode, carCode):
             return .requestParameters(parameters: ["trainCode": trainCode, "carCode": carCode], encoding: URLEncoding.default)
         case let .postRegisterSeat(requestDTO):
-            return .requestJSONEncodable(requestDTO)
+            let parameters: [String: Any] = [
+                "seatId": requestDTO.seatId,
+                "creditAmount": requestDTO.creditAmount
+            ]
+            dump(parameters)
+
+            return .requestParameters(
+                parameters: parameters,
+                encoding: URLEncoding.queryString
+            )
         case .deleteSeat:
             return .requestPlain
         case let .getIncomings(requestDTO):

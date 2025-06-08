@@ -25,6 +25,8 @@ public final class MainFeatureViewModel: ViewModel {
         case backToSeatSectionPage // 좌석 구역 페이지로 이동
         case manageSeatSection(SeatSectionAction) // 좌석 관리 액션 수행
         case manageSeatRequest(SeatRequestAction) // 좌석 요청 관련 액션 수행
+        case reportButtonDidTap // 바텀시트 신고버튼
+        case reportAlertConfirmButtonDidTap // 바텀시트 신고 후 알럿 버튼
     }
     
     enum SeatSectionAction {
@@ -49,6 +51,8 @@ public final class MainFeatureViewModel: ViewModel {
         var lookingCount: Int // 현재 열차 내 자리를 찾는 사용자 수, 0의 경우 띄우지 않음
         var seatSectionState: SeatSectionState
         var seatRequestState: SeatRequestState
+        var isSeatFetched = false
+        var isReportAlertPresented = false // 신고 alert
     }
     
     struct SeatSectionState {
@@ -69,7 +73,11 @@ public final class MainFeatureViewModel: ViewModel {
     // MARK: Dependencies
     let store: AppStore
     let coordinator: Coordinator
-    
+
+
+
+
+
     // MARK: States
     private(set) var state: State
     
@@ -241,7 +249,7 @@ public final class MainFeatureViewModel: ViewModel {
     func action(_ action: Action) {
         switch action {
         case .willAppear:
-            fetchSeatInSection()
+            if !state.isSeatFetched { fetchSeatInSection() }
             if state.userStatus == .standing || state.userStatus == .seated {
                 subscribeToTrain(trainCode: state.trainCode, carCode: state.carCode)
                 setupStoreObservers()
@@ -273,6 +281,11 @@ public final class MainFeatureViewModel: ViewModel {
             case let .willRejectSeatRequest(seat, requester):
                 rejectSeatRequest(seat, requester: requester)
             }
+        case .reportButtonDidTap:
+            coordinator.dismissSheet()
+            state.isReportAlertPresented = true
+        case .reportAlertConfirmButtonDidTap:
+            state.isReportAlertPresented = false
         }
     }
     
@@ -343,16 +356,37 @@ public final class MainFeatureViewModel: ViewModel {
     
     @MainActor
     private func handleSeatSectionAction(_ action: SeatSectionAction) {
+        dump(state.userStatus)
         switch action {
         case .willSelectSeat(let seat):
-            /// 좌석을 선택합니다
-            if state.userStatus != .cancelling { // 좌석 취소 중에는 선택 불가
-                if state.seatSectionState.selectedSeat?.id == seat.id {
-                    state.seatSectionState.selectedSeat = nil
-                } else {
-                    state.seatSectionState.selectedSeat = seat
+            switch state.userStatus {
+            case .seated:
+                dump(#function)
+            case .standing:
+                guard let occupant = seat.occupant else { return }
+                // FIXME: - occupant 없을 시 방지
+                // FIXME: - 실제 seat의 occupant로 교체
+                coordinator.presentSheet(
+                    AppSheet.seatInfo(
+                        occupant: occupant,
+                        reportButtonAction: {
+                            self.action(.reportButtonDidTap)
+                        },
+                        // FIXME: - 양보 로직 달기
+                        yieldButtonAction: { self.coordinator.dismissSheet() }
+                    )
+                )
+            case .registering, .moving, .cancelling:
+                // 좌석을 선택합니다
+                if state.userStatus != .cancelling { // 좌석 취소 중에는 선택 불가
+                    if state.seatSectionState.selectedSeat?.id == seat.id {
+                        state.seatSectionState.selectedSeat = nil
+                    } else {
+                        state.seatSectionState.selectedSeat = seat
+                    }
                 }
             }
+
         case .willUnlockAllSeats:
             /// 좌석 정보를 잠금 해제합니다
             Task {
@@ -374,6 +408,7 @@ public final class MainFeatureViewModel: ViewModel {
         let currentSeatSectionType = state.seatSectionType
         let currentUserStatus = state.userStatus
         Task {
+            defer { state.isSeatFetched = true }
             do {
                 let trainCar = try await getSeatInTrainCarUseCase.execute(trainCode: currentTrainCode, carCode: currentCarCode)
                 await MainActor.run {
@@ -381,7 +416,7 @@ public final class MainFeatureViewModel: ViewModel {
                     state.carCode == currentCarCode else { return }
                     /// 현재 구역의 좌석 데이터만 필터링
                     state.seatSectionState.seats = getSeatInSectionUseCase.execute(trainCar: trainCar, seatSectionType: currentSeatSectionType)
-                    
+
                     /// 나의 좌석 반영
                     state.seatSectionState.mySeat = findMySeat()
                     
@@ -414,6 +449,7 @@ public final class MainFeatureViewModel: ViewModel {
                 } catch {
                     print(error.localizedDescription)
                 }
+                coordinator.popToRoot()
             }
         }
     }
@@ -429,6 +465,7 @@ public final class MainFeatureViewModel: ViewModel {
                 } catch {
                     print(error.localizedDescription)
                 }
+                coordinator.popToRoot()
             }
         }
     }
@@ -443,6 +480,7 @@ public final class MainFeatureViewModel: ViewModel {
                 } catch {
                     print(error.localizedDescription)
                 }
+                coordinator.popToRoot()
             }
         }
     }
@@ -503,7 +541,9 @@ public final class MainFeatureViewModel: ViewModel {
             }
         }
     }
-    
+
+
+
     public enum UserStatus: Sendable {
         case seated // 착석 중
         case standing // 자리 찾는 중

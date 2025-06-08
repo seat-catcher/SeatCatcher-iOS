@@ -16,6 +16,7 @@ public final class StationsRepositoryImpl: StationsRepository {
 
     public func getStations(keyword: String, line: Int) async throws -> [Station] {
         let responseDTO = try await networkService.getStations(keyword: keyword, line: line)
+        dump(responseDTO)
         return responseDTO.map { $0.domainModel }
     }
 

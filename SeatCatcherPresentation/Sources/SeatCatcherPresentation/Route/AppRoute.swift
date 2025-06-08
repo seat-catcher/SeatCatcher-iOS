@@ -145,11 +145,7 @@ public enum AppSheet: AppRoute {
         confirmationButtonAction: () -> Void
     )
     case seatInfo(
-        name: String,
-        userImage: UserImage,
-        tags: [UserTag],
-        arrivalStationName: String,
-        expectedArrivalTime: Date,
+        occupant: Occupant,
         reportButtonAction: () -> Void,
         yieldButtonAction: () -> Void
     )

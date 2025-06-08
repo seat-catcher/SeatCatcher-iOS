@@ -88,7 +88,6 @@ public final class UserInfoViewModel: ViewModel {
                 var requestUser = appStore.user
                 requestUser.hasOnBoarded = true
                 let user = try await patchUserInfoUseCase.execute(requestUser)
-                appStore.setUser(user)
                 coordinator.push(OnboardingScene.userGreeting(user))
             } catch {
                 self.action(.errorOccured(error.localizedDescription))

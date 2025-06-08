@@ -24,9 +24,9 @@ struct SeatInfo: Codable {
 struct OccupantInfo: Codable {
     let userId: Int
     let nickname: String
-    let getOffRemainingCount: Int
-    let profileImage: String // FIXME: 서버 작업 중
-    let getOffStation: String // FIXME: 서버 작업 중
+    let getOffRemainingCount: Int?
+    let profileImageNum: String // FIXME: 서버 작업 중
+    let getOffStation: String? // FIXME: 서버 작업 중
     let tags: [String] // FIXME: 서버 작업 중
     
     static var stub: Self {
@@ -34,7 +34,7 @@ struct OccupantInfo: Codable {
             userId: 1,
             nickname: "신기한 발바닥",
             getOffRemainingCount: 33,
-            profileImage: "IMAGE_1",
+            profileImageNum: "IMAGE_1",
             getOffStation: "상도역",
             tags: ["USERTAG_LONGDISTANCE", "USERTAG_CARRIER"]
         )
@@ -192,10 +192,10 @@ extension OccupantInfo {
         Occupant(
             id: userId,
             name: nickname,
-            profileImage: UserImage(rawValue: profileImage) ?? .catchy1,
+            profileImage: UserImage(rawValue: profileImageNum) ?? .catchy1,
             tags: tags.compactMap { UserTag(rawValue: $0) },
-            minutesLeftToGetOff: getOffRemainingCount,
-            stationToGetOff: getOffStation
+            minutesLeftToGetOff: getOffRemainingCount ?? 0,
+            stationToGetOff: getOffStation ?? ""
         )
     }
 }
