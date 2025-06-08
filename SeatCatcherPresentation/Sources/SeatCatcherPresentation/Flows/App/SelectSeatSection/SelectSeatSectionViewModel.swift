@@ -62,14 +62,15 @@ public final class SelectSeatSectionViewModel: ViewModel {
                     trainCode: trainCode,
                     carCode: carCode
                 )
-                // occupant가 있는 section만 포함
-                let availableSections = trainCar.seatInfo.compactMap { (sectionType, seatSection) -> SeatSectionType? in
-                    let hasAvailableSeat = seatSection.topSeats.values.contains { $0.occupant != nil } ||
-                    seatSection.bottomSeats.values.contains { $0.occupant != nil }
-                    return hasAvailableSeat ? sectionType : nil
-                }
-                // availableSections 업데이트
-                self.state.availableSections = availableSections
+                store.trainCar = trainCar
+//                // occupant가 있는 section만 포함
+//                let availableSections = trainCar.seatInfo.compactMap { (sectionType, seatSection) -> SeatSectionType? in
+//                    let hasAvailableSeat = seatSection.topSeats.values.contains { $0.occupant != nil } ||
+//                    seatSection.bottomSeats.values.contains { $0.occupant != nil }
+//                    return hasAvailableSeat ? sectionType : nil
+//                }
+//                // availableSections 업데이트
+//                self.state.availableSections = availableSections
             }
         case let .willSelectOption(option):
             if option == self.state.selectedOption {

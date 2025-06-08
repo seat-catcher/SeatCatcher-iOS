@@ -48,6 +48,7 @@ public final class UserGreetingViewModel: ViewModel {
                 try? await Task.sleep(for: .seconds(1))
 
                 self.action(.fadedOut)
+                appStore.setUser(user)
             }
         case .fadedOut:
             // AppStore에 User 정보 전달 -> user.hasOnBoarded가 true로 전환되며 메인 플로우 시작

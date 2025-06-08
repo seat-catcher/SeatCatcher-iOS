@@ -29,7 +29,7 @@ public final class AppStore {
     public var carDirection: CarDirection? { incoming?.carDirection } // 하행 상행 구분
     public var isSitting: Bool // 앉아있음 여부
     /// 메인피쳐 좌석 정보 업데이트에 필요한 열차 좌석 정보 퍼블리셔입니다
-    private var trainCar: TrainCar? {
+    public var trainCar: TrainCar? {
         didSet {
             _trainCarPublisher.send(trainCar)
         }
@@ -101,12 +101,14 @@ public final class AppStore {
             .sink(
                 receiveCompletion: { completion in
                     if case let .failure(error) = completion {
-                        dump("열차 정보 오류: \(error.localizedDescription)")
+                        dump("열차 정보 오류: \(error)")
                     }
                 },
                 receiveValue: { [weak self] trainCar in
-                    guard self?.trainCar != trainCar else { return }
+//                    guard self?.trainCar != trainCar else { return }
+//                    dump(trainCar)
                     self?.trainCar = trainCar
+                    dump(self?.trainCar)
                 }
             )
             .store(in: &trainCarCancellables)

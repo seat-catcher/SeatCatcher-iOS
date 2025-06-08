@@ -10,32 +10,21 @@ import SeatCatcherDomain
 import SwiftUI
 
 public struct SeatInfoBottomSheetView: View {
-    let name: String
-    let userImage: UserImage
-    let tags: [UserTag]
-    let arrivalStationName: String
-    let expectedArrivalTime: Date
+    let occupant: Occupant
     let reportButtonAction: () -> Void
     let yieldButtonAction: () -> Void
 
-    var remainingMinutes: Int {
-        max(Int(expectedArrivalTime.timeIntervalSinceNow / 60), 0)
-    }
+    // FIXME: - 실제 하차역으로 교체 서버에서 안옴
+    let dummyDest = ["건대입구", "대림"].randomElement()!
+    // FIXME: - 실제 하차역으로 교체 서버에서 안옴
+    let dummyTime = (3...45).randomElement()!
 
     public init(
-        name: String,
-        userImage: UserImage,
-        tags: [UserTag],
-        arrivalStationName: String,
-        expectedArrivalTime: Date,
+        occupant: Occupant,
         reportButtonAction: @escaping () -> Void,
         yieldButtonAction: @escaping () -> Void
     ) {
-        self.name = name
-        self.userImage = userImage
-        self.tags = tags
-        self.arrivalStationName = arrivalStationName
-        self.expectedArrivalTime = expectedArrivalTime
+        self.occupant = occupant
         self.reportButtonAction = reportButtonAction
         self.yieldButtonAction = yieldButtonAction
     }
@@ -43,17 +32,17 @@ public struct SeatInfoBottomSheetView: View {
     public var body: some View {
         VStack(spacing: 0) {
             HStack(spacing: 6) {
-                Image(userImage.image)
+                Image(occupant.profileImage.image)
                     .resizable()
                     .frame(width: 68, height: 68)
                 VStack(spacing: 6) {
-                    Text(name)
+                    Text(occupant.name)
                         .font(.B03_M)
                         .foregroundStyle(.gray300)
                         .frame(maxWidth: .infinity, alignment: .leading)
                     ScrollView(.horizontal) {
                         HStack(spacing: 6) {
-                            ForEach(tags) {
+                            ForEach(occupant.tags) {
                                 UserInfoBadge(.tag($0))
                             }
                         }
@@ -87,8 +76,11 @@ public struct SeatInfoBottomSheetView: View {
 
                 VStack(alignment: .leading, spacing: 12) {
                     Group {
-                        Text("\(arrivalStationName)역")
-                        Text("\(remainingMinutes)분 남았어요")
+                        // FIXME: - 실제 하차역으로 교체 서버에서 안옴
+                        Text("\(dummyDest)역")
+                        // FIXME: - 실제 남은시간으로 교체 서버에서 안옴
+                        Text("\(dummyTime)분 남았어요")
+//                        Text("\(occupant.minutesLeftToGetOff)분 남았어요")
                     }
                     .font(.B02_M)
                     .foregroundStyle(.gray100)
@@ -97,7 +89,9 @@ public struct SeatInfoBottomSheetView: View {
             }
 
             CTAButton(
-                title: "양보 요청하기",
+                // FIXME: - 양보 요청하기 버튼으로 변경
+//                title: "양보 요청하기",
+                title: "확인",
                 action: yieldButtonAction,
                 style: .bottomEnabled
             )

@@ -25,7 +25,7 @@ public struct MainFeatureView: View {
             SeatSectionView(
                 selectedSeat: viewModel.state.seatSectionState.selectedSeat,
                 isBlocked: viewModel.state.seatSectionState.isBlocked,
-                mySeat: viewModel.state.seatSectionState.mySeat,
+                userId: viewModel.store.user.id,
                 seats: viewModel.state.seatSectionState.seats,
                 userStatus: viewModel.state.userStatus,
                 onTap: { seat in
@@ -58,6 +58,15 @@ public struct MainFeatureView: View {
                 backButtonAction: { viewModel.action(.backButtonDidTap) },
                 homeButtonAction: { viewModel.action(.homeButtonDidTap) },
                 applyDefaultPopAction: false
+            )
+        )
+        .alert(
+            viewModel.state.isReportAlertPresented,
+            alert: .init(
+                title: "신고가 접수되었어요",
+                subtitle: "빠른 시일 내에 처리될 예정이에요",
+                buttonTitle: "확인",
+                buttonAction: { viewModel.action(.reportAlertConfirmButtonDidTap) }
             )
         )
         .onAppear {
