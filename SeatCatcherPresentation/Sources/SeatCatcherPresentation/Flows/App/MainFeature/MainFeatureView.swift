@@ -25,7 +25,7 @@ public struct MainFeatureView: View {
             SeatSectionView(
                 selectedSeat: viewModel.state.seatSectionState.selectedSeat,
                 isBlocked: viewModel.state.seatSectionState.isBlocked,
-                userId: viewModel.store.user.id,
+                mySeat: viewModel.state.seatSectionState.mySeat,
                 seats: viewModel.state.seatSectionState.seats,
                 userStatus: viewModel.state.userStatus,
                 onTap: { seat in
