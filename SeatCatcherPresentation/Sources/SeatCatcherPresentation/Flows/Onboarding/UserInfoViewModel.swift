@@ -27,7 +27,7 @@ public final class UserInfoViewModel: ViewModel {
 
     private(set) var state = State()
 
-    private let appStore: AppStore
+    let appStore: AppStore
     private let getRandomNicknameUseCase: GetRandomNicknameUseCase
     private let getRandomUserImageUseCase: GetRandomUserImageUseCase
     private let patchUserInfoUseCase: PatchUserInfoUseCase

@@ -10,7 +10,6 @@ import SeatCatcherCore
 
 public struct UserGreetingView: View {
     @State private var viewModel: UserGreetingViewModel
-    @Environment(AppStore.self) private var appStore
 
     public init(viewModel: UserGreetingViewModel) {
         self._viewModel = State(initialValue: viewModel)
@@ -21,11 +20,11 @@ public struct UserGreetingView: View {
             Group {
                 Spacer().frame(height: 167)
 
-                Image(appStore.user.profileImage.image)
+                Image(viewModel.appStore.user.profileImage.image)
 
                 Spacer().frame(height: 30)
 
-                Text("\(appStore.user.name)님\n반가워요")
+                Text("\(viewModel.appStore.user.name)님\n반가워요")
                     .font(.T01_SB)
                     .foregroundStyle(.scWhite)
                     .multilineTextAlignment(.center)
