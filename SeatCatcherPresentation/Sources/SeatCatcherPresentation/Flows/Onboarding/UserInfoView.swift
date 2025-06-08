@@ -84,7 +84,6 @@ private struct UserInfoTextView: View {
 }
 
 private struct SelectTagCell: View {
-    @Environment(AppStore.self) private var appStore
     let viewModel: UserInfoViewModel
     let tag: UserTag
 
@@ -97,10 +96,10 @@ private struct SelectTagCell: View {
                 Text(tag.displayValue)
                     .font(.B02_M)
             }
-            .foregroundStyle(appStore.user.tags.contains(tag) ? .scGreen : .gray300)
+            .foregroundStyle(viewModel.appStore.user.tags.contains(tag) ? .scGreen : .gray300)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(appStore.user.tags.contains(tag) ? .scGreen700 : .gray500)
+        .background(viewModel.appStore.user.tags.contains(tag) ? .scGreen700 : .gray500)
         .clipShape(.rect(cornerRadius: 8))
         .onTapGesture { viewModel.action(.tagSelected(tag)) }
     }
@@ -124,7 +123,6 @@ private struct UserInfoGridView: View {
 }
 
 private struct SelectTagNextButton: View {
-    @Environment(AppStore.self) private var appStore
     let viewModel: UserInfoViewModel
 
     var body: some View {
@@ -132,14 +130,14 @@ private struct SelectTagNextButton: View {
             viewModel.action(.nextButtonTapped)
         } label: {
             Text("다음")
-                .foregroundStyle(appStore.user.tags.isEmpty ? .gray300 : .scWhite)
+                .foregroundStyle(viewModel.appStore.user.tags.isEmpty ? .gray300 : .scWhite)
                 .font(.B01_SB)
                 .padding(.vertical, 16)
                 .frame(maxWidth: .infinity)
-                .background(appStore.user.tags.isEmpty ? .gray500 : .scGreen)
+                .background(viewModel.appStore.user.tags.isEmpty ? .gray500 : .scGreen)
                 .clipShape(.rect(cornerRadius: 8))
         }
-        .disabled(appStore.user.tags.isEmpty)
+        .disabled(viewModel.appStore.user.tags.isEmpty)
 
     }
 }
