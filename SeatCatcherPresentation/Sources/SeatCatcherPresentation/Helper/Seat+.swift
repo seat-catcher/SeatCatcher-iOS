@@ -14,6 +14,19 @@ extension Seat {
         // 좌석 방향
         let directionPrefix = seatDirection == .top ? "seat_top" : "seat_bottom"
         
+        // 내가 앉아있는 자리
+        if isMySeat {
+            if isSelecting {
+                if isSelected { // 선택 중
+                    return ImageResource(name: "\(directionPrefix)_user", bundle: .module) // 내가 앉아있는 자리 선택중
+                } else {
+                    return ImageResource(name: "\(directionPrefix)_empty", bundle: .module) // 내가 앉아있는 자리 미선택
+                }
+            } else {
+                return ImageResource(name: "\(directionPrefix)_user", bundle: .module) // 선택 중 아닐 때
+            }
+        }
+        
         // 잠금
         if isBlocked {
             return ImageResource(name: "\(directionPrefix)_blocked", bundle: .module)
@@ -27,11 +40,6 @@ extension Seat {
             } else {
                 return ImageResource(name: "\(directionPrefix)_empty", bundle: .module)
             }
-        }
-        
-        // 내가 앉아있는 자리
-        if isMySeat {
-            return ImageResource(name: "\(directionPrefix)_user", bundle: .module)
         }
         
         // 빈 자리

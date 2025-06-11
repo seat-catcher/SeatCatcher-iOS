@@ -9,7 +9,7 @@ import Foundation
 
 public struct Seat: Sendable, Identifiable, Equatable {
     public static func == (lhs: Seat, rhs: Seat) -> Bool {
-        return lhs.id == rhs.id
+        return lhs.id == rhs.id && lhs.occupant == rhs.occupant
     }
     
     public var id: Int // 좌석 식별자 (서버에서 제공)

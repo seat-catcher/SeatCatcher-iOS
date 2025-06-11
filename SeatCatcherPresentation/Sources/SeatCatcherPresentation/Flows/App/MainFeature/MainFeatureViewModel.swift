@@ -449,7 +449,7 @@ public final class MainFeatureViewModel: ViewModel {
                 } catch {
                     print(error.localizedDescription)
                 }
-                coordinator.popToRoot()
+                coordinator.popLast(2)
             }
         }
     }
@@ -465,7 +465,7 @@ public final class MainFeatureViewModel: ViewModel {
                 } catch {
                     print(error.localizedDescription)
                 }
-                coordinator.popToRoot()
+                coordinator.popLast(2)
             }
         }
     }
@@ -480,7 +480,7 @@ public final class MainFeatureViewModel: ViewModel {
                 } catch {
                     print(error.localizedDescription)
                 }
-                coordinator.popToRoot()
+                coordinator.popLast(2)
             }
         }
     }

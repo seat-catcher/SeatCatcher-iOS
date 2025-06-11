@@ -7,7 +7,12 @@
 
 import Foundation
 
-public struct Occupant: Sendable {
+public struct Occupant: Sendable, Equatable {
+    
+    public static func == (lhs: Occupant, rhs: Occupant) -> Bool {
+        return lhs.id == rhs.id && lhs.minutesLeftToGetOff == rhs.minutesLeftToGetOff && lhs.stationToGetOff == rhs.stationToGetOff
+    }
+    
     public var id: Int // 유저 id(서버)
     public var name: String // 닉네임
     public var profileImage: UserImage // 프로필 사진
