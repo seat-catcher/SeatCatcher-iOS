@@ -186,10 +186,8 @@ private struct CTAButtonView: View {
                     if let seat = viewModel.state.seatSectionState.selectedSeat {
                         viewModel.action(.willMoveSeat(seat))
                     }
-                case .cancelling:
-                    if let seat = viewModel.state.seatSectionState.mySeat {
-                        viewModel.action(.willCancelSeat(seat))
-                    }
+                case .cancelling:    
+                    viewModel.action(.willCancelSeat(viewModel.state.seatSectionState.mySeat))
                 }
             },
             style: ctaButtonStyle

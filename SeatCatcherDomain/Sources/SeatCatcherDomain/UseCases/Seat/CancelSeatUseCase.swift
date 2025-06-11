@@ -8,7 +8,7 @@
 import Foundation
 
 public protocol CancelSeatUseCase {
-    func execute(_ seat: Seat) async throws
+    func execute(_ seat: Seat?) async throws
 }
 
 public final class CancelSeatUseCaseImpl: CancelSeatUseCase {
@@ -21,10 +21,12 @@ public final class CancelSeatUseCaseImpl: CancelSeatUseCase {
         self.seatStompRepository = seatStompRepository
     }
     
-    public func execute(_ seat: Seat) async throws {
+    public func execute(_ seat: Seat? = nil) async throws {
         /// 좌석 점유를 해제합니다
         try await seatRepository.cancelSeat()
         /// 좌석 요청에 대한 구독을 취소합니다
-        seatStompRepository.unsubscribeFromSeatOccupied(seat)
+        if let seat {
+            seatStompRepository.unsubscribeFromSeatOccupied(seat)
+        }
     }
 }
