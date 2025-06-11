@@ -21,7 +21,7 @@ public final class MainFeatureViewModel: ViewModel {
         case manageMySeatButtonDidTap // 좌석 관리 버튼
         case willRegisterSeat(Seat) // 좌석 등록
         case willMoveSeat(Seat) // 좌석 이동
-        case willCancelSeat(Seat) // 좌석 취소
+        case willCancelSeat(Seat?) // 좌석 취소
         case backToSeatSectionPage // 좌석 구역 페이지로 이동
         case manageSeatSection(SeatSectionAction) // 좌석 관리 액션 수행
         case manageSeatRequest(SeatRequestAction) // 좌석 요청 관련 액션 수행
@@ -471,7 +471,7 @@ public final class MainFeatureViewModel: ViewModel {
     }
     
     @MainActor
-    private func cancelSeat(_ seat: Seat) {
+    private func cancelSeat(_ seat: Seat?) {
         /// 좌석 정보를 취소합니다
         if let cancelSeatUseCase {
             Task {
