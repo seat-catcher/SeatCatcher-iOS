@@ -20,6 +20,7 @@ public protocol Coordinator: AnyObject {
     func push(_ scene: any AppRoute)
     func pop()
     func popToRoot()
+    func popLast(_ count: Int)
     func presentSheet(_ sheet: any AppRoute, onDismiss: (() -> Void)?)
     func dismissSheet()
     func presentFullScreenCover(
@@ -37,6 +38,12 @@ public extension Coordinator {
 
     func pop() {
         if !path.isEmpty { path.removeLast() }
+    }
+    
+    func popLast(_ count: Int) {
+        for _ in 0..<count {
+            if !path.isEmpty { path.removeLast() }
+        }
     }
 
     func popToRoot() {

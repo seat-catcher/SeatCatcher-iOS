@@ -73,6 +73,7 @@ public final class InputCarCodeViewModel: ViewModel {
                         expectedArrivalTime: expectedArrivalTime,
                         arrivalTimePublisher: arrivalTimePublisher
                     )
+                    coordinator.popToRoot()
                     coordinator.push(AppScene.selectSeatSection)
                 }
             }
