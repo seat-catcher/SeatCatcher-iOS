@@ -98,6 +98,7 @@ public final class HomeViewModel: ViewModel {
             }
         case .quickBoardingButtonTapped:
             if store.isOnJourney {
+                coordinator.push(AppScene.selectSeatSection)
                 coordinator.push(AppScene.mainFeature)
             } else {
                 Task { [getStationUseCase] in

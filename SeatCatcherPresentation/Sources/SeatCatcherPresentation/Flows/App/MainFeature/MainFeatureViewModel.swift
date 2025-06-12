@@ -48,7 +48,8 @@ public final class MainFeatureViewModel: ViewModel {
         var userStatus: UserStatus // 유저의 선택 상황
         var seatSectionType: SeatSectionType // 현재 보고있는 구역
         var lookingCount: Int // 현재 열차 내 자리를 찾는 사용자 수, 0의 경우 띄우지 않음
-        var seatSectionState: SeatSectionState
+        var seatSectionState: SeatSectionState // 보고있는 구역 좌석 정보
+        var trainCar: TrainCar // 열차 전체 좌석 정보
         var mySeat: Seat? // 내가 앉은 좌석
         var seatRequestState: SeatRequestState
         var isSeatFetched = false
@@ -136,6 +137,7 @@ public final class MainFeatureViewModel: ViewModel {
                 isBlocked: store.isBlocked,
                 seats: .init(topSeats: [:], bottomSeats: [:])
             ),
+            trainCar: TrainCar(carCode: store.carCode ?? "", seatInfo: [:]),
             seatRequestState: .init(
                 requesters: [], // 초깃값
                 requestee: nil // 초깃값
@@ -179,7 +181,6 @@ public final class MainFeatureViewModel: ViewModel {
         coordinator: Coordinator,
         getSeatInTrainCarUseCase: GetSeatInTrainCarUseCase,
         getSeatInSectionUseCase: GetSeatInSectionUseCase,
-        
         registerSeatUseCase: RegisterSeatUseCase
     ) {
         self.init(
@@ -283,24 +284,15 @@ public final class MainFeatureViewModel: ViewModel {
         store.trainCarPublisher
             .sink { [weak self] trainCar in
                 guard let self, let trainCar else { return }
+                /// 전체 열차 정보를 저장합니다
+                state.trainCar = trainCar
                 /// 현재 보고 있는 구역의 좌석 정보만을 가져옵니다
                 state.seatSectionState.seats = getSeatInSectionUseCase.execute(
                     trainCar: trainCar,
                     seatSectionType: state.seatSectionType
                 )
-                /// UI에 표시하기 위해 나의 좌석을 찾습니다
-                if let mySeat = findMySeat(in: trainCar) {
-                    state.mySeat = mySeat
-                    if state.userStatus == .standing {
-                        state.userStatus = .seated
-                        store.isSitting = true
-                    }
-                } else {
-                    state.mySeat = nil
-                    state.userStatus = .standing
-                    store.isSitting = false
-                }
-
+                /// ViewModel과 AppStore의 유저 상태를 업데이트합니다
+                self.updateUserStatus(from: state.userStatus, in: state.trainCar)
             }
             .store(in: &cancellables)
         /// 좌석 요청(자)  퍼블리셔
@@ -361,19 +353,21 @@ public final class MainFeatureViewModel: ViewModel {
                 guard let occupant = seat.occupant else { return }
                 // FIXME: - occupant 없을 시 방지
                 // FIXME: - 실제 seat의 occupant로 교체
-                if store.isBlocked && occupant.id != store.user.id {
-                    coordinator.push(AppScene.unlockSeatGuide) // 좌석 정보 잠금 해제 뷰
-                } else {
-                    coordinator.presentSheet( // 좌석 정보 조회
-                        AppSheet.seatInfo(
-                            occupant: occupant,
-                            reportButtonAction: {
-                                self.action(.reportButtonDidTap)
-                            },
-                            // FIXME: - 양보 로직 달기
-                            yieldButtonAction: { self.coordinator.dismissSheet() }
+                if occupant.id != store.user.id { // 내가 앉은 좌석에는 액션 적용 X
+                    if store.isBlocked {
+                        coordinator.push(AppScene.unlockSeatGuide) // 좌석 정보 잠금 해제 뷰
+                    } else {
+                        coordinator.presentSheet( // 좌석 정보 조회
+                            AppSheet.seatInfo(
+                                occupant: occupant,
+                                reportButtonAction: {
+                                    self.action(.reportButtonDidTap)
+                                },
+                                // FIXME: - 양보 로직 달기
+                                yieldButtonAction: { self.coordinator.dismissSheet() }
+                            )
                         )
-                    )
+                    }
                 }
             case .registering, .moving, .cancelling:
                 // 좌석을 선택합니다
@@ -400,20 +394,13 @@ public final class MainFeatureViewModel: ViewModel {
             do {
                 let trainCar = try await getSeatInTrainCarUseCase.execute(trainCode: currentTrainCode, carCode: currentCarCode)
                 await MainActor.run {
+                    state.trainCar = trainCar
                     guard state.trainCode == currentTrainCode,
                           state.carCode == currentCarCode else { return }
                     /// 현재 구역의 좌석 데이터만 필터링
                     state.seatSectionState.seats = getSeatInSectionUseCase.execute(trainCar: trainCar, seatSectionType: currentSeatSectionType)
-                    
-                    /// 나의 좌석 반영
-                    if let mySeat = findMySeat(in: trainCar) {
-                        state.mySeat = mySeat
-                        if state.userStatus == .standing {
-                            state.userStatus = .seated
-                            store.isSitting = true
-                        }
-                    }
-                    
+                    /// 유저 상태 업데이트
+                    self.updateUserStatus(from: state.userStatus, in: state.trainCar)
                     /// 나의 좌석 선택 처리 (좌석 등록 / 이동 시)
                     if currentUserStatus == .registering || currentUserStatus == .moving {
                         state.seatSectionState.selectedSeat = state.mySeat
@@ -441,13 +428,11 @@ public final class MainFeatureViewModel: ViewModel {
                 do {
                     let requesterPublisher = try await registerSeatUseCase.execute(seat)
                     self.store.subscribeToSeatRequesterPublisher(requesterPublisher, seatId: seat.id)
-                    state.userStatus = .seated // 상태 변경
-                    store.isSitting = true
+                    coordinator.push(AppScene.mainFeatureActionComplete(actionCase: .receivedCreditByRegister(creditAmount: 10))) // FIXME: 크레딧 액수 수정 필요
                 } catch {
                     print(error.localizedDescription)
                 }
             }
-            coordinator.popLast(2)
         }
     }
     
@@ -459,13 +444,11 @@ public final class MainFeatureViewModel: ViewModel {
                 do {
                     let requesterPublisher = try await moveSeatUseCase.execute(from: oldSeat, to: newSeat)
                     self.store.subscribeToSeatRequesterPublisher(requesterPublisher, seatId: newSeat.id)
-                    state.userStatus = .seated // 상태 변경
-                    store.isSitting = true
+                    coordinator.popLast(2)
                 } catch {
                     print(error.localizedDescription)
                 }
             }
-            coordinator.popLast(2)
         }
     }
     
@@ -476,14 +459,13 @@ public final class MainFeatureViewModel: ViewModel {
             Task {
                 do {
                     try await cancelSeatUseCase.execute(seat)
-                    state.userStatus = .standing // 상태 변경
-                    state.mySeat = nil
-                    store.isSitting = false
+                    // FIXME: 5분 내 취소한 경우에만 나타나도록 수정 필요
+                    // FIXME: 크레딧 액수 수정 필요
+                    coordinator.push(AppScene.mainFeatureActionComplete(actionCase: .takeBackCreditByCancel(creditAmount: 10)))
                 } catch {
                     print(error.localizedDescription)
                 }
             }
-            coordinator.popLast(2)
         }
     }
     
@@ -540,6 +522,42 @@ public final class MainFeatureViewModel: ViewModel {
                 } catch {
                     print(error.localizedDescription)
                 }
+            }
+        }
+    }
+    
+    @MainActor
+    private func updateUserStatus(from _status: UserStatus, in trainCar: TrainCar) {
+        switch _status {
+        case .registering, .moving, .cancelling: // 좌석 정보 등록, 이동, 취소
+            if let mySeat = self.findMySeat(in: trainCar) { // 해당 열차 내 착석 정보 조회
+                self.state.mySeat = mySeat
+                self.store.isSitting = true
+            } else {
+                self.state.mySeat = nil
+                self.store.isSitting = false
+            }
+        default: // 서 있거나 앉아 있을 때
+            /// 현재 보고 있는 구역 좌석 데이터입니다
+            let currentSection = Array(state.seatSectionState.seats.topSeats.values) + Array(state.seatSectionState.seats.bottomSeats.values)
+            /// 현재 보고 있는 구역 좌석 데이터입니다
+            if let mySeat = findMySeat(in: trainCar) {
+                if currentSection.contains(where: { $0.id == mySeat.id }) {
+                    /// mySeat가 현재 보고 있는 구역에 속하는 경우
+                    state.mySeat = mySeat
+                    state.userStatus = .seated
+                    store.isSitting = true
+                } else {
+                    /// mySeat가 현재 보고 있는 구역에 속하지 않는 경우
+                    state.mySeat = mySeat
+                    state.userStatus = .standing // 다른 구역에 내 자리가 있음
+                    store.isSitting = true
+                }
+            } else {
+                /// 좌석이 없으면 standing
+                state.mySeat = nil
+                state.userStatus = .standing
+                store.isSitting = false
             }
         }
     }

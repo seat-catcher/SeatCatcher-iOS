@@ -172,6 +172,12 @@ final class AppCoordinator: Coordinator {
                 unlockSeatUseCase: diContainer.resolveUnlockSeatUseCase()
             )
             UnlockSeatGuideView(viewModel: viewModel)
+        case let .mainFeatureActionComplete(actionCase):
+            let viewModel = MainFeatureActionCompleteViewModel(
+                coordinator: self,
+                actionCase: actionCase
+            )
+            MainFeatureActionCompleteView(viewModel: viewModel)
         }
     }
 

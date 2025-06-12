@@ -24,7 +24,7 @@ public final class SeatRepositoryImpl: SeatRepository, Sendable {
     }
 
     public func unlockAllSeats(creditAmount: Int, targetUserId: Int) async throws {
-        try await networkService.patchCredit(creditAmount: 300, targetUserId: targetUserId)
+        try await networkService.patchCredit(creditAmount: creditAmount, targetUserId: targetUserId)
         return
     }
         
