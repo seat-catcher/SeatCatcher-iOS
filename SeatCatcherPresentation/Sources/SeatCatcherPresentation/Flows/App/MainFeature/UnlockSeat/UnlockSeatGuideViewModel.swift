@@ -38,8 +38,10 @@ public final class UnlockSeatGuideViewModel: ViewModel {
             Task {
                 do {
                     try await unlockSeatUseCase.execute(creditAmount: 10, targetUserId: store.user.id) // FIXME: 크레딧 액수 수정
-                    store.isBlocked = false
-                    coordinator.push(AppScene.mainFeatureActionComplete(actionCase: .unlockedSeat(creditAmount: 10)))
+                    await MainActor.run {
+                        store.isBlocked = false
+                        coordinator.push(AppScene.mainFeatureActionComplete(actionCase: .unlockedSeat(creditAmount: 10)))
+                    }
                 } catch {
                     print(error.localizedDescription)
                 }
