@@ -64,10 +64,8 @@ public class ManageSeatViewModel: ViewModel {
         case .didSelectOption:
             if let option = state.selectedOption {
                 let scene = switch option {
-                case .register:
-                    AppScene.mainFeatureRegisterSeat
-                case .move:
-                    AppScene.mainFeatureMoveSeat
+                case .register, .move:
+                    store.isSitting ? AppScene.mainFeatureMoveSeat : AppScene.mainFeatureRegisterSeat
                 case .cancel:
                     AppScene.mainFeatureCancelSeat
                 }

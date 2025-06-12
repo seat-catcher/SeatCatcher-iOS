@@ -31,6 +31,7 @@ public enum AppScene: AppRoute {
     case mainFeatureCancelSeat
     case manageSeat
     case selectSeatSection
+    case unlockSeatGuide
 
     public var id: String {
         switch self {
@@ -51,6 +52,7 @@ public enum AppScene: AppRoute {
         case .mainFeatureCancelSeat: return "mainFeatureCancelSeat"
         case .manageSeat: return "manageSeat"
         case .selectSeatSection: return "selectSeatSection"
+        case .unlockSeatGuide: return "unlockSeatGuide"
         }
     }
 

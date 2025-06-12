@@ -117,7 +117,6 @@ final class AppCoordinator: Coordinator {
                 coordinator: self,
                 getSeatInTrainCarUseCase: diContainer.resolveGetSeatInTrainCarUseCase(),
                 getSeatInSectionUseCase: diContainer.resolveGetSeatInSectionUseCase(),
-                unlockSeatUseCase: diContainer.resolveUnlockSeatUseCase(),
                 subscribeTrainUseCase: diContainer.resolveSubscribeTrainUseCase(),
                 postSeatRequestUseCase: diContainer.resolveRequestSeatUseCase(),
                 cancelSeatRequestUseCase: diContainer.resolveCancelRequestSeatUseCase(),
@@ -131,7 +130,6 @@ final class AppCoordinator: Coordinator {
                 coordinator: self,
                 getSeatInTrainCarUseCase: diContainer.resolveGetSeatInTrainCarUseCase(),
                 getSeatInSectionUseCase: diContainer.resolveGetSeatInSectionUseCase(),
-                unlockSeatUseCase: diContainer.resolveUnlockSeatUseCase(),
                 registerSeatUseCase: diContainer.resolveRegisterSeatUseCase()
             )
             MainFeatureView(viewModel: viewModel)
@@ -141,7 +139,6 @@ final class AppCoordinator: Coordinator {
                 coordinator: self,
                 getSeatInTrainCarUseCase: diContainer.resolveGetSeatInTrainCarUseCase(),
                 getSeatInSectionUseCase: diContainer.resolveGetSeatInSectionUseCase(),
-                unlockSeatUseCase: diContainer.resolveUnlockSeatUseCase(),
                 moveSeatUseCase: diContainer.resolveMoveSeatUseCase()
             )
             MainFeatureView(viewModel: viewModel)
@@ -151,7 +148,6 @@ final class AppCoordinator: Coordinator {
                 coordinator: self,
                 getSeatInTrainCarUseCase: diContainer.resolveGetSeatInTrainCarUseCase(),
                 getSeatInSectionUseCase: diContainer.resolveGetSeatInSectionUseCase(),
-                unlockSeatUseCase: diContainer.resolveUnlockSeatUseCase(),
                 cancelSeatUseCase: diContainer.resolveCancelSeatUseCase()
             )
             MainFeatureView(viewModel: viewModel)
@@ -169,6 +165,13 @@ final class AppCoordinator: Coordinator {
                 getSeatInTrainCarUseCase: diContainer.resolveGetSeatInTrainCarUseCase()
             )
             SelectSeatSectionView(viewModel: viewModel)
+        case .unlockSeatGuide:
+            let viewModel = UnlockSeatGuideViewModel(
+                store: diContainer.resolveAppStore(),
+                coordinator: self,
+                unlockSeatUseCase: diContainer.resolveUnlockSeatUseCase()
+            )
+            UnlockSeatGuideView(viewModel: viewModel)
         }
     }
 
