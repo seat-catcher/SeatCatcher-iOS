@@ -25,12 +25,12 @@ public enum MainFeatureLiterals {
         case cancelSeat = "앉은좌석 취소하기"
     }
     
-    static func getTitleText(seatSection: SeatSectionType, status: MainFeatureViewModel.UserStatus) -> (title: String, subtitle: String?) {
+    static func getTitleText(seatSection: SeatSectionType, status: MainFeatureViewModel.UserStatus, isBlocked: Bool) -> (title: String, subtitle: String?) {
         switch status {
         case .seated:
             return (title: seatSection.rawValue + "에서\n앉아 있어요", subtitle: nil)
         case .standing:
-            return (title: seatSection.rawValue + "에서\n원하는 좌석을 찾아보세요", subtitle: "빨리 비워지는 좌석일수록 밝아져요")
+            return (title: seatSection.rawValue + "에서\n원하는 좌석을 찾아보세요", subtitle: isBlocked ? "크레딧을 통해 좌석정보를 확인할 수 있어요" : "빨리 비워지는 좌석일수록 밝아져요")
         case .registering, .moving:
             return (title: seatSection.rawValue + "에서\n내가 앉은 좌석을 선택해주세요", subtitle: "허위 등록 시, 이용이 제한될 수 있습니다.")
         case .cancelling:

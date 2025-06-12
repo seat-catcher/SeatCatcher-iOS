@@ -18,14 +18,14 @@ public struct MainFeatureView: View {
     
     public var body: some View {
         VStack(spacing: 0) {
-            TitleTextView(seatSection: viewModel.state.seatSectionType, status: viewModel.state.userStatus)
+            TitleTextView(seatSection: viewModel.state.seatSectionType, status: viewModel.state.userStatus, isBlocked: viewModel.store.isBlocked)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.top, 18)
                 .padding(.bottom, 32)
             SeatSectionView(
                 selectedSeat: viewModel.state.seatSectionState.selectedSeat,
                 isBlocked: viewModel.state.seatSectionState.isBlocked,
-                mySeat: viewModel.state.seatSectionState.mySeat,
+                mySeat: viewModel.state.mySeat,
                 seats: viewModel.state.seatSectionState.seats,
                 userStatus: viewModel.state.userStatus,
                 onTap: { seat in
@@ -77,18 +77,19 @@ public struct MainFeatureView: View {
 private struct TitleTextView: View {
     let seatSection: SeatSectionType
     let status: MainFeatureViewModel.UserStatus
+    let isBlocked: Bool
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text(
-                MainFeatureLiterals.getTitleText(seatSection: seatSection, status: status).title,
+                MainFeatureLiterals.getTitleText(seatSection: seatSection, status: status, isBlocked: isBlocked).title,
                 styledSubstring: seatSection.rawValue,
                 color: .scGreen,
                 font: .T02_B
             )
             .font(.T02_B)
             .foregroundStyle(.gray100)
-            if let subtitle = MainFeatureLiterals.getTitleText(seatSection: seatSection, status: status).subtitle {
+            if let subtitle = MainFeatureLiterals.getTitleText(seatSection: seatSection, status: status, isBlocked: isBlocked).subtitle {
                 Text(subtitle)
                     .font(.B03_M)
                     .foregroundStyle(.gray300)
@@ -187,7 +188,7 @@ private struct CTAButtonView: View {
                         viewModel.action(.willMoveSeat(seat))
                     }
                 case .cancelling:    
-                    viewModel.action(.willCancelSeat(viewModel.state.seatSectionState.mySeat))
+                    viewModel.action(.willCancelSeat(viewModel.state.mySeat))
                 }
             },
             style: ctaButtonStyle
