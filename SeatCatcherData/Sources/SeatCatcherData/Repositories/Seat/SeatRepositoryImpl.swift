@@ -23,8 +23,8 @@ public final class SeatRepositoryImpl: SeatRepository, Sendable {
         return response.domainModel
     }
 
-    public func unlockAllSeats() async throws {
-        // TODO: 크레딧 차감 API 호출
+    public func unlockAllSeats(creditAmount: Int, targetUserId: Int) async throws {
+        try await networkService.patchCredit(creditAmount: 300, targetUserId: targetUserId)
         return
     }
         
