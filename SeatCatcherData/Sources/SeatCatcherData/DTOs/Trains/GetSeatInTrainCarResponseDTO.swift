@@ -195,7 +195,7 @@ extension OccupantInfo {
             profileImage: UserImage(rawValue: profileImageNum) ?? .catchy1,
             tags: tags.compactMap { UserTag(rawValue: $0) },
             minutesLeftToGetOff: expectedArrivalTime.minutesUntilDropOff() ?? 0,
-            stationToGetOff: getOffStationName ?? "알 수 없음"
+            stationToGetOff: getOffStationName
         )
     }
 }
