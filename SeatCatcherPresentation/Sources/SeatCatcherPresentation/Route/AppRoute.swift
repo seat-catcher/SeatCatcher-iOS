@@ -32,6 +32,7 @@ public enum AppScene: AppRoute {
     case manageSeat
     case selectSeatSection
     case unlockSeatGuide
+    case mainFeatureActionComplete(actionCase: MainFeatureActionCompleteViewModel.MainFeatureActionCase)
 
     public var id: String {
         switch self {
@@ -53,6 +54,7 @@ public enum AppScene: AppRoute {
         case .manageSeat: return "manageSeat"
         case .selectSeatSection: return "selectSeatSection"
         case .unlockSeatGuide: return "unlockSeatGuide"
+        case .mainFeatureActionComplete: return "mainFeatureActionComplete"
         }
     }
 
