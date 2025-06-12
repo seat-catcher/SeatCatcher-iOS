@@ -14,11 +14,6 @@ public struct SeatInfoBottomSheetView: View {
     let reportButtonAction: () -> Void
     let yieldButtonAction: () -> Void
 
-    // FIXME: - 실제 하차역으로 교체 서버에서 안옴
-    let dummyDest = ["건대입구", "대림"].randomElement()!
-    // FIXME: - 실제 하차역으로 교체 서버에서 안옴
-    let dummyTime = (3...45).randomElement()!
-
     public init(
         occupant: Occupant,
         reportButtonAction: @escaping () -> Void,
@@ -76,11 +71,8 @@ public struct SeatInfoBottomSheetView: View {
 
                 VStack(alignment: .leading, spacing: 12) {
                     Group {
-                        // FIXME: - 실제 하차역으로 교체 서버에서 안옴
-                        Text("\(dummyDest)역")
-                        // FIXME: - 실제 남은시간으로 교체 서버에서 안옴
-                        Text("\(dummyTime)분 남았어요")
-//                        Text("\(occupant.minutesLeftToGetOff)분 남았어요")
+                        Text("\(occupant.stationToGetOff)역")
+                        Text("\(occupant.minutesLeftToGetOff)분 남았어요")
                     }
                     .font(.B02_M)
                     .foregroundStyle(.gray100)
