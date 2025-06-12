@@ -10,7 +10,7 @@ import SeatCatcherCore
 
 public struct UnlockSeatGuideView: View {
     
-    @State var viewModel: UnlockSeatGuideViewModel
+    @State private var viewModel: UnlockSeatGuideViewModel
     
     public init(viewModel: UnlockSeatGuideViewModel) {
         self._viewModel = State(initialValue: viewModel)

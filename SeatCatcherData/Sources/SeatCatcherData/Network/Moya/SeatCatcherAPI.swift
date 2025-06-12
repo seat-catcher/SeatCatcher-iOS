@@ -91,7 +91,7 @@ extension SeatCatcherAPI: TargetType {
             return "/user/seats/\(seatId)/yield"
         case .patchSeatOccupant:
             return "/user/seats"
-        case .patchCredit(requestDTO: let requestDTO):
+        case .patchCredit:
             return "/credit"
         }
     }

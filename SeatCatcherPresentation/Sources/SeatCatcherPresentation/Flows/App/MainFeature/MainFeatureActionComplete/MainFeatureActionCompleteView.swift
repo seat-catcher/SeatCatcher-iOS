@@ -9,7 +9,7 @@ import SwiftUI
 
 public struct MainFeatureActionCompleteView: View {
     
-    @State var viewModel: MainFeatureActionCompleteViewModel
+    @State private var viewModel: MainFeatureActionCompleteViewModel
     
     public init(viewModel: MainFeatureActionCompleteViewModel) {
         self._viewModel = State(initialValue: viewModel)
