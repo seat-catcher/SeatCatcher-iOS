@@ -24,18 +24,18 @@ struct SeatInfo: Codable {
 struct OccupantInfo: Codable {
     let userId: Int
     let nickname: String
-    let getOffRemainingCount: Int?
-    let profileImageNum: String // FIXME: 서버 작업 중
-    let getOffStation: String? // FIXME: 서버 작업 중
-    let tags: [String] // FIXME: 서버 작업 중
+    let expectedArrivalTime: String
+    let profileImageNum: String
+    let getOffStationName: String
+    let tags: [String]
     
     static var stub: Self {
         .init(
-            userId: 1,
-            nickname: "신기한 발바닥",
-            getOffRemainingCount: 33,
-            profileImageNum: "IMAGE_1",
-            getOffStation: "상도역",
+            userId: 2,
+            nickname: "뜨거운 승강장",
+            expectedArrivalTime: "2025-06-11T15:50:13.84318",
+            profileImageNum: "IMAGE_2",
+            getOffStationName: "서울대입구",
             tags: ["USERTAG_LONGDISTANCE", "USERTAG_CARRIER"]
         )
     }
@@ -194,8 +194,8 @@ extension OccupantInfo {
             name: nickname,
             profileImage: UserImage(rawValue: profileImageNum) ?? .catchy1,
             tags: tags.compactMap { UserTag(rawValue: $0) },
-            minutesLeftToGetOff: getOffRemainingCount ?? 0,
-            stationToGetOff: getOffStation ?? ""
+            minutesLeftToGetOff: expectedArrivalTime.minutesUntilDropOff() ?? 0,
+            stationToGetOff: getOffStationName ?? "알 수 없음"
         )
     }
 }
@@ -238,5 +238,24 @@ fileprivate extension SeatType {
         case "PRIORITY": self = .priority
         default: throw SeatCatcherDataError.InvalidSeatType
         }
+    }
+}
+
+// 잔여 시간 계산
+fileprivate extension String {
+    func minutesUntilDropOff() -> Int? {
+        let formatter = ISO8601DateFormatter() // UTC 기본
+        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        
+        guard let dropOffDate = formatter.date(from: self) else {
+            return nil
+        }
+        
+        let currentDate = Date() // UTC 기준
+        
+        let seconds = dropOffDate.timeIntervalSince(currentDate)
+        
+        // 초를 분으로 변환 (올림 처리)
+        return seconds > 0 ? Int(ceil(seconds / 60.0)) : 0
     }
 }
