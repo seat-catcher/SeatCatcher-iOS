@@ -265,4 +265,9 @@ public struct NetworkService: Sendable {
         let responseDTO = try JSONDecoder().decode([GetIncomingsResponseDTO].self, from: response)
         return responseDTO
     }
+    
+    // MARK: - Credit
+    func patchCredit(creditAmount: Int, targetUserId: Int) async throws {
+        try await provider.request(.patchCredit(requestDTO: PatchCreditRequestDTO(amount: creditAmount, targetUserId: targetUserId)))
+    }
 }

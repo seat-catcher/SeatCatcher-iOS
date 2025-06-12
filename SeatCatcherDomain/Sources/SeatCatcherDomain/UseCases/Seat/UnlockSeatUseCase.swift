@@ -8,7 +8,7 @@
 import Foundation
 
 public protocol UnlockSeatUseCase: Sendable {
-    func execute() async throws
+    func execute(creditAmount: Int, targetUserId: Int) async throws
 }
 
 public final class UnlockSeatUseCaseImpl: UnlockSeatUseCase {
@@ -19,7 +19,7 @@ public final class UnlockSeatUseCaseImpl: UnlockSeatUseCase {
         self.seatRepository = seatRepository
     }
     
-    public func execute() async throws {
-        try await seatRepository.unlockAllSeats()
+    public func execute(creditAmount: Int, targetUserId: Int) async throws {
+        try await seatRepository.unlockAllSeats(creditAmount: creditAmount, targetUserId: targetUserId)
     }
 }

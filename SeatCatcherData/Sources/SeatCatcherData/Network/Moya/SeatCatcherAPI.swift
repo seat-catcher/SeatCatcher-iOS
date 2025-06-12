@@ -37,6 +37,8 @@ enum SeatCatcherAPI: Sendable {
     case rejectSeatRequest(seatId: Int, requesterId: Int, creditAmount: Int)
 
     case getIncomings(requestDTO: GetIncomingsRequestDTO)
+    
+    case patchCredit(requestDTO: PatchCreditRequestDTO)
 }
 
 extension SeatCatcherAPI: TargetType {
@@ -89,6 +91,8 @@ extension SeatCatcherAPI: TargetType {
             return "/user/seats/\(seatId)/yield"
         case .patchSeatOccupant:
             return "/user/seats"
+        case .patchCredit(requestDTO: let requestDTO):
+            return "/credit"
         }
     }
     
@@ -133,6 +137,8 @@ extension SeatCatcherAPI: TargetType {
         case .rejectSeatRequest:
             return .post
         case .patchSeatOccupant:
+            return .patch
+        case .patchCredit:
             return .patch
         }
     }
@@ -216,9 +222,22 @@ extension SeatCatcherAPI: TargetType {
             return .requestParameters(parameters: parameters, encoding: URLEncoding.default)
         case let .patchSeatOccupant(requestDTO):
             return .requestJSONEncodable(requestDTO)
+        case let .patchCredit(requestDTO):
+            let requestBodyParameters: [String: Any] = [
+                "amount": abs((requestDTO.amount)), // 절댓값
+                "targetUserId": requestDTO.targetUserId
+            ]
+            let queryParameter: [String: Any] = [
+                "isAddition": requestDTO.amount > 0 // 지급, 차감 여부
+            ]
+            return .requestCompositeParameters(
+                bodyParameters: requestBodyParameters,
+                bodyEncoding: JSONEncoding.default,
+                urlParameters: queryParameter
+            )
         }
     }
-
+    
     var headers: [String : String]? {
         var accessToken: String { (try? KeychainService.get(key: "accessToken")) ?? "" }
 
@@ -268,6 +287,8 @@ extension SeatCatcherAPI: TargetType {
         case .rejectSeatRequest:
             return baseWithAuth
         case .patchSeatOccupant:
+            return baseWithAuth
+        case .patchCredit:
             return baseWithAuth
         }
     }

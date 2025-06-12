@@ -12,7 +12,7 @@ public protocol SeatRepository: Sendable {
     func getSeatsInTrainCar(trainCode: String, carCode: String) async throws -> TrainCar
     // MARK: - 좌석 상태 관리
     /// 좌석 정보 잠금을 해제합니다
-    func unlockAllSeats() async throws
+    func unlockAllSeats(creditAmount: Int, targetUserId: Int) async throws
     /// 좌석 정보를 등록합니다
     func registerSeat(_ seat: Seat) async throws
     /// 좌석 정보를 취소합니다

@@ -344,7 +344,6 @@ public final class MainFeatureViewModel: ViewModel {
         }
     }
     
-    
     /// 구독 해제
     @MainActor
     private func unsubscribeFromTrain() { // TODO: - 백그라운드에서도 연결 유지해야하므로 추후 검토 후 삭제
@@ -356,7 +355,6 @@ public final class MainFeatureViewModel: ViewModel {
     
     @MainActor
     private func handleSeatSectionAction(_ action: SeatSectionAction) {
-        dump(state.userStatus)
         switch action {
         case .willSelectSeat(let seat):
             switch state.userStatus {
@@ -391,8 +389,8 @@ public final class MainFeatureViewModel: ViewModel {
             /// 좌석 정보를 잠금 해제합니다
             Task {
                 do {
-                    try await unlockSeatUseCase.execute()
-                    state.seatSectionState.isBlocked = false
+                    try await unlockSeatUseCase.execute(creditAmount: 300, targetUserId: store.user.id)
+                    store.isBlocked = false
                 } catch {
                     print(error.localizedDescription)
                 }
