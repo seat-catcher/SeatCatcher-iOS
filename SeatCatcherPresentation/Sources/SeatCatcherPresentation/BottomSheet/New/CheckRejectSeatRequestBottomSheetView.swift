@@ -30,7 +30,7 @@ public struct CheckRejectSeatRequestBottomSheetView: View {
                 .foregroundStyle(.gray300)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.top, 6)
-            Image(.iconReject)
+            Image(.iconRejectPost)
                 .padding(.vertical, 26)
             HStack(spacing: 10) {
                 CTAButton(

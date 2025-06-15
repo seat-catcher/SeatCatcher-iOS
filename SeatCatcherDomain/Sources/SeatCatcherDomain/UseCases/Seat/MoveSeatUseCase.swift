@@ -9,7 +9,7 @@ import Foundation
 import Combine
 
 public protocol MoveSeatUseCase {
-    @MainActor func execute(from oldSeat: Seat, to newSeat: Seat) async throws  -> AnyPublisher<SeatRequester, Error>
+    @MainActor func execute(from oldSeat: Seat, to newSeat: Seat, creditAmount: Int) async throws  -> AnyPublisher<SeatRequester, Error>
 }
 
 public final class MoveSeatUseCaseImpl: MoveSeatUseCase {
@@ -23,13 +23,13 @@ public final class MoveSeatUseCaseImpl: MoveSeatUseCase {
     }
     
     @MainActor
-    public func execute(from oldSeat: Seat, to newSeat: Seat) async throws -> AnyPublisher<SeatRequester, Error> {
+    public func execute(from oldSeat: Seat, to newSeat: Seat, creditAmount: Int) async throws -> AnyPublisher<SeatRequester, Error> {
         /// 기존 좌석 정보를 삭제합니다
         try await seatRepository.cancelSeat()
         /// 기존 앉은 좌석에 대한 요청 구독을 해제합니다
         seatStompRepository.unsubscribeFromSeatOccupied(oldSeat)
         /// 이후 새로운 좌석 정보를 등록합니다
-        try await seatRepository.registerSeat(newSeat)
+        try await seatRepository.registerSeat(newSeat, creditAmount: creditAmount)
         /// 앉은 좌석에 대한 요청 구독을 시작합니다
         seatStompRepository.subscribeToSeatOccupied(newSeat)
         /// 해당 퍼블리셔를 리턴합니다

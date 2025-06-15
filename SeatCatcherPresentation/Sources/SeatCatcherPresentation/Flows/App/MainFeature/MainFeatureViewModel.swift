@@ -12,7 +12,7 @@ import SeatCatcherDomain
 
 @Observable
 public final class MainFeatureViewModel: ViewModel {
-    
+
     // MARK: Action Definition
     enum Action {
         case willAppear // 초기 상태
@@ -28,18 +28,18 @@ public final class MainFeatureViewModel: ViewModel {
         case reportButtonDidTap // 바텀시트 신고버튼
         case reportAlertConfirmButtonDidTap // 바텀시트 신고 후 알럿 버튼
     }
-    
+
     enum SeatSectionAction {
         case willSelectSeat(Seat) // 좌석 선택
     }
-    
+
     enum SeatRequestAction {
         case willRequestSeat(_ seat: Seat, creditAmount: Int) // 좌석 요청
         case willCancelRequestSeat(_ seat: Seat, creditAmount: Int) // 좌석 요청 취소
         case willAcceptSeatRequest(_ seat: Seat, requester: SeatRequester) // 좌석 요청 수락
         case willRejectSeatRequest(_ seat: Seat, requester: SeatRequester) // 좌석 요청 거절
     }
-    
+
     // MARK: State Definition
     struct State {
         var trainCode: String // 열차 코드
@@ -55,28 +55,28 @@ public final class MainFeatureViewModel: ViewModel {
         var isSeatFetched = false
         var isReportAlertPresented = false // 신고 alert
     }
-    
+
     struct SeatSectionState {
         var selectedSeat: Seat? // 선택한 좌석
         var isBlocked: Bool // 좌석 정보 잠금 상태
         var seats: SeatSection // 좌석 정보
     }
-    
+
     struct SeatRequestState {
         var requesters: [SeatRequester]? // 좌석 점유자일 때 - 좌석 요청자(요청 정보) 리스트
         var requestee: SeatRequestee? // 좌석 요청자일 때 - 좌석 점유자(응답 정보)
     }
-    
+
     // MARK: Cancellables
     private var cancellables = Set<AnyCancellable>()
-    
+
     // MARK: Dependencies
     let store: AppStore
     let coordinator: Coordinator
-    
+
     // MARK: States
     private(set) var state: State
-    
+
     // MARK: UseCases
     /// 필수 유즈케이스
     private let getSeatInTrainCarUseCase: GetSeatInTrainCarUseCase
@@ -95,7 +95,7 @@ public final class MainFeatureViewModel: ViewModel {
     /// 옵셔널 유즈케이스 - 좌석 점유자
     private let acceptSeatRequestUseCase : AcceptRequestSeatUseCase?
     private let rejectSeatRequestUseCase : RejectRequestSeatUseCase?
-    
+
     // MARK: Initialize
     @MainActor
     public init(
@@ -144,8 +144,8 @@ public final class MainFeatureViewModel: ViewModel {
             )
         )
     }
-    
-    
+
+
     // MARK: 기본
     @MainActor
     public convenience init(
@@ -153,12 +153,15 @@ public final class MainFeatureViewModel: ViewModel {
         coordinator: Coordinator,
         getSeatInTrainCarUseCase: GetSeatInTrainCarUseCase,
         getSeatInSectionUseCase: GetSeatInSectionUseCase,
-        
+
         subscribeTrainUseCase: SubscribeTrainUseCase,
         postSeatRequestUseCase : RequestSeatUseCase,
         cancelSeatRequestUseCase : CancelRequestSeatUseCase,
         acceptSeatRequestUseCase : AcceptRequestSeatUseCase,
-        rejectSeatRequestUseCase : RejectRequestSeatUseCase
+        rejectSeatRequestUseCase : RejectRequestSeatUseCase,
+
+        // FIXME: - TEMP
+        cancelSeatUseCase: CancelSeatUseCase
     ) {
         self.init(
             store: store,
@@ -166,14 +169,15 @@ public final class MainFeatureViewModel: ViewModel {
             getSeatInTrainCarUseCase: getSeatInTrainCarUseCase,
             getSeatInSectionUseCase: getSeatInSectionUseCase,
             subscribeTrainUseCase: subscribeTrainUseCase,
+            cancelSeatUseCase: cancelSeatUseCase,
             postSeatRequestUseCase : postSeatRequestUseCase,
             cancelSeatRequestUseCase : cancelSeatRequestUseCase,
             acceptSeatRequestUseCase : acceptSeatRequestUseCase,
             rejectSeatRequestUseCase : rejectSeatRequestUseCase,
-            userStatus: store.isSitting ? .seated : .standing
+            userStatus: store.isSitting ? .seated : .standing,
         )
     }
-    
+
     // MARK: 좌석 등록하는 경우
     @MainActor
     public convenience init(
@@ -192,7 +196,7 @@ public final class MainFeatureViewModel: ViewModel {
             userStatus: .registering
         )
     }
-    
+
     // MARK: 좌석 이동하는 경우
     @MainActor
     public convenience init(
@@ -211,7 +215,7 @@ public final class MainFeatureViewModel: ViewModel {
             userStatus: .moving
         )
     }
-    
+
     // MARK: 좌석 취소하는 경우
     @MainActor
     public convenience init(
@@ -230,7 +234,7 @@ public final class MainFeatureViewModel: ViewModel {
             userStatus: .cancelling
         )
     }
-    
+
     // MARK: action
     @MainActor
     func action(_ action: Action) {
@@ -275,7 +279,7 @@ public final class MainFeatureViewModel: ViewModel {
             state.isReportAlertPresented = false
         }
     }
-    
+
     /// 메인피쳐 기본 상태일 시에만 수행합니다
     /// 좌석 등록 / 이동 / 취소 시엔 STOMP 없이 REST API만 작동합니다
     @MainActor
@@ -324,7 +328,7 @@ public final class MainFeatureViewModel: ViewModel {
             }
             .store(in: &cancellables)
     }
-    
+
     @MainActor
     private func subscribeToTrain(trainCode: String, carCode: String) {
         if let subscribeTrainUseCase {
@@ -332,7 +336,7 @@ public final class MainFeatureViewModel: ViewModel {
             store.subscribeToTrainPublisher(trainCarPublisher, trainCode: trainCode)
         }
     }
-    
+
     /// 구독 해제
     @MainActor
     private func unsubscribeFromTrain() { // TODO: - 백그라운드에서도 연결 유지해야하므로 추후 검토 후 삭제
@@ -341,7 +345,7 @@ public final class MainFeatureViewModel: ViewModel {
             cancellables.removeAll()
         }
     }
-    
+
     @MainActor
     private func handleSeatSectionAction(_ action: SeatSectionAction) {
         switch action {
@@ -357,14 +361,22 @@ public final class MainFeatureViewModel: ViewModel {
                     if store.isBlocked {
                         coordinator.push(AppScene.unlockSeatGuide) // 좌석 정보 잠금 해제 뷰
                     } else {
-                        coordinator.presentSheet( // 좌석 정보 조회
+                        coordinator.presentSheet(
+                            // 좌석 정보 조회
                             AppSheet.seatInfo(
                                 occupant: occupant,
                                 reportButtonAction: {
                                     self.action(.reportButtonDidTap)
                                 },
                                 // FIXME: - 양보 로직 달기
-                                yieldButtonAction: { self.coordinator.dismissSheet() }
+                                yieldButtonAction: {
+//                                    self.postSeatRequest(
+//                                        seat,
+//                                        creditAmount: self.store.user.credit
+//                                    )
+                                    self.coordinator.dismissSheet()
+                                    self.coordinator.push(AppScene.mainFeatureActionComplete(actionCase: .requestInProcess(stationName: occupant.stationToGetOff)))
+                                }
                             )
                         )
                     }
@@ -381,8 +393,8 @@ public final class MainFeatureViewModel: ViewModel {
             }
         }
     }
-    
-    
+
+
     @MainActor
     private func fetchSeatInSection() {
         let currentTrainCode = state.trainCode
@@ -406,27 +418,27 @@ public final class MainFeatureViewModel: ViewModel {
                         state.seatSectionState.selectedSeat = state.mySeat
                     }
                 }
-                
+
             } catch {
                 print(error.localizedDescription)
             }
         }
     }
-    
+
     @MainActor
     private func findMySeat(in trainCar: TrainCar) -> Seat? {
         trainCar.seatInfo.values
             .flatMap { Array($0.topSeats.values) + Array($0.bottomSeats.values) }
             .first { $0.occupant?.id == store.user.id }
     }
-    
+
     @MainActor
     private func registerSeat(_ seat: Seat) {
         /// 좌석 정보를 등록합니다
         if let registerSeatUseCase {
             Task {
                 do {
-                    let requesterPublisher = try await registerSeatUseCase.execute(seat)
+                    let requesterPublisher = try await registerSeatUseCase.execute(seat, creditAmount: 10)
                     self.store.subscribeToSeatRequesterPublisher(requesterPublisher, seatId: seat.id)
                     coordinator.push(AppScene.mainFeatureActionComplete(actionCase: .receivedCreditByRegister(creditAmount: 10))) // FIXME: 크레딧 액수 수정 필요
                 } catch {
@@ -435,14 +447,14 @@ public final class MainFeatureViewModel: ViewModel {
             }
         }
     }
-    
+
     @MainActor
     private func moveSeat(_ newSeat: Seat) {
         /// 좌석 정보를 이동합니다
         if let moveSeatUseCase, let oldSeat = self.state.mySeat {
             Task {
                 do {
-                    let requesterPublisher = try await moveSeatUseCase.execute(from: oldSeat, to: newSeat)
+                    let requesterPublisher = try await moveSeatUseCase.execute(from: oldSeat, to: newSeat, creditAmount: 10)
                     self.store.subscribeToSeatRequesterPublisher(requesterPublisher, seatId: newSeat.id)
                     coordinator.popLast(2)
                 } catch {
@@ -451,7 +463,7 @@ public final class MainFeatureViewModel: ViewModel {
             }
         }
     }
-    
+
     @MainActor
     private func cancelSeat(_ seat: Seat?) {
         /// 좌석 정보를 취소합니다
@@ -468,7 +480,7 @@ public final class MainFeatureViewModel: ViewModel {
             }
         }
     }
-    
+
     @MainActor
     private func postSeatRequest(_ seat: Seat, creditAmount: Int) {
         /// 좌석 요청을 송신합니다
@@ -483,7 +495,7 @@ public final class MainFeatureViewModel: ViewModel {
             }
         }
     }
-    
+
     @MainActor
     private func cancelSeatRequest(_ seat: Seat, creditAmount: Int) {
         /// 좌석 요청을 취소합니다
@@ -497,7 +509,7 @@ public final class MainFeatureViewModel: ViewModel {
             }
         }
     }
-    
+
     @MainActor
     private func acceptSeatRequest(_ seat: Seat, requester: SeatRequester) {
         /// 좌석 요청을 수락합니다
@@ -511,7 +523,7 @@ public final class MainFeatureViewModel: ViewModel {
             }
         }
     }
-    
+
     @MainActor
     private func rejectSeatRequest(_ seat: Seat, requester: SeatRequester) {
         /// 좌석 요청을 거절합니다
@@ -525,7 +537,7 @@ public final class MainFeatureViewModel: ViewModel {
             }
         }
     }
-    
+
     @MainActor
     private func updateUserStatus(from _status: UserStatus, in trainCar: TrainCar) {
         switch _status {
@@ -561,12 +573,59 @@ public final class MainFeatureViewModel: ViewModel {
             }
         }
     }
-    
+
     public enum UserStatus: Sendable {
         case seated // 착석 중
         case standing // 자리 찾는 중
         case registering // 좌석 관리 - 앉은 자리 등록 중
         case moving // 좌석 관리 - 앉은 자리 이동 중
         case cancelling // 좌석 관리 - 앉은 자리 취소 중
+    }
+}
+
+// FIXME: - TEMP
+extension MainFeatureViewModel {
+    @MainActor
+    func presentYieldSheet() {
+        var occupant: Occupant {
+            if store.user.name != "뜨거운 승강장" {
+                Occupant(
+                    id: 2,
+                    name: "뜨거운 승강장",
+                    profileImage: .catchy2,
+                    tags: [.longDistance, .pregnant],
+                    minutesLeftToGetOff: 15,
+                    stationToGetOff: "몰라"
+                )
+            } else {
+                Occupant(
+                    id: 1,
+                    name: "지친 애플",
+                    profileImage: .catchy1,
+                    tags: [.tired],
+                    minutesLeftToGetOff: 15,
+                    stationToGetOff: "몰라"
+                )
+            }
+        }
+
+        coordinator.presentSheet(AppSheet.checkAcceptSeatRequest(
+            occupant: occupant,
+            creditAmount: 10,
+            reportButtonAction: {
+                self.action(.reportButtonDidTap)
+            },
+            confirmationButtonAction: {
+                guard let seat = self.state.mySeat,
+                      let cancelSeatUseCase = self.cancelSeatUseCase
+                else { return }
+
+                Task { try? await cancelSeatUseCase.execute(seat) }
+                self.coordinator.dismissSheet()
+            },
+            cancelButtonAction: {
+                self.coordinator.dismissSheet()
+            }
+        ))
     }
 }

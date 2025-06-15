@@ -380,7 +380,7 @@ private struct PathCardPathExists: View {
                 .frame(width: 1.4, height: 60)
                 .foregroundStyle(.gray600)
                 .padding(EdgeInsets(top: -3, leading: 5.2, bottom: -2, trailing: 46))
-            if let incoming = viewModel.state.incoming {
+            if viewModel.state.incoming != nil {
                 Group {
                     Text("\(viewModel.state.incoming?.arrivalTime.hour24Time ?? "")")
                         .font(.C01_SB)

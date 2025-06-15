@@ -14,7 +14,8 @@ let package = Package(
     ],
     dependencies: [
         .package(name: "SeatCatcherDomain", path: "../SeatCatcherDomain"),
-        .package(name: "SeatCatcherCore", path: "../SeatCatcherCore")
+        .package(name: "SeatCatcherCore", path: "../SeatCatcherCore"),
+        .package(url: "https://github.com/airbnb/lottie-ios.git", .upToNextMajor(from: "4.5.2"))
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -23,7 +24,8 @@ let package = Package(
             name: "SeatCatcherPresentation",
             dependencies: [
                 "SeatCatcherDomain",
-                "SeatCatcherCore"
+                "SeatCatcherCore",
+                .product(name: "Lottie", package: "lottie-ios")
             ],
             resources: [.process("Resources")]
         )

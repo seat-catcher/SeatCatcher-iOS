@@ -81,9 +81,7 @@ public struct SeatInfoBottomSheetView: View {
             }
 
             CTAButton(
-                // FIXME: - 양보 요청하기 버튼으로 변경
-//                title: "양보 요청하기",
-                title: "확인",
+                title: "양보 요청하기",
                 action: yieldButtonAction,
                 style: .bottomEnabled
             )

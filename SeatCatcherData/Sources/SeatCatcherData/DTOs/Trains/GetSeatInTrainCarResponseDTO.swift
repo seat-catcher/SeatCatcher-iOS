@@ -244,9 +244,10 @@ fileprivate extension SeatType {
 // 잔여 시간 계산
 fileprivate extension String {
     func minutesUntilDropOff() -> Int? {
-        let formatter = ISO8601DateFormatter() // UTC 기본
-        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-        
+        let formatter = DateFormatter() // UTC 기본
+        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS"
+        formatter.timeZone = TimeZone(abbreviation: "UTC")
+
         guard let dropOffDate = formatter.date(from: self) else {
             return nil
         }
@@ -254,7 +255,7 @@ fileprivate extension String {
         let currentDate = Date() // UTC 기준
         
         let seconds = dropOffDate.timeIntervalSince(currentDate)
-        
+
         // 초를 분으로 변환 (올림 처리)
         return seconds > 0 ? Int(ceil(seconds / 60.0)) : 0
     }

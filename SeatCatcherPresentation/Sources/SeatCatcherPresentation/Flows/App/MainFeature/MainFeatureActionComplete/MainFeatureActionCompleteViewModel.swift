@@ -44,19 +44,23 @@ public final class MainFeatureActionCompleteViewModel: ViewModel {
                     hasUnderline: false,
                     buttonTitle: nil
                 )
-            case .requestInProcess(let stationName):
+            case .requestInProcess(_):
                 return Config(
                     iconImage: .dangerCircle,
                     title: "요청 중",
-                    subtitle: "\(stationName)역을 지난 뒤부터\n좌석을 바꿀 수 있어요",
+                    subtitle: "상대방의 요청을 기다리고 있어요",
+                    // FIXME: TEMP
+//                    subtitle: "\(stationName)역을 지난 뒤부터\n좌석을 바꿀 수 있어요",
                     hasUnderline: false,
                     buttonTitle: "요청 취소하기"
                 )
-            case .requestAccepted(let stationName):
+            case .requestAccepted(_):
                 return Config(
                     iconImage: .iconAccept,
                     title: "요청이 수락됐어요",
-                    subtitle: "\(stationName)역을 지난 뒤부터\n좌석을 바꿀 수 있어요",
+                    // FIXME: TEMP
+                    subtitle: "이제 자리에 앉을 수 있어요",
+//                    subtitle: "\(stationName)역을 지난 뒤부터\n좌석을 바꿀 수 있어요",
                     hasUnderline: false,
                     buttonTitle: "확인"
                 )
@@ -64,7 +68,9 @@ public final class MainFeatureActionCompleteViewModel: ViewModel {
                 return Config(
                     iconImage: .iconReject,
                     title: "요청이 거절됐어요",
-                    subtitle: "수락 여부와 관계없이\n크레딧은 소모됩니다.",
+                    // FIXME: TEMP
+                    subtitle: "다른 자리를 다시 요청할 수 있어요",
+//                    subtitle: "수락 여부와 관계없이\n크레딧은 소모됩니다.",
                     hasUnderline: true,
                     buttonTitle: "확인"
                 )
@@ -107,9 +113,9 @@ public final class MainFeatureActionCompleteViewModel: ViewModel {
     enum Action {
         case willDismiss
     }
-    
-    private let coordinator: Coordinator
-    
+
+    let coordinator: Coordinator
+
     private(set) var state: State
     
     @MainActor

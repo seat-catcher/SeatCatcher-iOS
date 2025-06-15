@@ -121,7 +121,8 @@ final class AppCoordinator: Coordinator {
                 postSeatRequestUseCase: diContainer.resolveRequestSeatUseCase(),
                 cancelSeatRequestUseCase: diContainer.resolveCancelRequestSeatUseCase(),
                 acceptSeatRequestUseCase: diContainer.resolveAcceptRequestSeatUseCase(),
-                rejectSeatRequestUseCase: diContainer.resolveRejectRequestSeatUseCase()
+                rejectSeatRequestUseCase: diContainer.resolveRejectRequestSeatUseCase(),
+                cancelSeatUseCase: diContainer.resolveCancelSeatUseCase()
             )
             MainFeatureView(viewModel: viewModel)
         case .mainFeatureRegisterSeat:
@@ -212,18 +213,14 @@ final class AppCoordinator: Coordinator {
                 SendRequestBottomSheetView(profileConfig: profileConfig, leftButtonAction: leftButtonAction, rightButtonAction: rightButtonAction, coinCount: coinCount, reportAction: reportAction)
             // MARK: - New
             case let .checkAcceptSeatRequest(
-                name,
-                userImage,
-                tags,
+                occupant,
                 creditAmount,
                 reportButtonAction,
                 confirmationButtonAction,
                 cancelButtonAction
             ):
                 CheckAcceptSeatRequestBottomSheetView(
-                    name: name,
-                    userImage: userImage,
-                    tags: tags,
+                    occupant: occupant,
                     creditAmount: creditAmount,
                     reportButtonAction: reportButtonAction,
                     confirmationButtonAction: confirmationButtonAction,

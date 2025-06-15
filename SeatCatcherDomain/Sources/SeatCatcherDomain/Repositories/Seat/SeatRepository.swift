@@ -14,7 +14,7 @@ public protocol SeatRepository: Sendable {
     /// 좌석 정보 잠금을 해제합니다
     func unlockAllSeats(creditAmount: Int, targetUserId: Int) async throws
     /// 좌석 정보를 등록합니다
-    func registerSeat(_ seat: Seat) async throws
+    func registerSeat(_ seat: Seat, creditAmount: Int) async throws
     /// 좌석 정보를 취소합니다
     func cancelSeat() async throws
     // MARK: - 좌석 요청 관련
