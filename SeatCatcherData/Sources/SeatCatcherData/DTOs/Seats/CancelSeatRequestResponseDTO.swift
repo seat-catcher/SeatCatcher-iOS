@@ -40,3 +40,4 @@ extension CancelSeatRequestResponseDTO: ResponseDTO {
         )
     }
 }
+

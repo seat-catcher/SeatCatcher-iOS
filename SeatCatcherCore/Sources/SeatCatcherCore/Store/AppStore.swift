@@ -126,6 +126,7 @@ public final class AppStore {
                 },
                 receiveValue: { [weak self] requester in
                     self?.seatRequester = requester
+                    dump("requester: \(requester)")
                 }
             )
             .store(in: &seatRequesterCancellables)
@@ -142,6 +143,7 @@ public final class AppStore {
                     }
                 },
                 receiveValue: { [weak self] requestee in
+                    dump("requestee: \(requestee)")
                     self?.seatRequestee = requestee
                 }
             )

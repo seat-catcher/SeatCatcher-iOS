@@ -81,13 +81,13 @@ extension SeatCatcherAPI: TargetType {
             return "/user/seats"
         case .getIncomings:
             return "/trains/incomings"
-        case let .postSeatRequest(seatId):
+        case let .postSeatRequest(seatId, _):
             return "/user/seats/\(seatId)/yield"
-        case let .cancelSeatRequest(seatId):
+        case let .cancelSeatRequest(seatId, _):
             return "/user/seats/\(seatId)/yield"
-        case let .acceptSeatRequest(seatId):
+        case let .acceptSeatRequest(seatId, _):
             return "/user/seats/\(seatId)/yield"
-        case let .rejectSeatRequest(seatId):
+        case let .rejectSeatRequest(seatId, _, _):
             return "/user/seats/\(seatId)/yield"
         case .patchSeatOccupant:
             return "/user/seats"
@@ -180,8 +180,6 @@ extension SeatCatcherAPI: TargetType {
                 "seatId": requestDTO.seatId,
                 "creditAmount": requestDTO.creditAmount
             ]
-            dump(parameters)
-
             return .requestParameters(
                 parameters: parameters,
                 encoding: URLEncoding.queryString
@@ -200,26 +198,26 @@ extension SeatCatcherAPI: TargetType {
                 "type": "REQUEST",
                 "creditAmount": creditAmount
             ]
-            return .requestParameters(parameters: parameters, encoding: URLEncoding.default)
+            return .requestParameters(parameters: parameters, encoding: URLEncoding.queryString)
         case let .cancelSeatRequest(_, creditAmount):
             let parameters: [String: Any] = [
                 "type": "CANCEL",
                 "creditAmount": creditAmount
             ]
-            return .requestParameters(parameters: parameters, encoding: URLEncoding.default)
+            return .requestParameters(parameters: parameters, encoding: URLEncoding.queryString)
         case let .acceptSeatRequest(_, requesterId):
             let parameters: [String: Any] = [
                 "type": "ACCEPT",
                 "oppositeUserId": requesterId
             ]
-            return .requestParameters(parameters: parameters, encoding: URLEncoding.default)
+            return .requestParameters(parameters: parameters, encoding: URLEncoding.queryString)
         case let .rejectSeatRequest(_, requesterId, creditAmount):
             let parameters: [String: Any] = [
                 "type": "REJECT",
                 "oppositeUserId": requesterId,
                 "creditAmount": creditAmount
             ]
-            return .requestParameters(parameters: parameters, encoding: URLEncoding.default)
+            return .requestParameters(parameters: parameters, encoding: URLEncoding.queryString)
         case let .patchSeatOccupant(requestDTO):
             return .requestJSONEncodable(requestDTO)
         case let .patchCredit(requestDTO):

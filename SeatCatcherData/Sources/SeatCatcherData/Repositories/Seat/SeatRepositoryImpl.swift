@@ -17,8 +17,6 @@ public final class SeatRepositoryImpl: SeatRepository, Sendable {
     }
     
     public func getSeatsInTrainCar(trainCode: String, carCode: String) async throws -> TrainCar {
-//        return GetSeatInTrainCarResponseDTO.stub.domainModel
-        
         let response = try await networkService.getSeatsInTrainCar(trainCode: trainCode, carCode: carCode)
         return response.domainModel
     }
@@ -28,9 +26,9 @@ public final class SeatRepositoryImpl: SeatRepository, Sendable {
         return
     }
         
-    public func registerSeat(_ seat: Seat) async throws {
+    public func registerSeat(_ seat: Seat, creditAmount: Int) async throws {
         /// 새로운 좌석 등록
-        try await networkService.registerSeat(seatId: seat.id, creditAmount: 0) // FIXME: 유저 데이터와 연결
+        try await networkService.registerSeat(seatId: seat.id, creditAmount: creditAmount)
     }
     
     public func cancelSeat() async throws {

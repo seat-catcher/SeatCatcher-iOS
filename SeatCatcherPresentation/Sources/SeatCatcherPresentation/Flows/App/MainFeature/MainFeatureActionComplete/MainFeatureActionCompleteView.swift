@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Lottie
 
 public struct MainFeatureActionCompleteView: View {
     
@@ -20,11 +21,18 @@ public struct MainFeatureActionCompleteView: View {
         let config = viewModel.state.actionCase.config
         
         VStack(alignment: .center) {
-            Image(config.iconImage)
-                .resizable()
-                .frame(width: 80, height: 80)
-                .padding(.top, 221)
-                .padding(.bottom, 20)
+            Group {
+                if case .requestInProcess = viewModel.state.actionCase {
+                    LottieView(animation: .named("InProgressLottie", bundle: .module))
+                        .looping()
+                } else {
+                    Image(config.iconImage)
+                        .resizable()
+                }
+            }
+            .frame(width: 80, height: 80)
+            .padding(.top, 221)
+            .padding(.bottom, 20)
             Text(config.title)
                 .multilineTextAlignment(.center)
                 .font(.T01_SB)
@@ -37,6 +45,10 @@ public struct MainFeatureActionCompleteView: View {
                 .foregroundStyle(.gray300)
                 .padding(.top, 20)
             Spacer(minLength: 0)
+
+            // FIXME: - TEMP
+            TempButtonGroup(viewModel: viewModel)
+
             if let buttonTitle = config.buttonTitle {
                 CTAButton(
                     title: buttonTitle,
@@ -53,7 +65,6 @@ public struct MainFeatureActionCompleteView: View {
             }
         }
         .applyToolbarVisibility(.hidden, for: .navigationBar)
-        .ignoresSafeArea()
         .withBackground(.gray900)
         .onTapGesture {
             if config.buttonTitle == nil {
@@ -62,3 +73,28 @@ public struct MainFeatureActionCompleteView: View {
         }
     }
 }
+
+// FIXME: TEMP
+private struct TempButtonGroup: View {
+    let viewModel: MainFeatureActionCompleteViewModel
+
+    var body: some View {
+        HStack {
+            Button {
+                viewModel.coordinator.push(AppScene.mainFeatureActionComplete(actionCase: .requestRejected))
+            } label: {
+                Color.clear
+            }
+            .frame(width: 20, height: 20)
+            Spacer()
+            Button {
+                viewModel.coordinator.push(AppScene.mainFeatureActionComplete(actionCase: .requestAccepted(stationName: "")))
+            } label: {
+                Color.clear
+            }
+            .frame(width: 20, height: 20)
+        }
+        .padding(.bottom, 20)
+    }
+}
+

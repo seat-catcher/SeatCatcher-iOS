@@ -119,9 +119,7 @@ public enum AppSheet: AppRoute {
     )
     // MARK: - New
     case checkAcceptSeatRequest(
-        name: String,
-        userImage: UserImage,
-        tags: [UserTag],
+        occupant: Occupant,
         creditAmount: Int,
         reportButtonAction: () -> Void,
         confirmationButtonAction: () -> Void,

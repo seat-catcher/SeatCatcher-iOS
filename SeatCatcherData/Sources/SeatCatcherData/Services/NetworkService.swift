@@ -234,8 +234,7 @@ public struct NetworkService: Sendable {
     
     // MARK: - Seats
     func registerSeat(seatId: Int, creditAmount: Int) async throws {
-        let requestDTO = PostRegisterSeatRequestDTO(seatId: seatId, creditAmount: creditAmount)
-        dump(requestDTO)
+        let requestDTO = PostRegisterSeatRequestDTO(seatId: seatId, creditAmount: creditAmount)        
         try await provider.request(.postRegisterSeat(requestDTO: requestDTO))
     }
     func cancelSeat() async throws {
