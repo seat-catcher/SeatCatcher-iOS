@@ -312,6 +312,8 @@ public final class MainFeatureViewModel: ViewModel {
                         self?.state.seatRequestState.requesters?.removeAll {
                             $0.requesterId == requester.requesterId
                         }
+                        /// 좌석 요청건 바텀시트를 내립니다
+                        self?.coordinator.dismissSheet()
                     }
                 }
             }
@@ -326,15 +328,6 @@ public final class MainFeatureViewModel: ViewModel {
         }
     }
 
-    /// 구독 해제
-    @MainActor
-    private func unsubscribeFromTrain() { // TODO: - 백그라운드에서도 연결 유지해야하므로 추후 검토 후 삭제
-        if let subscribeTrainUseCase {
-            subscribeTrainUseCase.unsubscribe(trainCode: state.trainCode)
-            cancellables.removeAll()
-        }
-    }
-
     @MainActor
     private func handleSeatSectionAction(_ action: SeatSectionAction) {
         switch action {
@@ -344,8 +337,6 @@ public final class MainFeatureViewModel: ViewModel {
                 dump(#function)
             case .standing:
                 guard let occupant = seat.occupant else { return }
-                // FIXME: - occupant 없을 시 방지
-                // FIXME: - 실제 seat의 occupant로 교체
                 if occupant.id != store.user.id { // 내가 앉은 좌석에는 액션 적용 X
                     if store.isBlocked {
                         coordinator.push(AppScene.unlockSeatGuide) // 좌석 정보 잠금 해제 뷰
@@ -357,18 +348,18 @@ public final class MainFeatureViewModel: ViewModel {
                                 reportButtonAction: {
                                     self.action(.reportButtonDidTap)
                                 },
-                                // FIXME: - 양보 로직 달기
                                 yieldButtonAction: {
                                     self.postSeatRequest(
                                         seat,
-                                        creditAmount: 10
+                                        creditAmount: 10 // FIXME: 크레딧 입력
                                     )
                                     self.coordinator.dismissSheet()
                                     self.coordinator.push(
                                         AppScene.mainFeatureActionComplete(
                                             actionCase: .requestInProcess(
                                                 stationName: occupant.stationToGetOff,
-                                                seat: seat
+                                                seat: seat,
+                                                creditAmount: 10
                                             )
                                         )
                                     )

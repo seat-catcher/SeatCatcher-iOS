@@ -27,7 +27,7 @@ public final class MainFeatureActionCompleteViewModel: ViewModel {
     
     public enum MainFeatureActionCase {
         case unlockedSeat(creditAmount: Int) // 좌석 정보 잠금 해제
-        case requestInProcess(stationName: String, seat: Seat) // 요청 중
+        case requestInProcess(stationName: String, seat: Seat, creditAmount: Int) // 요청 중
         case requestAccepted(stationName: String) // 좌석 요청이 수락됨
         case requestRejected // 좌석 요청이 거절됨
         case sendCredit(creditAmount: Int) // 좌석을 양보 받은 후 크레딧 전달
@@ -45,7 +45,7 @@ public final class MainFeatureActionCompleteViewModel: ViewModel {
                     hasUnderline: false,
                     buttonTitle: nil
                 )
-            case let .requestInProcess(stationName, _):
+            case let .requestInProcess(stationName, _, _):
                 return Config(
                     iconImage: .dangerCircle, // 실제로 쓰지 않고 로티 사용
                     title: "요청 중",
@@ -113,16 +113,18 @@ public final class MainFeatureActionCompleteViewModel: ViewModel {
     let store: AppStore
     let coordinator: Coordinator // 양보 요청에 대한 응답 건
     let receiveSeatUseCase: ReceiveSeatUseCase
+    let cancelRequestSeatUseCase: CancelRequestSeatUseCase
     private var cancellables: Set<AnyCancellable> = []
 
     private(set) var state: State
     
     @MainActor
-    public init(store: AppStore, coordinator: Coordinator, actionCase: MainFeatureActionCase, receiveSeatUseCase: ReceiveSeatUseCase) {
+    public init(store: AppStore, coordinator: Coordinator, actionCase: MainFeatureActionCase, receiveSeatUseCase: ReceiveSeatUseCase, cancelRequestSeatUseCase: CancelRequestSeatUseCase) {
         self.store = store
         self.coordinator = coordinator
         self.state = .init(actionCase: actionCase)
         self.receiveSeatUseCase = receiveSeatUseCase
+        self.cancelRequestSeatUseCase = cancelRequestSeatUseCase
     }
     
     func action(_ action: Action) {
@@ -131,20 +133,23 @@ public final class MainFeatureActionCompleteViewModel: ViewModel {
             switch state.actionCase {
             case .sendCredit, .receivedCreditByYield:
                 coordinator.popLast(1)
-            case .unlockedSeat, .requestInProcess, .requestAccepted, .requestRejected:
+            case let .requestInProcess(_, seat, creditAmount):
+                cancelSeatRequest(seat, requesterId: store.user.id, creditAmount: creditAmount) // 좌석 요청 취소
+                coordinator.popLast(2)
+            case .unlockedSeat, .requestAccepted, .requestRejected:
                 coordinator.popLast(2)
             case .takeBackCreditByCancel,.receivedCreditByRegister:
                 coordinator.popLast(3)
             }
         case .willAppear:
-            if case let .requestInProcess(stationName, seat) = state.actionCase {
-                observeRequestee(stationName: stationName, seat: seat)
+            if case let .requestInProcess(stationName, seat, creditAmount) = state.actionCase {
+                observeRequestee(stationName: stationName, seat: seat, creditAmount: creditAmount)
             }
         }
     }
     
     @MainActor
-    private func observeRequestee(stationName: String, seat: Seat) {
+    private func observeRequestee(stationName: String, seat: Seat, creditAmount: Int) {
         /// 좌석 요청 응답(자)  퍼블리셔
         store.seatRequesteePublisher
             .sink { [weak self] requestee in
@@ -152,7 +157,7 @@ public final class MainFeatureActionCompleteViewModel: ViewModel {
                 if let requestee = requestee {
                     if requestee.isAccepted {
                         Task {
-                            let publisher =  try await receiveSeatUseCase.execute(seat, requesterId: store.user.id, creditAmount: 10) // FIXME: 크레딧 수 수정
+                            let publisher =  try await receiveSeatUseCase.execute(seat, requesterId: store.user.id, creditAmount: creditAmount)
                             store.subscribeToSeatRequesterPublisher(publisher, seatId: seat.id)
                             coordinator.push(AppScene.mainFeatureActionComplete(actionCase: .requestAccepted(stationName: stationName)))
                         }
@@ -163,5 +168,12 @@ public final class MainFeatureActionCompleteViewModel: ViewModel {
                 }
             }
             .store(in: &cancellables)
+    }
+    
+    @MainActor
+    private func cancelSeatRequest(_ seat: Seat, requesterId: Int, creditAmount: Int) {
+        Task {
+            try await cancelRequestSeatUseCase.execute(seat, requesterId: requesterId, creditAmount: creditAmount)
+        }
     }
 }
