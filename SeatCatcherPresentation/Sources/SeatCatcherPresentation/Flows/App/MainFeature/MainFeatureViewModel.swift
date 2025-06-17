@@ -585,6 +585,7 @@ extension MainFeatureViewModel {
                     Task {
                         try await acceptSeatRequestUseCase.execute(seat, requester: seatRequester)
                         self.coordinator.dismissSheet()
+                        self.coordinator.push(AppScene.mainFeatureActionComplete(actionCase: .receivedCreditByYield(creditAmount: seatRequester.creditAmount ?? 0)))
                     }
                 },
                 cancelButtonAction: {
