@@ -158,9 +158,6 @@ public final class MainFeatureViewModel: ViewModel {
         cancelSeatRequestUseCase : CancelRequestSeatUseCase,
         acceptSeatRequestUseCase : AcceptRequestSeatUseCase,
         rejectSeatRequestUseCase : RejectRequestSeatUseCase,
-
-        // FIXME: - TEMP
-        cancelSeatUseCase: CancelSeatUseCase
     ) {
         self.init(
             store: store,
@@ -168,7 +165,6 @@ public final class MainFeatureViewModel: ViewModel {
             getSeatInTrainCarUseCase: getSeatInTrainCarUseCase,
             getSeatInSectionUseCase: getSeatInSectionUseCase,
             subscribeTrainUseCase: subscribeTrainUseCase,
-            cancelSeatUseCase: cancelSeatUseCase,
             postSeatRequestUseCase : postSeatRequestUseCase,
             cancelSeatRequestUseCase : cancelSeatRequestUseCase,
             acceptSeatRequestUseCase : acceptSeatRequestUseCase,
@@ -365,7 +361,7 @@ public final class MainFeatureViewModel: ViewModel {
                                 yieldButtonAction: {
                                     self.postSeatRequest(
                                         seat,
-                                        creditAmount: self.store.user.credit
+                                        creditAmount: 10
                                     )
                                     self.coordinator.dismissSheet()
                                     self.coordinator.push(
@@ -616,33 +612,5 @@ extension MainFeatureViewModel {
                 }
             )
         )
-    }
-}
-
-// FIXME: - TEMP
-extension MainFeatureViewModel {
-    @MainActor
-    func presentYieldSheet() {
-        var occupant: Occupant {
-            if store.user.name != "뜨거운 승강장" {
-                Occupant(
-                    id: 2,
-                    name: "뜨거운 승강장",
-                    profileImage: .catchy2,
-                    tags: [.longDistance, .pregnant],
-                    minutesLeftToGetOff: 15,
-                    stationToGetOff: "몰라"
-                )
-            } else {
-                Occupant(
-                    id: 1,
-                    name: "지친 애플",
-                    profileImage: .catchy1,
-                    tags: [.tired],
-                    minutesLeftToGetOff: 15,
-                    stationToGetOff: "몰라"
-                )
-            }
-        }
     }
 }

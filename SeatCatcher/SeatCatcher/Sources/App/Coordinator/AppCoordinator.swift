@@ -121,8 +121,7 @@ final class AppCoordinator: Coordinator {
                 postSeatRequestUseCase: diContainer.resolveRequestSeatUseCase(),
                 cancelSeatRequestUseCase: diContainer.resolveCancelRequestSeatUseCase(),
                 acceptSeatRequestUseCase: diContainer.resolveAcceptRequestSeatUseCase(),
-                rejectSeatRequestUseCase: diContainer.resolveRejectRequestSeatUseCase(),
-                cancelSeatUseCase: diContainer.resolveCancelSeatUseCase()
+                rejectSeatRequestUseCase: diContainer.resolveRejectRequestSeatUseCase()
             )
             MainFeatureView(viewModel: viewModel)
         case .mainFeatureRegisterSeat:
@@ -188,32 +187,6 @@ final class AppCoordinator: Coordinator {
     func buildSheet(_ sheet: AppSheet) -> some View {
         Group {
             switch sheet {
-            // MARK: - Legacy
-            case let .askRequestDeclineBottomSheetView(yesButtonAction, noButtonAction):
-                AskRequestDeclineBottomSheetView(yesButtonAction: yesButtonAction, noButtonAction: noButtonAction)
-            case let .askSeatChangedBottomSheetView(action):
-                AskSeatChangedBottomSheetView(action: action)
-            case let .askSeatedBottomSheetView(action):
-                AskSeatedBottomSheetView(action: action)
-            case let .changeSeatNowBottomSheetView(action):
-                ChangeSeatNowBottomSheetView(action: action)
-            case .dibsBottomSheetView:
-                DibsBottomSheetView()
-            case let .noticeChangeSeatBottomSheetView(minutesLeft):
-                NoticeChangeSeatBottomSheetView(minutesLeft: minutesLeft)
-            case .noticeGetOffBottomSheetView:
-                NoticeGetOffBottomSheetView()
-            case let .receiveRequestBottomSheetView(profileConfig, leftButtonAction, rightButtonAction, coinCount, reportAction):
-                ReceiveRequestBottomSheetView(profileConfig: profileConfig, leftButtonAction: leftButtonAction, rightButtonAction: rightButtonAction, coinCount: coinCount, reportAction: reportAction)
-            case let .rejectRequestBottomSheetView(action):
-                RejectRequestBottomSheetView(action: action)
-            case let .requestDeclinedBottomSheetView(action):
-                RequestDeclinedBottomSheetView(action: action)
-            case let .seatInformationBottomSheetView(profileConfig, station, minutesLeft, leftButtonAction, heartFilled, heartCount, rightButtonAction, coinCount, reportAction):
-                SeatInformationBottomSheetView(profileConfig: profileConfig, station: station, minutesLeft: minutesLeft, leftButtonAction: leftButtonAction, heartFilled: heartFilled, heartCount: heartCount, rightButtonAction: rightButtonAction, coinCount: coinCount, reportAction: reportAction)
-            case let .sendRequestBottomSheetView(profileConfig, leftButtonAction, rightButtonAction, coinCount, reportAction):
-                SendRequestBottomSheetView(profileConfig: profileConfig, leftButtonAction: leftButtonAction, rightButtonAction: rightButtonAction, coinCount: coinCount, reportAction: reportAction)
-            // MARK: - New
             case let .checkAcceptSeatRequest(
                 seatRequster,
                 reportButtonAction,

@@ -14,7 +14,7 @@ public final class SelectTrainViewModel: ViewModel {
     struct State {
         var incomings: [Incoming] = []
         var errorMessage: String?
-        var selectedIncoming: Incoming?
+        var selectedIncoming: Incoming? = Incoming(trainCode: "1111", arrivalTime: Date().addingTimeInterval(360), carDirection: .up, destination: "서울대입구")
     }
     enum Action {
         case viewWillAppear
