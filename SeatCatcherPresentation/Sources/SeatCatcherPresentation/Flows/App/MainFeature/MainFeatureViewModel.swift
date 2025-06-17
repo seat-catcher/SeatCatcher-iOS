@@ -153,7 +153,6 @@ public final class MainFeatureViewModel: ViewModel {
         coordinator: Coordinator,
         getSeatInTrainCarUseCase: GetSeatInTrainCarUseCase,
         getSeatInSectionUseCase: GetSeatInSectionUseCase,
-
         subscribeTrainUseCase: SubscribeTrainUseCase,
         postSeatRequestUseCase : RequestSeatUseCase,
         cancelSeatRequestUseCase : CancelRequestSeatUseCase,
@@ -303,27 +302,21 @@ public final class MainFeatureViewModel: ViewModel {
         store.seatRequesterPublisher
             .sink { [weak self] requester in
                 if let requester = requester {
-                    if let creditAmount = requester.creditAmount {
+                    if let creditAmount = requester.creditAmount, let mySeat = self?.state.mySeat {
                         /// 동일한 유저의 기존 요청이 있다면 제거합니다
                         self?.state.seatRequestState.requesters?.removeAll {
                             $0.requesterId == requester.requesterId
                         }
                         /// creditAmount가 포함되어있으므로 새로운 요청을 추가합니다
                         self?.state.seatRequestState.requesters?.append(requester)
+                        /// 좌석 요청건을 바텀시트로 띄웁니다
+                        self?.presentSeatRequesterSheet(mySeat, seatRequester: requester)
                     } else {
                         /// creditAmount가 없으므로 기존 요청 취소만 수행합니다
                         self?.state.seatRequestState.requesters?.removeAll {
                             $0.requesterId == requester.requesterId
                         }
                     }
-                }
-            }
-            .store(in: &cancellables)
-        /// 좌석 요청 응답(자)  퍼블리셔
-        store.seatRequesteePublisher
-            .sink { [weak self] requestee in
-                if let requestee = requestee {
-                    self?.state.seatRequestState.requestee = requestee
                 }
             }
             .store(in: &cancellables)
@@ -583,6 +576,42 @@ public final class MainFeatureViewModel: ViewModel {
     }
 }
 
+// MARK: - Seat Request Handling
+extension MainFeatureViewModel {
+    @MainActor
+    func presentSeatRequesterSheet(_ seat: Seat, seatRequester: SeatRequester) {
+        coordinator.presentSheet(
+            AppSheet.checkAcceptSeatRequest(
+                seatRequster: seatRequester,
+                reportButtonAction: {
+                    self.action(.reportButtonDidTap)
+                },
+                confirmationButtonAction: {
+                    guard let acceptSeatRequestUseCase = self.acceptSeatRequestUseCase else { return }
+                    Task {
+                        try await acceptSeatRequestUseCase.execute(seat, requester: seatRequester)
+                        self.coordinator.dismissSheet()
+                    }
+                },
+                cancelButtonAction: {
+                    guard let rejectSeatRequestUseCase = self.rejectSeatRequestUseCase else { return }
+                    Task {
+                        try await rejectSeatRequestUseCase.execute(seat, requester: seatRequester)
+                        self.coordinator.dismissSheet()
+                        self.coordinator.presentSheet(
+                            AppSheet.requestRejected(
+                                confirmationButtonAction: {
+                                    self.coordinator.dismissSheet()
+                                }
+                            )
+                        )
+                    }
+                }
+            )
+        )
+    }
+}
+
 // FIXME: - TEMP
 extension MainFeatureViewModel {
     @MainActor
@@ -608,24 +637,5 @@ extension MainFeatureViewModel {
                 )
             }
         }
-
-        coordinator.presentSheet(AppSheet.checkAcceptSeatRequest(
-            occupant: occupant,
-            creditAmount: 10,
-            reportButtonAction: {
-                self.action(.reportButtonDidTap)
-            },
-            confirmationButtonAction: {
-                guard let seat = self.state.mySeat,
-                      let cancelSeatUseCase = self.cancelSeatUseCase
-                else { return }
-
-                Task { try? await cancelSeatUseCase.execute(seat) }
-                self.coordinator.dismissSheet()
-            },
-            cancelButtonAction: {
-                self.coordinator.dismissSheet()
-            }
-        ))
     }
 }

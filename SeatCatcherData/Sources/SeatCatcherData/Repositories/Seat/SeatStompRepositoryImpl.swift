@@ -42,7 +42,7 @@ public final class SeatStompRepositoryImpl: SeatStompRepository {
     public func getSeatRequesterPublisher() -> AnyPublisher<SeatRequester, Error> {
         stompClientService.messagePublisher
             .receive(on: DispatchQueue.main)
-            .filter { $0.destination.contains("/topic/seat.") && $0.destination.contains(".owner") }
+            .filter { $0.destination.contains(".owner") }
             .tryMap { message in
                 guard let data = message.text.data(using: .utf8) else {
                     throw SeatCatcherDataError.NullValue
@@ -65,7 +65,7 @@ public final class SeatStompRepositoryImpl: SeatStompRepository {
     public func getSeatRequesteePublisher() -> AnyPublisher<SeatRequestee, Error> {
         stompClientService.messagePublisher
             .receive(on: DispatchQueue.main)
-            .filter { $0.destination.contains("/topic/seat.") && $0.destination.contains(".requester") }
+            .filter { $0.destination.contains(".requester") }
             .tryMap { message in
                 guard let data = message.text.data(using: .utf8) else {
                     throw SeatCatcherDataError.NullValue

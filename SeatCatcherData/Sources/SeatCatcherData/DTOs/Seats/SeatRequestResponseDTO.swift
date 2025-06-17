@@ -35,8 +35,8 @@ extension SeatRequestResponseDTO: ResponseDTO {
         .init(
             requesterId: requestUserId,
             requesterNickname: requestUserNickname,
-            profileImageString: requestUserProfileImageNum,
-            userTag: requestUserTags.map{
+            profileImage: UserImage(rawValue: requestUserProfileImageNum) ?? .catchy1,
+            tags: requestUserTags.map{
                 UserTag(rawValue: $0) ?? .none
             },
             creditAmount: creditAmount
