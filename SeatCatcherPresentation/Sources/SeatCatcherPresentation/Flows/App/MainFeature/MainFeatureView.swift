@@ -45,10 +45,6 @@ public struct MainFeatureView: View {
                 )
                 .padding(.bottom, 20)
             }
-
-            // FIXME: - TEMP
-            TempButtonGroup(viewModel: viewModel)
-
             CTAButtonView(viewModel: viewModel)
                 .padding(.bottom, 2)
         }
@@ -197,22 +193,5 @@ private struct CTAButtonView: View {
             },
             style: ctaButtonStyle
         )
-    }
-}
-
-// FIXME: TEMP
-private struct TempButtonGroup: View {
-    let viewModel: MainFeatureViewModel
-
-    var body: some View {
-        if viewModel.state.userStatus == .seated {
-            Button {
-                viewModel.presentYieldSheet()
-            } label: {
-                Color.clear
-            }
-            .frame(width: 20, height: 20)
-            .padding(.bottom, 20)
-        }
     }
 }

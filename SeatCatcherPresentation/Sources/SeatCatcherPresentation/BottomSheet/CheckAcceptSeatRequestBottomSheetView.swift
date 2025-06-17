@@ -38,7 +38,7 @@ public struct CheckAcceptSeatRequestBottomSheetView: View {
                         .foregroundStyle(.gray100)
                         .frame(maxWidth: .infinity, alignment: .leading)
                     Group {
-                        Text("\(seatRequester.creditAmount) 크레딧")
+                        Text("\(seatRequester.creditAmount ?? 0) 크레딧")
                             .font(.SHEETSUBTITLE)
                             .foregroundStyle(.scGreen)
                         +

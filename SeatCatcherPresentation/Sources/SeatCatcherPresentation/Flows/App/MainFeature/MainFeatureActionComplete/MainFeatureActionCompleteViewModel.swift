@@ -37,7 +37,7 @@ public final class MainFeatureActionCompleteViewModel: ViewModel {
         
         var config: Config {
             switch self {
-            case .unlockedSeat(let creditAmount):
+            case let .unlockedSeat(creditAmount):
                 return Config(
                     iconImage: .iconSeat,
                     title: "좌석정보\n획득 완료!",
@@ -45,22 +45,18 @@ public final class MainFeatureActionCompleteViewModel: ViewModel {
                     hasUnderline: false,
                     buttonTitle: nil
                 )
-            case .requestInProcess(let stationName):
+            case let .requestInProcess(stationName, _):
                 return Config(
-                    iconImage: .dangerCircle,
+                    iconImage: .dangerCircle, // 실제로 쓰지 않고 로티 사용
                     title: "요청 중",
-//                    subtitle: "상대방의 요청을 기다리고 있어요",
-                    // FIXME: TEMP
                     subtitle: "\(stationName)역을 지난 뒤부터\n좌석을 바꿀 수 있어요",
                     hasUnderline: false,
                     buttonTitle: "요청 취소하기"
                 )
-            case .requestAccepted(let stationName):
+            case let .requestAccepted(stationName):
                 return Config(
                     iconImage: .iconAccept,
                     title: "요청이 수락됐어요",
-                    // FIXME: TEMP
-//                    subtitle: "이제 자리에 앉을 수 있어요",
                     subtitle: "\(stationName)역을 지난 뒤부터\n좌석을 바꿀 수 있어요",
                     hasUnderline: false,
                     buttonTitle: "확인"
@@ -69,13 +65,11 @@ public final class MainFeatureActionCompleteViewModel: ViewModel {
                 return Config(
                     iconImage: .iconReject,
                     title: "요청이 거절됐어요",
-                    // FIXME: TEMP
-                    subtitle: "다른 자리를 다시 요청할 수 있어요",
-//                    subtitle: "수락 여부와 관계없이\n크레딧은 소모됩니다.",
+                    subtitle: "수락 여부와 관계없이\n크레딧은 소모됩니다.",
                     hasUnderline: true,
                     buttonTitle: "확인"
                 )
-            case .sendCredit(let creditAmount):
+            case let .sendCredit(creditAmount):
                 return Config(
                     iconImage: .iconSeat,
                     title: "\(creditAmount) 크레딧을 전달했어요",
@@ -83,7 +77,7 @@ public final class MainFeatureActionCompleteViewModel: ViewModel {
                     hasUnderline: false,
                     buttonTitle: nil
                 )
-            case .receivedCreditByYield(let creditAmount):
+            case let .receivedCreditByYield(creditAmount):
                 return Config(
                     iconImage: .iconCreditPlus,
                     title: "\(creditAmount) 크레딧을\n받았어요",
@@ -91,7 +85,7 @@ public final class MainFeatureActionCompleteViewModel: ViewModel {
                     hasUnderline: false,
                     buttonTitle: nil
                 )
-            case .receivedCreditByRegister(let creditAmount):
+            case let .receivedCreditByRegister(creditAmount):
                 return Config(
                     iconImage: .iconCreditPlus,
                     title: "\(creditAmount) 크레딧을\n받았어요",
@@ -99,7 +93,7 @@ public final class MainFeatureActionCompleteViewModel: ViewModel {
                     hasUnderline: false,
                     buttonTitle: nil
                 )
-            case .takeBackCreditByCancel(let creditAmount):
+            case let .takeBackCreditByCancel(creditAmount):
                 return Config(
                     iconImage: .iconCreditMinus,
                     title: "\(creditAmount) 크레딧이\n회수됐어요",
@@ -136,11 +130,11 @@ public final class MainFeatureActionCompleteViewModel: ViewModel {
         case .willDismiss:
             switch state.actionCase {
             case .sendCredit, .receivedCreditByYield:
-                coordinator.popLast(1) // FIXME: 코디네이터 애니메이션 필요
-            case .unlockedSeat, .requestInProcess:
-                coordinator.popLast(2) // FIXME: 코디네이터 애니메이션 필요
-            case .requestAccepted, .requestRejected, .takeBackCreditByCancel,.receivedCreditByRegister:
-                coordinator.popLast(3) // FIXME: 코디네이터 애니메이션 필요
+                coordinator.popLast(1)
+            case .unlockedSeat, .requestInProcess, .requestAccepted, .requestRejected:
+                coordinator.popLast(2)
+            case .takeBackCreditByCancel,.receivedCreditByRegister:
+                coordinator.popLast(3)
             }
         case .willAppear:
             if case let .requestInProcess(stationName, seat) = state.actionCase {

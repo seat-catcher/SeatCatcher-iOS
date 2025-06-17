@@ -13,7 +13,7 @@ struct SeatRequestResponseDTO: Decodable {
     let requestUserId: Int
     let requestUserNickname: String
     let requestUserProfileImageNum: String
-    let requestUserTags: [String]
+//    let requestUserTags: [String]
     let creditAmount: Int
 }
 
@@ -26,7 +26,7 @@ extension SeatRequestResponseDTO: ResponseDTO {
             requestUserId: 0,
             requestUserNickname: "귀여운 호랑이",
             requestUserProfileImageNum: "IMAGE_1",
-            requestUserTags: ["USERTAG_LONGDISTANCE", "USERTAG_CARRIER"],
+//            requestUserTags: ["USERTAG_LONGDISTANCE", "USERTAG_CARRIER"],
             creditAmount: 300
         )
     }
@@ -36,9 +36,10 @@ extension SeatRequestResponseDTO: ResponseDTO {
             requesterId: requestUserId,
             requesterNickname: requestUserNickname,
             profileImage: UserImage(rawValue: requestUserProfileImageNum) ?? .catchy1,
-            tags: requestUserTags.map{
-                UserTag(rawValue: $0) ?? .none
-            },
+            tags: [.longDistance],
+//            tags: requestUserTags.map{
+//                UserTag(rawValue: $0) ?? .none
+//            },
             creditAmount: creditAmount
         )
     }

@@ -28,14 +28,17 @@ public struct RequestRejectedBottomSheetView: View {
                 .foregroundStyle(.gray300)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.top, 6)
+                .padding(.bottom, 7)
+            Spacer(minLength: 0)
             Image(.iconSend)
+                .resizable()
+                .frame(width: 80, height: 80)
                 .padding(.vertical, 26)
             CTAButton(
                 title: "확인",
                 action: confirmationButtonAction,
                 style: .bottomEnabled
             )
-            Spacer()
         }
         .padding(.horizontal, 18)
         .withBackground(.gray900)

@@ -67,57 +67,6 @@ public enum AppScene: AppRoute {
 }
 
 public enum AppSheet: AppRoute {
-    // MARK: - Legacy
-    case askRequestDeclineBottomSheetView(
-        yesButtonAction: () -> Void,
-        noButtonAction: () -> Void
-    )
-    case askSeatChangedBottomSheetView(
-        action: () -> Void
-    )
-    case askSeatedBottomSheetView(
-        action: () -> Void
-    )
-    case changeSeatNowBottomSheetView(
-        action: () -> Void
-    )
-    case dibsBottomSheetView
-    case noticeChangeSeatBottomSheetView(
-        minutesLeft: Int
-    )
-    case noticeGetOffBottomSheetView
-    case receiveRequestBottomSheetView(
-        profileConfig: ProfileConfig,
-        leftButtonAction: () -> Void,
-        rightButtonAction: () -> Void,
-        coinCount: Int,
-        reportAction: () -> Void,
-    )
-    case rejectRequestBottomSheetView(
-        action: () -> Void
-    )
-    case requestDeclinedBottomSheetView(
-        action: () -> Void
-    )
-    case seatInformationBottomSheetView(
-        profileConfig: ProfileConfig,
-        station: String,
-        minutesLeft: Int,
-        leftButtonAction: () -> Void,
-        heartFilled: Bool,
-        heartCount: Int,
-        rightButtonAction: () -> Void,
-        coinCount: Int,
-        reportAction: () -> Void
-    )
-    case sendRequestBottomSheetView(
-        profileConfig: ProfileConfig,
-        leftButtonAction: () -> Void,
-        rightButtonAction: () -> Void,
-        coinCount: Int,
-        reportAction: () -> Void
-    )
-    // MARK: - New
     case checkAcceptSeatRequest(
         seatRequster: SeatRequester,
         reportButtonAction: () -> Void,
@@ -154,30 +103,6 @@ public enum AppSheet: AppRoute {
     
     public var id: String {
         switch self {
-        case .askRequestDeclineBottomSheetView:
-            return "askRequestDeclineBottomSheetView"
-        case .askSeatChangedBottomSheetView:
-            return "askSeatChangedBottomSheetView"
-        case .askSeatedBottomSheetView:
-            return "askSeatedBottomSheetView"
-        case .changeSeatNowBottomSheetView:
-            return "changeSeatNowBottomSheetView"
-        case .dibsBottomSheetView:
-            return "dibsBottomSheetView"
-        case .noticeChangeSeatBottomSheetView:
-            return "noticeChangeSeatBottomSheetView"
-        case .noticeGetOffBottomSheetView:
-            return "noticeGetOffBottomSheetView"
-        case .receiveRequestBottomSheetView:
-            return "receiveRequestBottomSheetView"
-        case .rejectRequestBottomSheetView:
-            return "rejectRequestBottomSheetView"
-        case .requestDeclinedBottomSheetView:
-            return "requestDeclinedBottomSheetView"
-        case .seatInformationBottomSheetView:
-            return "seatInformationBottomSheetView"
-        case .sendRequestBottomSheetView:
-            return "sendRequestBottomSheetView"
         case .checkAcceptSeatRequest:
             return "checkAcceptSeatRequest"
         case .checkRejectSeatRequest:

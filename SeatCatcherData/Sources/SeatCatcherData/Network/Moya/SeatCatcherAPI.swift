@@ -33,7 +33,7 @@ enum SeatCatcherAPI: Sendable {
     case postSeatRequest(seatId: Int, creditAmount: Int)
     case cancelSeatRequest(seatId: Int, creditAmount: Int)
     case acceptSeatRequest(seatId: Int, requesterId: Int)
-    case patchSeatOccupant(requestDTO: PatchSeatOccupantDTO)
+    case patchSeatOccupant(seatId: Int, creditAmount: Int)
     case rejectSeatRequest(seatId: Int, requesterId: Int, creditAmount: Int)
 
     case getIncomings(requestDTO: GetIncomingsRequestDTO)
@@ -218,8 +218,12 @@ extension SeatCatcherAPI: TargetType {
                 "creditAmount": creditAmount
             ]
             return .requestParameters(parameters: parameters, encoding: URLEncoding.queryString)
-        case let .patchSeatOccupant(requestDTO):
-            return .requestJSONEncodable(requestDTO)
+        case let .patchSeatOccupant(seatId, creditAmount):
+            let parameters: [String: Any] = [
+                "seatId": seatId,
+                "creditAmount": creditAmount
+            ]
+            return .requestParameters(parameters: parameters, encoding: URLEncoding.queryString)
         case let .patchCredit(requestDTO):
             let requestBodyParameters: [String: Any] = [
                 "amount": abs((requestDTO.amount)), // 절댓값

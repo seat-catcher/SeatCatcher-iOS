@@ -46,9 +46,6 @@ public struct MainFeatureActionCompleteView: View {
                 .padding(.top, 20)
             Spacer(minLength: 0)
 
-            // FIXME: - TEMP
-            TempButtonGroup(viewModel: viewModel)
-
             if let buttonTitle = config.buttonTitle {
                 CTAButton(
                     title: buttonTitle,
@@ -76,28 +73,3 @@ public struct MainFeatureActionCompleteView: View {
         }
     }
 }
-
-// FIXME: TEMP
-private struct TempButtonGroup: View {
-    let viewModel: MainFeatureActionCompleteViewModel
-
-    var body: some View {
-        HStack {
-            Button {
-                viewModel.coordinator.push(AppScene.mainFeatureActionComplete(actionCase: .requestRejected))
-            } label: {
-                Color.clear
-            }
-            .frame(width: 20, height: 20)
-            Spacer()
-            Button {
-                viewModel.coordinator.push(AppScene.mainFeatureActionComplete(actionCase: .requestAccepted(stationName: "")))
-            } label: {
-                Color.clear
-            }
-            .frame(width: 20, height: 20)
-        }
-        .padding(.bottom, 20)
-    }
-}
-
