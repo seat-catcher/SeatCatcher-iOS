@@ -28,7 +28,7 @@ public final class MainFeatureActionCompleteViewModel: ViewModel {
     public enum MainFeatureActionCase {
         case unlockedSeat(creditAmount: Int) // 좌석 정보 잠금 해제
         case requestInProcess(stationName: String, seat: Seat, creditAmount: Int) // 요청 중
-        case requestAccepted(stationName: String) // 좌석 요청이 수락됨
+        case requestAccepted(stationName: String, creditAmount: Int) // 좌석 요청이 수락됨
         case requestRejected // 좌석 요청이 거절됨
         case sendCredit(creditAmount: Int) // 좌석을 양보 받은 후 크레딧 전달
         case receivedCreditByYield(creditAmount: Int) // 좌석 양보로 크레딧 지급
@@ -131,12 +131,14 @@ public final class MainFeatureActionCompleteViewModel: ViewModel {
         switch action {
         case .willDismiss:
             switch state.actionCase {
-            case .sendCredit, .receivedCreditByYield:
+            case .receivedCreditByYield:
                 coordinator.popLast(1)
             case let .requestInProcess(_, seat, creditAmount):
                 cancelSeatRequest(seat, requesterId: store.user.id, creditAmount: creditAmount) // 좌석 요청 취소
-                coordinator.popLast(2)
-            case .unlockedSeat, .requestAccepted, .requestRejected:
+                coordinator.popLast(1)
+            case let .requestAccepted(_, creditAmount):
+                coordinator.push(AppScene.mainFeatureActionComplete(actionCase: .sendCredit(creditAmount: creditAmount)))
+            case .unlockedSeat, .requestRejected, .sendCredit:
                 coordinator.popLast(2)
             case .takeBackCreditByCancel,.receivedCreditByRegister:
                 coordinator.popLast(3)
@@ -159,7 +161,7 @@ public final class MainFeatureActionCompleteViewModel: ViewModel {
                         Task {
                             let publisher =  try await receiveSeatUseCase.execute(seat, requesterId: store.user.id, creditAmount: creditAmount)
                             store.subscribeToSeatRequesterPublisher(publisher, seatId: seat.id)
-                            coordinator.push(AppScene.mainFeatureActionComplete(actionCase: .requestAccepted(stationName: stationName)))
+                            coordinator.push(AppScene.mainFeatureActionComplete(actionCase: .requestAccepted(stationName: stationName, creditAmount: creditAmount)))
                         }
                     } else {
                         coordinator.push(AppScene.mainFeatureActionComplete(actionCase: .requestRejected))
