@@ -44,6 +44,7 @@ public protocol DIContainer {
     func resolveCancelRequestSeatUseCase() -> CancelRequestSeatUseCase
     func resolveAcceptRequestSeatUseCase() -> AcceptRequestSeatUseCase
     func resolveRejectRequestSeatUseCase() -> RejectRequestSeatUseCase
+    func resolveReceiveSeatUseCase() -> ReceiveSeatUseCase
 
     // MARK: - Incoming UseCases
     func resolveGetIncomingsUseCase() -> GetIncomingsUseCase

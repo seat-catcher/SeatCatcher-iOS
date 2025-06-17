@@ -10,7 +10,7 @@ import Combine
 
 /// 좌석요청자 - 좌석 교환 성공 시 호출
 public protocol ReceiveSeatUseCase {
-    func execute(_ seat: Seat, requesterId: Int, creditAmount: Int) async throws -> AnyPublisher<SeatRequester, Error>
+    @MainActor func execute(_ seat: Seat, requesterId: Int, creditAmount: Int) async throws -> AnyPublisher<SeatRequester, Error>
 }
 
 public final class ReceiveSeatUseCaseImpl: ReceiveSeatUseCase {
@@ -23,6 +23,8 @@ public final class ReceiveSeatUseCaseImpl: ReceiveSeatUseCase {
         self.seatStompRepository = seatStompRepository
     }
     
+    // FIXME: MainActor 수정
+    @MainActor
     public func execute(_ seat: Seat, requesterId: Int, creditAmount: Int) async throws -> AnyPublisher<SeatRequester, Error> {
         /// 좌석 요청자를 점유자로 좌석 상태를 업데이트합니다
         try await seatRepository.changeSeatOccupant(seat, creditAmount: creditAmount)

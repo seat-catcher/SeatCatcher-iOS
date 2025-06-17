@@ -177,7 +177,8 @@ final class AppCoordinator: Coordinator {
             let viewModel = MainFeatureActionCompleteViewModel(
                 store: diContainer.resolveAppStore(),
                 coordinator: self,
-                actionCase: actionCase
+                actionCase: actionCase,
+                receiveSeatUseCase: diContainer.resolveReceiveSeatUseCase()
             )
             MainFeatureActionCompleteView(viewModel: viewModel)
         }

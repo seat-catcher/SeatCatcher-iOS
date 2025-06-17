@@ -25,9 +25,9 @@ public final class MainFeatureActionCompleteViewModel: ViewModel {
         let buttonTitle: String?
     }
     
-    public enum MainFeatureActionCase: Equatable {
+    public enum MainFeatureActionCase {
         case unlockedSeat(creditAmount: Int) // 좌석 정보 잠금 해제
-        case requestInProcess(stationName: String) // 요청 중
+        case requestInProcess(stationName: String, seat: Seat) // 요청 중
         case requestAccepted(stationName: String) // 좌석 요청이 수락됨
         case requestRejected // 좌석 요청이 거절됨
         case sendCredit(creditAmount: Int) // 좌석을 양보 받은 후 크레딧 전달
@@ -112,20 +112,23 @@ public final class MainFeatureActionCompleteViewModel: ViewModel {
     }
     
     enum Action {
+        case willAppear
         case willDismiss
     }
     
     let store: AppStore
     let coordinator: Coordinator // 양보 요청에 대한 응답 건
+    let receiveSeatUseCase: ReceiveSeatUseCase
     private var cancellables: Set<AnyCancellable> = []
 
     private(set) var state: State
     
     @MainActor
-    public init(store: AppStore, coordinator: Coordinator, actionCase: MainFeatureActionCase) {
+    public init(store: AppStore, coordinator: Coordinator, actionCase: MainFeatureActionCase, receiveSeatUseCase: ReceiveSeatUseCase) {
         self.store = store
         self.coordinator = coordinator
         self.state = .init(actionCase: actionCase)
+        self.receiveSeatUseCase = receiveSeatUseCase
     }
     
     func action(_ action: Action) {
@@ -139,18 +142,28 @@ public final class MainFeatureActionCompleteViewModel: ViewModel {
             case .requestAccepted, .requestRejected, .takeBackCreditByCancel,.receivedCreditByRegister:
                 coordinator.popLast(3) // FIXME: 코디네이터 애니메이션 필요
             }
+        case .willAppear:
+            if case let .requestInProcess(stationName, seat) = state.actionCase {
+                observeRequestee(stationName: stationName, seat: seat)
+            }
         }
     }
     
-    private func observeRequestee(stationName: String) {
+    @MainActor
+    private func observeRequestee(stationName: String, seat: Seat) {
         /// 좌석 요청 응답(자)  퍼블리셔
         store.seatRequesteePublisher
             .sink { [weak self] requestee in
+                guard let self else { return }
                 if let requestee = requestee {
                     if requestee.isAccepted {
-//                        self?.coordinator.push(AppScene.mainFeatureActionComplete(actionCase: .requestAccepted(stationName: stationName)))
+                        Task {
+                            let publisher =  try await receiveSeatUseCase.execute(seat, requesterId: store.user.id, creditAmount: 10) // FIXME: 크레딧 수 수정
+                            store.subscribeToSeatRequesterPublisher(publisher, seatId: seat.id)
+                            coordinator.push(AppScene.mainFeatureActionComplete(actionCase: .requestAccepted(stationName: stationName)))
+                        }
                     } else {
-                        
+                        coordinator.push(AppScene.mainFeatureActionComplete(actionCase: .requestRejected))
                     }
                     
                 }
