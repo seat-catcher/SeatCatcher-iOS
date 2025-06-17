@@ -24,7 +24,7 @@ public struct MainFeatureView: View {
                 .padding(.bottom, 32)
             SeatSectionView(
                 selectedSeat: viewModel.state.seatSectionState.selectedSeat,
-                isBlocked: viewModel.state.seatSectionState.isBlocked,
+                isBlocked: viewModel.store.isBlocked,
                 mySeat: viewModel.state.mySeat,
                 seats: viewModel.state.seatSectionState.seats,
                 userStatus: viewModel.state.userStatus,

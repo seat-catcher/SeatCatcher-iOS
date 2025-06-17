@@ -47,6 +47,7 @@ public final class SeatStompRepositoryImpl: SeatStompRepository {
                 guard let data = message.text.data(using: .utf8) else {
                     throw SeatCatcherDataError.NullValue
                 }
+                dump(message)
                 do {
                     // creditAmount가 있으면 SeatRequestResponseDTO로 디코딩 성공
                     let dto = try self.decoder.decode(SeatRequestResponseDTO.self, from: data)

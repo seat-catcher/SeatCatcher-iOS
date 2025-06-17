@@ -370,10 +370,10 @@ public final class MainFeatureViewModel: ViewModel {
                                 },
                                 // FIXME: - 양보 로직 달기
                                 yieldButtonAction: {
-//                                    self.postSeatRequest(
-//                                        seat,
-//                                        creditAmount: self.store.user.credit
-//                                    )
+                                    self.postSeatRequest(
+                                        seat,
+                                        creditAmount: self.store.user.credit
+                                    )
                                     self.coordinator.dismissSheet()
                                     self.coordinator.push(AppScene.mainFeatureActionComplete(actionCase: .requestInProcess(stationName: occupant.stationToGetOff)))
                                 }
