@@ -12,21 +12,18 @@ import SwiftUI
 public struct CheckAcceptSeatRequestBottomSheetView: View {
     @State private var tagScrollViewWidth: CGFloat = .zero
 
-    let occupant: Occupant
-    let creditAmount: Int
+    let seatRequester: SeatRequester
     let reportButtonAction: () -> Void
     let confirmationButtonAction: () -> Void
     let cancelButtonAction: () -> Void
 
     public init(
-        occupant: Occupant,
-        creditAmount: Int,
+        seatRequester: SeatRequester,
         reportButtonAction: @escaping () -> Void,
         confirmationButtonAction: @escaping () -> Void,
         cancelButtonAction: @escaping () -> Void
     ) {
-        self.occupant = occupant
-        self.creditAmount = creditAmount
+        self.seatRequester = seatRequester
         self.reportButtonAction = reportButtonAction
         self.confirmationButtonAction = confirmationButtonAction
         self.cancelButtonAction = cancelButtonAction
@@ -41,7 +38,7 @@ public struct CheckAcceptSeatRequestBottomSheetView: View {
                         .foregroundStyle(.gray100)
                         .frame(maxWidth: .infinity, alignment: .leading)
                     Group {
-                        Text("\(creditAmount) 크레딧")
+                        Text("\(seatRequester.creditAmount) 크레딧")
                             .font(.SHEETSUBTITLE)
                             .foregroundStyle(.scGreen)
                         +
@@ -68,16 +65,16 @@ public struct CheckAcceptSeatRequestBottomSheetView: View {
             .padding(.vertical, 40)
 
             HStack(spacing: 6) {
-                Image(occupant.profileImage.image)
+                Image(seatRequester.profileImage.image)
                     .resizable()
                     .frame(width: 68, height: 68)
                 VStack(alignment: .leading, spacing: 6) {
-                    Text(occupant.name)
+                    Text(seatRequester.requesterNickname)
                         .font(.B03_M)
                         .foregroundStyle(.gray300)
                     ScrollView(.horizontal) {
                         HStack(spacing: 6) {
-                            ForEach(occupant.tags) {
+                            ForEach(seatRequester.tags) {
                                 UserInfoBadge(.tag($0))
                             }
                         }

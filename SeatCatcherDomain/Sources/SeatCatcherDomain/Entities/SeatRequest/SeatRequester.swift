@@ -11,15 +11,15 @@ import Foundation
 public struct SeatRequester: Sendable {
     public var requesterId: Int
     public var requesterNickname: String
-    public var profileImageString: String
-    public var userTag: [UserTag]
+    public var profileImage: UserImage
+    public var tags: [UserTag]
     public var creditAmount: Int? // 취소한 경우에는 creditAmount가 전달되지 않습니다
     
-    public init(requesterId: Int, requesterNickname: String, profileImageString: String, userTag: [UserTag], creditAmount: Int?) {
+    public init(requesterId: Int, requesterNickname: String, profileImage: UserImage, tags: [UserTag], creditAmount: Int?) {
         self.requesterId = requesterId
         self.requesterNickname = requesterNickname
-        self.profileImageString = profileImageString
-        self.userTag = userTag
+        self.profileImage = profileImage
+        self.tags = tags
         self.creditAmount = creditAmount
     }
 }

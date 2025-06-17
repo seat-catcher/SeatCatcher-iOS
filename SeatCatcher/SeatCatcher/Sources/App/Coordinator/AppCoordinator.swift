@@ -175,6 +175,7 @@ final class AppCoordinator: Coordinator {
             UnlockSeatGuideView(viewModel: viewModel)
         case let .mainFeatureActionComplete(actionCase):
             let viewModel = MainFeatureActionCompleteViewModel(
+                store: diContainer.resolveAppStore(),
                 coordinator: self,
                 actionCase: actionCase
             )
@@ -213,15 +214,13 @@ final class AppCoordinator: Coordinator {
                 SendRequestBottomSheetView(profileConfig: profileConfig, leftButtonAction: leftButtonAction, rightButtonAction: rightButtonAction, coinCount: coinCount, reportAction: reportAction)
             // MARK: - New
             case let .checkAcceptSeatRequest(
-                occupant,
-                creditAmount,
+                seatRequster,
                 reportButtonAction,
                 confirmationButtonAction,
                 cancelButtonAction
             ):
                 CheckAcceptSeatRequestBottomSheetView(
-                    occupant: occupant,
-                    creditAmount: creditAmount,
+                    seatRequester: seatRequster,
                     reportButtonAction: reportButtonAction,
                     confirmationButtonAction: confirmationButtonAction,
                     cancelButtonAction: cancelButtonAction

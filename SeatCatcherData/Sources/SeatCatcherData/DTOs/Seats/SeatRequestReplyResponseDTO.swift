@@ -33,7 +33,7 @@ extension SeatRequestReplyResponseDTO: ResponseDTO {
         .init(
             ownerId: ownerId,
             ownerNickname: ownerNickname,
-            profileImageString: ownerProfileImageNum,
+            profileImage: UserImage(rawValue: ownerProfileImageNum) ?? .catchy1,
             isAccepted: isAccepted
         )
     }

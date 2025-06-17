@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 import SeatCatcherCore
 import SeatCatcherDomain
+import Combine
 
 @Observable
 public final class MainFeatureActionCompleteViewModel: ViewModel {
@@ -44,23 +45,23 @@ public final class MainFeatureActionCompleteViewModel: ViewModel {
                     hasUnderline: false,
                     buttonTitle: nil
                 )
-            case .requestInProcess(_):
+            case .requestInProcess(let stationName):
                 return Config(
                     iconImage: .dangerCircle,
                     title: "요청 중",
-                    subtitle: "상대방의 요청을 기다리고 있어요",
+//                    subtitle: "상대방의 요청을 기다리고 있어요",
                     // FIXME: TEMP
-//                    subtitle: "\(stationName)역을 지난 뒤부터\n좌석을 바꿀 수 있어요",
+                    subtitle: "\(stationName)역을 지난 뒤부터\n좌석을 바꿀 수 있어요",
                     hasUnderline: false,
                     buttonTitle: "요청 취소하기"
                 )
-            case .requestAccepted(_):
+            case .requestAccepted(let stationName):
                 return Config(
                     iconImage: .iconAccept,
                     title: "요청이 수락됐어요",
                     // FIXME: TEMP
-                    subtitle: "이제 자리에 앉을 수 있어요",
-//                    subtitle: "\(stationName)역을 지난 뒤부터\n좌석을 바꿀 수 있어요",
+//                    subtitle: "이제 자리에 앉을 수 있어요",
+                    subtitle: "\(stationName)역을 지난 뒤부터\n좌석을 바꿀 수 있어요",
                     hasUnderline: false,
                     buttonTitle: "확인"
                 )
@@ -113,13 +114,16 @@ public final class MainFeatureActionCompleteViewModel: ViewModel {
     enum Action {
         case willDismiss
     }
-
-    let coordinator: Coordinator
+    
+    let store: AppStore
+    let coordinator: Coordinator // 양보 요청에 대한 응답 건
+    private var cancellables: Set<AnyCancellable> = []
 
     private(set) var state: State
     
     @MainActor
-    public init(coordinator: Coordinator, actionCase: MainFeatureActionCase) {
+    public init(store: AppStore, coordinator: Coordinator, actionCase: MainFeatureActionCase) {
+        self.store = store
         self.coordinator = coordinator
         self.state = .init(actionCase: actionCase)
     }
@@ -136,5 +140,21 @@ public final class MainFeatureActionCompleteViewModel: ViewModel {
                 coordinator.popLast(3) // FIXME: 코디네이터 애니메이션 필요
             }
         }
+    }
+    
+    private func observeRequestee(stationName: String) {
+        /// 좌석 요청 응답(자)  퍼블리셔
+        store.seatRequesteePublisher
+            .sink { [weak self] requestee in
+                if let requestee = requestee {
+                    if requestee.isAccepted {
+//                        self?.coordinator.push(AppScene.mainFeatureActionComplete(actionCase: .requestAccepted(stationName: stationName)))
+                    } else {
+                        
+                    }
+                    
+                }
+            }
+            .store(in: &cancellables)
     }
 }

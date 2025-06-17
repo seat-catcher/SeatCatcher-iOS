@@ -32,8 +32,8 @@ extension CancelSeatRequestResponseDTO: ResponseDTO {
         .init(
             requesterId: requestUserId,
             requesterNickname: requestUserNickname,
-            profileImageString: requestUserProfileImageNum,
-            userTag: requestUserTags.map{
+            profileImage: UserImage(rawValue: requestUserProfileImageNum) ?? .catchy1,
+            tags: requestUserTags.map{
                 UserTag(rawValue: $0) ?? .none
             },
             creditAmount: nil // 요청 취소 시 크레딧 전달하지 않음
