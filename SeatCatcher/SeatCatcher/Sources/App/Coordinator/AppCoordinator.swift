@@ -177,7 +177,8 @@ final class AppCoordinator: Coordinator {
                 store: diContainer.resolveAppStore(),
                 coordinator: self,
                 actionCase: actionCase,
-                receiveSeatUseCase: diContainer.resolveReceiveSeatUseCase()
+                receiveSeatUseCase: diContainer.resolveReceiveSeatUseCase(),
+                cancelRequestSeatUseCase: diContainer.resolveCancelRequestSeatUseCase()
             )
             MainFeatureActionCompleteView(viewModel: viewModel)
         }
