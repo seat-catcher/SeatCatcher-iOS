@@ -71,6 +71,9 @@ public struct MainFeatureActionCompleteView: View {
                 viewModel.action(.willDismiss) // 버튼이 없는 경우 터치 시 dismiss
             }
         }
+        .onAppear {
+            viewModel.action(.willAppear)
+        }
     }
 }
 

@@ -79,6 +79,7 @@ final class DIContainerImpl {
     private lazy var cancelRequestSeatUseCase: CancelRequestSeatUseCase = CancelRequestSeatUseCaseImpl(seatRepository: seatRepository, seatStompRepository: seatStompRepository)
     private lazy var acceptRequestSeatUseCase: AcceptRequestSeatUseCase = AcceptRequestSeatUseCaseImpl(seatRepository: seatRepository)
     private lazy var rejectRequestSeatUseCase: RejectRequestSeatUseCase = RejectRequestSeatUseCaseImpl(seatRepository: seatRepository)
+    private lazy var receiveSeatUseCase: ReceiveSeatUseCase = ReceiveSeatUseCaseImpl(seatRepository: seatRepository, seatStompRepository: seatStompRepository)
     
     // MARK: - PathHistories UseCase Instances
     private lazy var getPathHistoriesUseCase = GetPathHistoriesUseCaseImpl(pathHistoriesRepository: pathHistoriesRepository)
@@ -136,6 +137,7 @@ extension DIContainerImpl: DIContainer {
     func resolveCancelRequestSeatUseCase() -> CancelRequestSeatUseCase { return cancelRequestSeatUseCase }
     func resolveAcceptRequestSeatUseCase() -> AcceptRequestSeatUseCase { return acceptRequestSeatUseCase }
     func resolveRejectRequestSeatUseCase() -> RejectRequestSeatUseCase { return rejectRequestSeatUseCase }
+    func resolveReceiveSeatUseCase() -> ReceiveSeatUseCase { return receiveSeatUseCase }
 
     // MARK: Incomings UseCases
     func resolveGetIncomingsUseCase() -> GetIncomingsUseCase { return getIncomingsUseCase }

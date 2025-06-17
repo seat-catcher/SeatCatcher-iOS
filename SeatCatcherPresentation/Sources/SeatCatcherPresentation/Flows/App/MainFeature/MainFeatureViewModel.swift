@@ -368,7 +368,14 @@ public final class MainFeatureViewModel: ViewModel {
                                         creditAmount: self.store.user.credit
                                     )
                                     self.coordinator.dismissSheet()
-                                    self.coordinator.push(AppScene.mainFeatureActionComplete(actionCase: .requestInProcess(stationName: occupant.stationToGetOff)))
+                                    self.coordinator.push(
+                                        AppScene.mainFeatureActionComplete(
+                                            actionCase: .requestInProcess(
+                                                stationName: occupant.stationToGetOff,
+                                                seat: seat
+                                            )
+                                        )
+                                    )
                                 }
                             )
                         )
