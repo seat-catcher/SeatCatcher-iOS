@@ -71,9 +71,7 @@ private struct SeatRowView: View {
                     )
                     )
                     .frame(width: 40, height: 42)
-                    .onTapGesture {
-                        onTap(seat)
-                    }
+                    .onTapGesture { onTap(seat) }
                 } else {
                     Spacer()
                         .frame(width: 40, height: 42)

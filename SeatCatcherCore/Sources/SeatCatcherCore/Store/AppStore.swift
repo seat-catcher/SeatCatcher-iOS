@@ -105,10 +105,7 @@ public final class AppStore {
                     }
                 },
                 receiveValue: { [weak self] trainCar in
-//                    guard self?.trainCar != trainCar else { return }
-//                    dump(trainCar)
                     self?.trainCar = trainCar
-                    dump(self?.trainCar)
                 }
             )
             .store(in: &trainCarCancellables)
