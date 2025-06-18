@@ -576,30 +576,40 @@ extension MainFeatureViewModel {
     func presentSeatRequesterSheet(_ seat: Seat, seatRequester: SeatRequester) {
         coordinator.presentSheet(
             AppSheet.checkAcceptSeatRequest(
-                seatRequster: seatRequester,
+                seatRequester: seatRequester,
                 reportButtonAction: {
                     self.action(.reportButtonDidTap)
                 },
                 confirmationButtonAction: {
                     guard let acceptSeatRequestUseCase = self.acceptSeatRequestUseCase else { return }
                     Task {
-                        try await acceptSeatRequestUseCase.execute(seat, requester: seatRequester)
-                        self.coordinator.dismissSheet()
-                        self.coordinator.push(AppScene.mainFeatureActionComplete(actionCase: .receivedCreditByYield(creditAmount: seatRequester.creditAmount ?? 0)))
+                        do {
+                            try await acceptSeatRequestUseCase.execute(seat, requester: seatRequester)
+                            self.coordinator.dismissSheet()
+                            self.coordinator.push(AppScene.mainFeatureActionComplete(actionCase: .receivedCreditByYield(creditAmount: seatRequester.creditAmount ?? 0)))
+                        } catch {
+                            dump(error.localizedDescription)
+                            self.coordinator.dismissSheet()
+                        }
                     }
                 },
                 cancelButtonAction: {
                     guard let rejectSeatRequestUseCase = self.rejectSeatRequestUseCase else { return }
                     Task {
-                        try await rejectSeatRequestUseCase.execute(seat, requester: seatRequester)
-                        self.coordinator.dismissSheet()
-                        self.coordinator.presentSheet(
-                            AppSheet.requestRejected(
-                                confirmationButtonAction: {
-                                    self.coordinator.dismissSheet()
-                                }
+                        do {
+                            try await rejectSeatRequestUseCase.execute(seat, requester: seatRequester)
+                            self.coordinator.dismissSheet()
+                            self.coordinator.presentSheet(
+                                AppSheet.requestRejected(
+                                    confirmationButtonAction: {
+                                        self.coordinator.dismissSheet()
+                                    }
+                                )
                             )
-                        )
+                        } catch {
+                            dump(error.localizedDescription)
+                            self.coordinator.dismissSheet()
+                        }
                     }
                 }
             )

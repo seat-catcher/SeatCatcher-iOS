@@ -68,7 +68,7 @@ public enum AppScene: AppRoute {
 
 public enum AppSheet: AppRoute {
     case checkAcceptSeatRequest(
-        seatRequster: SeatRequester,
+        seatRequester: SeatRequester,
         reportButtonAction: () -> Void,
         confirmationButtonAction: () -> Void,
         cancelButtonAction: () -> Void
@@ -99,7 +99,6 @@ public enum AppSheet: AppRoute {
         reportButtonAction: () -> Void,
         yieldButtonAction: () -> Void
     )
-
     
     public var id: String {
         switch self {

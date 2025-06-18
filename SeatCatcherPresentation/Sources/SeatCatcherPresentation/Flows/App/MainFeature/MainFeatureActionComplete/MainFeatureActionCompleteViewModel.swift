@@ -53,7 +53,7 @@ public final class MainFeatureActionCompleteViewModel: ViewModel {
                     hasUnderline: false,
                     buttonTitle: "요청 취소하기"
                 )
-            case let .requestAccepted(stationName):
+            case let .requestAccepted(stationName, _):
                 return Config(
                     iconImage: .iconAccept,
                     title: "요청이 수락됐어요",
@@ -138,9 +138,9 @@ public final class MainFeatureActionCompleteViewModel: ViewModel {
                 coordinator.popLast(1)
             case let .requestAccepted(_, creditAmount):
                 coordinator.push(AppScene.mainFeatureActionComplete(actionCase: .sendCredit(creditAmount: creditAmount)))
-            case .unlockedSeat, .requestRejected, .sendCredit:
+            case .unlockedSeat, .requestRejected:
                 coordinator.popLast(2)
-            case .takeBackCreditByCancel,.receivedCreditByRegister:
+            case .takeBackCreditByCancel,.receivedCreditByRegister, .sendCredit:
                 coordinator.popLast(3)
             }
         case .willAppear:

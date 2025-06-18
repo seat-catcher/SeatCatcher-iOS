@@ -37,7 +37,7 @@ public final class UnlockSeatGuideViewModel: ViewModel {
             /// 좌석 정보를 잠금 해제합니다
             Task {
                 do {
-                    try await unlockSeatUseCase.execute(creditAmount: 10, targetUserId: store.user.id) // FIXME: 크레딧 액수 수정
+                    try await unlockSeatUseCase.execute(creditAmount: -10, targetUserId: store.user.id) // FIXME: 크레딧 액수 수정
                     await MainActor.run {
                         store.isBlocked = false
                         coordinator.push(AppScene.mainFeatureActionComplete(actionCase: .unlockedSeat(creditAmount: 10)))

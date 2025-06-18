@@ -189,13 +189,13 @@ final class AppCoordinator: Coordinator {
         Group {
             switch sheet {
             case let .checkAcceptSeatRequest(
-                seatRequster,
+                seatRequester,
                 reportButtonAction,
                 confirmationButtonAction,
                 cancelButtonAction
             ):
                 CheckAcceptSeatRequestBottomSheetView(
-                    seatRequester: seatRequster,
+                    seatRequester: seatRequester,
                     reportButtonAction: reportButtonAction,
                     confirmationButtonAction: confirmationButtonAction,
                     cancelButtonAction: cancelButtonAction
