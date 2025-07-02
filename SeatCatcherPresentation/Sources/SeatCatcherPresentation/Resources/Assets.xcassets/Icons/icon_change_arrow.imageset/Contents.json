@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "icon_change_arrow.svg",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
