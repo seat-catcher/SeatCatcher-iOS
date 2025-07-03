@@ -181,6 +181,14 @@ final class AppCoordinator: Coordinator {
                 cancelRequestSeatUseCase: diContainer.resolveCancelRequestSeatUseCase()
             )
             MainFeatureActionCompleteView(viewModel: viewModel)
+        case .mypageProfileChange:
+            let viewModel = MypageProfileChangeViewModel(
+                appStore: diContainer.resolveAppStore(),
+                coordinator: self,
+                getRandomNicknameUseCase: diContainer.resolveGetRandomNicknameUseCase(),
+                patchUserInfoUseCase: diContainer.resolvePatchUserInfoUseCase()
+            )
+            MypageProfileChangeView(viewModel: viewModel)
         }
     }
 
@@ -200,27 +208,48 @@ final class AppCoordinator: Coordinator {
                     confirmationButtonAction: confirmationButtonAction,
                     cancelButtonAction: cancelButtonAction
                 )
+                .presentationDragIndicator(.visible)
+                .presentationDetents([.height(300)])
+
             case let .checkRejectSeatRequest(confirmationButtonAction, cancelButtonAction):
                 CheckRejectSeatRequestBottomSheetView(
                     confirmationButtonAction: confirmationButtonAction,
                     cancelButtonAction: cancelButtonAction
                 )
+                .presentationDragIndicator(.visible)
+                .presentationDetents([.height(300)])
+
             case let .checkSeatExchange(confirmationButtonAction, cancelButtonAction):
                 CheckSeatExchangeStatusBottomSheetView(
                     confirmationButtonAction: confirmationButtonAction,
                     cancelButtonAction: cancelButtonAction
                 )
+                .presentationDragIndicator(.visible)
+                .presentationDetents([.height(300)])
+
             case let .checkSeatOccupancy(confirmationButtonAction, cancelButtonAction):
                 CheckSeatOccupancyStatusBottomSheetView(
                     confirmationButtonAction: confirmationButtonAction,
                     cancelButtonAction: cancelButtonAction
                 )
+                .presentationDragIndicator(.visible)
+                .presentationDetents([.height(300)])
+
             case let .exchangeGuiding(confirmationButtonAction):
                 ExchangeGuidingBottomSheetView(confirmationButtonAction: confirmationButtonAction)
+                .presentationDragIndicator(.visible)
+                .presentationDetents([.height(300)])
+
             case let .notifyWaiting(confirmationButtonAction):
                 NotifyWaitingBottomSheetView(confirmationButtonAction: confirmationButtonAction)
+                .presentationDragIndicator(.visible)
+                .presentationDetents([.height(300)])
+
             case let .requestRejected(confirmationButtonAction):
                 RequestRejectedBottomSheetView(confirmationButtonAction: confirmationButtonAction)
+                .presentationDragIndicator(.visible)
+                .presentationDetents([.height(300)])
+
             case let .seatInfo(
                 occupant,
                 reportButtonAction,
@@ -231,10 +260,15 @@ final class AppCoordinator: Coordinator {
                     reportButtonAction: reportButtonAction,
                     yieldButtonAction: yieldButtonAction
                 )
+                .presentationDragIndicator(.visible)
+                .presentationDetents([.height(300)])
+
+            case let .profileImageChange(viewModel):
+                MypageProfileImageChangeBottomSheetView(viewModel: viewModel)
+                    .presentationDragIndicator(.visible)
+                    .presentationDetents([.height(507)])
             }
         }
-        .presentationDragIndicator(.visible)
-        .presentationDetents([.height(300)])
     }
 
     @ViewBuilder

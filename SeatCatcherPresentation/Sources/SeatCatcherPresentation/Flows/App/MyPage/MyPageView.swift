@@ -34,9 +34,27 @@ private struct UserInfoArea: View {
     let viewModel: MyPageViewModel
 
     var body: some View {
-        Image(viewModel.appStore.user.profileImage.image)
-            .frame(width: 124, height: 124)
-            .padding(.top, 18)
+        ZStack(alignment: .bottomTrailing) {
+            Image(viewModel.appStore.user.profileImage.image)
+                .resizable()
+                .frame(width: 124, height: 124)
+                .padding(.top, 18)
+            ZStack {
+                Circle()
+                    .foregroundStyle(.gray200)
+                    .frame(width: 28, height: 28)
+                Image(.iconSetting)
+                    .renderingMode(.template)
+                    .foregroundStyle(.gray500)
+                    .frame(width: 18, height: 18)
+            }
+            .overlay(
+                Circle()
+                    .stroke(Color.black, lineWidth: 4)
+            )
+        }.onTapGesture {
+            viewModel.action(.didTapProfileChangeButton)
+        }
         Text(viewModel.appStore.user.name)
             .font(.T02_B)
             .foregroundStyle(.gray100)
@@ -47,7 +65,7 @@ private struct UserInfoArea: View {
 
 private struct SettingsList: View {
     let viewModel: MyPageViewModel
-
+    
     var body: some View {
         ForEach(Config.allCases) {
             SettingsListCell(viewModel: viewModel, config: $0)

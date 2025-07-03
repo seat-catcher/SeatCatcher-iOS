@@ -34,14 +34,20 @@ public struct MypageProfileChangeView: View {
                         .stroke(Color.black, lineWidth: 4)
                 )
             }
+            .onTapGesture {
+                viewModel.action(.didTapprofileimageChangeButton)
+            }
             .padding(.top, 18)
             .padding(.bottom, 32)
-            HStack(alignment: .center, spacing: 10) {
+            HStack(alignment: .center, spacing: 8) {
                 Text(viewModel.appStore.user.name)
                     .font(.T03_SB)
-                    .foregroundStyle(.gray100)
-                    .frame(maxWidth: .infinity)
+                    .foregroundStyle(viewModel.state.didChangeNickname ? .gray100 : .gray300)
                     .padding(.horizontal, 12)
+                    .frame(height: 44)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .background(.gray700)
+                    .clipShape(.rect(cornerRadius: 12))
                 Button(
                     action: {
                         viewModel.action(.willSetNewNickname)
@@ -51,7 +57,7 @@ public struct MypageProfileChangeView: View {
                             Image(.iconChangeArrow)
                         }
                         .frame(width: 44, height: 44)
-                        .backgroundStyle(.scGreen)
+                        .background(.scGreen)
                         .clipShape(.rect(cornerRadius: 12))
                     }
                 )

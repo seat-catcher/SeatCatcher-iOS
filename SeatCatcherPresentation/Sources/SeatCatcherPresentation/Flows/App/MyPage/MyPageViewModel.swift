@@ -18,6 +18,7 @@ public final class MyPageViewModel: ViewModel {
         case toggleNotification
         case logoutButtonTapped
         case withdrawalButtonTapped
+        case didTapProfileChangeButton
     }
 
     let appStore: AppStore
@@ -37,6 +38,8 @@ public final class MyPageViewModel: ViewModel {
             try? logoutUseCase.execute()
         case .withdrawalButtonTapped:
             try? logoutUseCase.execute()
+        case .didTapProfileChangeButton:
+            coordinator.push(AppScene.mypageProfileChange)
         }
     }
 }

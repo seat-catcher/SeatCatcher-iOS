@@ -12,6 +12,7 @@ import SeatCatcherDomain
 public enum AppScene: AppRoute {
     case home
     case mypage
+    case mypageProfileChange
     case notifications
     case selectBoardingState
     case selectLine(boardingState: BoardingState)
@@ -55,6 +56,7 @@ public enum AppScene: AppRoute {
         case .selectSeatSection: return "selectSeatSection"
         case .unlockSeatGuide: return "unlockSeatGuide"
         case .mainFeatureActionComplete: return "mainFeatureActionComplete"
+        case .mypageProfileChange: return "mypageProfileChange"
         }
     }
 
@@ -99,6 +101,9 @@ public enum AppSheet: AppRoute {
         reportButtonAction: () -> Void,
         yieldButtonAction: () -> Void
     )
+    case profileImageChange(
+        viewModel: MypageProfileChangeViewModel
+    )
     
     public var id: String {
         switch self {
@@ -118,6 +123,8 @@ public enum AppSheet: AppRoute {
             return "requestRejected"
         case .seatInfo:
             return "seatInfo"
+        case .profileImageChange:
+            return "profileImageChange"
         }
     }
     
