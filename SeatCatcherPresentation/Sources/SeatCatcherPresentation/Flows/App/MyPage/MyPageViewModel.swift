@@ -19,6 +19,7 @@ public final class MyPageViewModel: ViewModel {
         case logoutButtonTapped
         case withdrawalButtonTapped
         case didTapProfileChangeButton
+        case termsButtonTapped
     }
 
     let appStore: AppStore
@@ -40,6 +41,8 @@ public final class MyPageViewModel: ViewModel {
             try? logoutUseCase.execute()
         case .didTapProfileChangeButton:
             coordinator.push(AppScene.mypageProfileChange)
+        case .termsButtonTapped:
+            coordinator.push(AppScene.mypageTermsOfService)
         }
     }
 }

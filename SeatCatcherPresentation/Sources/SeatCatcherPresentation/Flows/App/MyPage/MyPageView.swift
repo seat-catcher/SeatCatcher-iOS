@@ -111,6 +111,7 @@ private struct SettingsList: View {
         var body: some View {
             Button {
                 if config == .logout { viewModel.action(.logoutButtonTapped) }
+                if config == .terms { viewModel.action(.termsButtonTapped) }
                 if config == .withdrawl { viewModel.action(.withdrawalButtonTapped) }
             } label: {
                 HStack(spacing: 8) {
