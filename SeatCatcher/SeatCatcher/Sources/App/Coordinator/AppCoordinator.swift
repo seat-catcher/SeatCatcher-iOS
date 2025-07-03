@@ -189,6 +189,8 @@ final class AppCoordinator: Coordinator {
                 patchUserInfoUseCase: diContainer.resolvePatchUserInfoUseCase()
             )
             MypageProfileChangeView(viewModel: viewModel)
+        case .mypageTermsOfService:
+            MypageTermsofServiceView(coordinator: self)
         }
     }
 

@@ -13,6 +13,8 @@ public enum AppScene: AppRoute {
     case home
     case mypage
     case mypageProfileChange
+    case mypageTermsOfService
+    
     case notifications
     case selectBoardingState
     case selectLine(boardingState: BoardingState)
@@ -57,6 +59,7 @@ public enum AppScene: AppRoute {
         case .unlockSeatGuide: return "unlockSeatGuide"
         case .mainFeatureActionComplete: return "mainFeatureActionComplete"
         case .mypageProfileChange: return "mypageProfileChange"
+        case .mypageTermsOfService: return "mypageTermsOfService"
         }
     }
 
