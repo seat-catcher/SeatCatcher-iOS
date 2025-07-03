@@ -12,11 +12,14 @@ import SeatCatcherDomain
 public final class MypageProfileChangeViewModel: ViewModel {
     struct State {
         var nickname: String
+        var didChangeNickname: Bool = false
         var profileImage: UserImage
+        var selectedProfileImage: UserImage?
     }
     
     enum Action {
         case willSetNewNickname
+        case didTapprofileimageChangeButton
         case WillSetProfileImage(UserImage)
     }
 
@@ -26,7 +29,7 @@ public final class MypageProfileChangeViewModel: ViewModel {
     let coordinator: Coordinator
     private(set) var state: State
     
-    public init(appStore: AppStore, getRandomNicknameUseCase: GetRandomNicknameUseCase, patchUserInfoUseCase: PatchUserInfoUseCase, coordinator: Coordinator) {
+    public init(appStore: AppStore, coordinator: Coordinator, getRandomNicknameUseCase: GetRandomNicknameUseCase, patchUserInfoUseCase: PatchUserInfoUseCase) {
         self.appStore = appStore
         self.state = .init(nickname: appStore.user.name, profileImage: appStore.user.profileImage)
         self.getRandomNicknameUseCase = getRandomNicknameUseCase
@@ -48,10 +51,16 @@ public final class MypageProfileChangeViewModel: ViewModel {
                 do {
                     try await self.patchUserInfoUseCase.execute(updatedUser)
                     appStore.setUser(updatedUser)
+                    state.didChangeNickname = true
                 } catch {
                     dump(error.localizedDescription)
                 }
             }
+        case .didTapprofileimageChangeButton:
+            coordinator.presentSheet(
+                AppSheet.profileImageChange(viewModel: self),
+                onDismiss: { }
+            )
         case let .WillSetProfileImage(image):
             let updatedUser = User(
                 id: appStore.user.id,
@@ -71,5 +80,4 @@ public final class MypageProfileChangeViewModel: ViewModel {
             }
         }
     }
-
 }
