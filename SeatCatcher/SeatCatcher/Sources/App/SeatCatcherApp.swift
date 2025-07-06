@@ -35,6 +35,9 @@ struct SeatCatcherApp: App {
         if isSignedIn { appStore.user.hasOnBoarded ? .authenticated : .onboarding }
         else { .unauthenticated }
     }
+    
+    // FCM을 위해 AppDelegate 사용
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
 
     init() {
         // DIContainer 인스턴스 생성
