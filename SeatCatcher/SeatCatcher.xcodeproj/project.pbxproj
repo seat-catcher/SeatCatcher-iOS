@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0964A0182E1A4A91009AA276 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 0964A0172E1A4A91009AA276 /* FirebaseMessaging */; };
 		DF07F1352D81A1BA0093E16F /* Moya in Frameworks */ = {isa = PBXBuildFile; productRef = DF07F1342D81A1BA0093E16F /* Moya */; };
 		DF7781302D903ED3003B9EB6 /* KakaoSDKAuth in Frameworks */ = {isa = PBXBuildFile; productRef = DF77812F2D903ED3003B9EB6 /* KakaoSDKAuth */; };
 		DF7781322D903ED3003B9EB6 /* KakaoSDKCommon in Frameworks */ = {isa = PBXBuildFile; productRef = DF7781312D903ED3003B9EB6 /* KakaoSDKCommon */; };
@@ -48,6 +49,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0964A0182E1A4A91009AA276 /* FirebaseMessaging in Frameworks */,
 				DFDD85322D857C3D009A00FF /* SeatCatcherData in Frameworks */,
 				DF7781322D903ED3003B9EB6 /* KakaoSDKCommon in Frameworks */,
 				DFF8CF842D85728700CDC6D6 /* SeatCatcherDomain in Frameworks */,
@@ -104,6 +106,7 @@
 				DFDD85472D86C265009A00FF /* SeatCatcherPresentation */,
 				DF77812F2D903ED3003B9EB6 /* KakaoSDKAuth */,
 				DF7781312D903ED3003B9EB6 /* KakaoSDKCommon */,
+				0964A0172E1A4A91009AA276 /* FirebaseMessaging */,
 			);
 			productName = SeatCatcher;
 			productReference = DF07F0D82D79C4E60093E16F /* SeatCatcher.app */;
@@ -140,6 +143,7 @@
 				DFDD85302D857C3D009A00FF /* XCLocalSwiftPackageReference "../SeatCatcherData" */,
 				DFDD85462D86C265009A00FF /* XCLocalSwiftPackageReference "../SeatCatcherPresentation" */,
 				DF77812E2D903ED3003B9EB6 /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */,
+				0964A0162E1A4A91009AA276 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = DF07F0D92D79C4E60093E16F /* Products */;
@@ -421,6 +425,14 @@
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		0964A0162E1A4A91009AA276 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 11.15.0;
+			};
+		};
 		DF07F1332D81A1BA0093E16F /* XCRemoteSwiftPackageReference "Moya" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Moya/Moya.git";
@@ -440,6 +452,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		0964A0172E1A4A91009AA276 /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0964A0162E1A4A91009AA276 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
+		};
 		DF07F1342D81A1BA0093E16F /* Moya */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = DF07F1332D81A1BA0093E16F /* XCRemoteSwiftPackageReference "Moya" */;
