@@ -46,7 +46,7 @@ public final class LoginViewModel: ViewModel {
     func action(_ action: Action) {
         switch action {
         case .loginWithKakaoButtonTapped:
-            Task {
+            Task { [kakaoLoginUseCase, getUserInfoUseCase] in
                 do {
                     try await kakaoLoginUseCase.execute()
                     let user = try await getUserInfoUseCase.execute()
@@ -75,7 +75,7 @@ public final class LoginViewModel: ViewModel {
             else { return }
 
             // authUseCase에 identityToken을 넘겨 서버와 로그인 로직 수행
-            Task {
+            Task { [appleLoginUseCase, getUserInfoUseCase] in
                 do {
                     try await appleLoginUseCase.execute(identityToken: identityToken.base64EncodedString())
                     let user = try await getUserInfoUseCase.execute()

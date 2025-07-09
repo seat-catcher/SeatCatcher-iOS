@@ -53,7 +53,7 @@ public final class SelectTrainViewModel: ViewModel {
     func action(_ action: Action) {
         switch action {
         case .viewWillAppear, .pulledToRefresh, .refreshButtonTapped:
-            Task {
+            Task { [getIncomingsUseCase] in
                 do {
                     let incomings = try await getIncomingsUseCase.execute(departure: departure, arrival: arrival)
                     state.incomings = incomings

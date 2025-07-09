@@ -118,7 +118,6 @@ final class AppCoordinator: Coordinator {
                 getSeatInTrainCarUseCase: diContainer.resolveGetSeatInTrainCarUseCase(),
                 getSeatInSectionUseCase: diContainer.resolveGetSeatInSectionUseCase(),
                 subscribeTrainUseCase: diContainer.resolveSubscribeTrainUseCase(),
-                postSeatRequestUseCase: diContainer.resolveRequestSeatUseCase(),
                 cancelSeatRequestUseCase: diContainer.resolveCancelRequestSeatUseCase(),
                 acceptSeatRequestUseCase: diContainer.resolveAcceptRequestSeatUseCase(),
                 rejectSeatRequestUseCase: diContainer.resolveRejectRequestSeatUseCase()
@@ -181,6 +180,15 @@ final class AppCoordinator: Coordinator {
                 cancelRequestSeatUseCase: diContainer.resolveCancelRequestSeatUseCase()
             )
             MainFeatureActionCompleteView(viewModel: viewModel)
+        case let .inputCredit(stationName, seat):
+            let viewModel = InputCreditViewModel(
+                stationName: stationName,
+                seat: seat,
+                requestSeatUseCase: diContainer.resolveRequestSeatUseCase(),
+                appStore: diContainer.resolveAppStore(),
+                coordinator: self
+            )
+            InputCreditView(viewModel: viewModel)
         case .mypageProfileChange:
             let viewModel = MypageProfileChangeViewModel(
                 appStore: diContainer.resolveAppStore(),
@@ -221,14 +229,6 @@ final class AppCoordinator: Coordinator {
                 .presentationDragIndicator(.visible)
                 .presentationDetents([.height(300)])
 
-            case let .checkSeatExchange(confirmationButtonAction, cancelButtonAction):
-                CheckSeatExchangeStatusBottomSheetView(
-                    confirmationButtonAction: confirmationButtonAction,
-                    cancelButtonAction: cancelButtonAction
-                )
-                .presentationDragIndicator(.visible)
-                .presentationDetents([.height(300)])
-
             case let .checkSeatOccupancy(confirmationButtonAction, cancelButtonAction):
                 CheckSeatOccupancyStatusBottomSheetView(
                     confirmationButtonAction: confirmationButtonAction,
@@ -237,13 +237,8 @@ final class AppCoordinator: Coordinator {
                 .presentationDragIndicator(.visible)
                 .presentationDetents([.height(300)])
 
-            case let .exchangeGuiding(confirmationButtonAction):
-                ExchangeGuidingBottomSheetView(confirmationButtonAction: confirmationButtonAction)
-                .presentationDragIndicator(.visible)
-                .presentationDetents([.height(300)])
-
-            case let .notifyWaiting(confirmationButtonAction):
-                NotifyWaitingBottomSheetView(confirmationButtonAction: confirmationButtonAction)
+            case let .verifyRequest(confirmationButtonAction):
+                VerifyRequestBottomSheetView(confirmationButtonAction: confirmationButtonAction)
                 .presentationDragIndicator(.visible)
                 .presentationDetents([.height(300)])
 

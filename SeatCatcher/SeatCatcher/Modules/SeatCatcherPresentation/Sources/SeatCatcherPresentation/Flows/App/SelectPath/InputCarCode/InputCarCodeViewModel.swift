@@ -56,7 +56,7 @@ public final class InputCarCodeViewModel: ViewModel {
             state.carCodeDigits[idx] = digit
         case .nextButtonTapped:
             let carCode = state.carCodeDigits.joined()
-            Task {
+            Task { [startJourneyUseCase] in
                 let (pathHistoryId, expectedArrivalTime) = try await startJourneyUseCase.execute(
                     departure: departure,
                     arrival: arrival,

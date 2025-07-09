@@ -83,7 +83,7 @@ public final class HomeViewModel: ViewModel {
     func action(_ action: Action) {
         switch action {
         case .viewWillAppear:
-            Task {
+            Task { [getPathHistoriesUseCase, getStationUseCase, getIncomingsUseCase] in
                 guard let pathHistories = try? await getPathHistoriesUseCase.execute(),
                       let firstHistory = pathHistories.first,
                       let departure = try? await getStationUseCase.execute(id: firstHistory.departureStationId),
