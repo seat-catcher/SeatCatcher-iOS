@@ -24,6 +24,9 @@
 		DF4104AC2D8C763900CE77C9 /* Exceptions for "SeatCatcher" folder in "SeatCatcher" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				"Modules/Users/qkrgustn/Projects/SeatCatcher-iOS/SeatCatcher/SeatCatcher/Modules/SeatCatcherData",
+				"Modules/Users/qkrgustn/Projects/SeatCatcher-iOS/SeatCatcher/SeatCatcher/Modules/SeatCatcherDomain",
+				"Modules/Users/qkrgustn/Projects/SeatCatcher-iOS/SeatCatcher/SeatCatcher/Modules/SeatCatcherPresentation",
 				Resources/Configurations/Debug.xcconfig,
 				Resources/Configurations/Release.xcconfig,
 				Resources/Plists/Info.plist,
