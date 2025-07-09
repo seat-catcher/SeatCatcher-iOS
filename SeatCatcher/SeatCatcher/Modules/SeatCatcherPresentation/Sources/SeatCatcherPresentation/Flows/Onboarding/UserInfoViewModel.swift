@@ -81,7 +81,7 @@ public final class UserInfoViewModel: ViewModel {
 
     @MainActor
     private func saveUserInfo() {
-        Task {
+        Task { [patchUserInfoUseCase] in
             do {
                 // AppStore의 User hasOnBoarded 값을 true로 바꾸면 즉시 플로우가 전환되므로,
                 // 새로운 인스턴스를 복사하여 hasOnBoarded에 true 대입 후 UseCase에 넘깁니다.

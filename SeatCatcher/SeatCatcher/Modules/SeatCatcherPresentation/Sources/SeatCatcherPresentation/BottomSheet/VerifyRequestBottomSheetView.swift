@@ -1,15 +1,15 @@
 //
-//  NotifyWaitingBottomSheetView.swift
+//  VerifyRequestBottomSheetView.swift
 //  SeatCatcherPresentation
 //
-//  Created by 박현수 on 6/5/25.
+//  Created by 박현수 on 6/4/25.
 //
 
 import Foundation
 import SeatCatcherDomain
 import SwiftUI
 
-public struct NotifyWaitingBottomSheetView: View {
+public struct VerifyRequestBottomSheetView: View {
     let confirmationButtonAction: () -> Void
 
     public init(confirmationButtonAction: @escaping () -> Void) {
@@ -18,12 +18,12 @@ public struct NotifyWaitingBottomSheetView: View {
 
     public var body: some View {
         VStack(spacing: 0) {
-            Text("자리교환을 위해 요청자가 앞에서 기다려요")
+            Text("해당 좌석 앞에 도착한 후 '확인'을 눌러주세요")
                 .font(.B01_SB)
                 .foregroundStyle(.gray100)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.top, 40)
-            Text("자리교환 타이밍에 맞게 푸쉬알람을 전송해요")
+            Text("해당 좌석 앞에서만 좌석 요청을 보낼 수 있어요")
                 .font(.SHEETSUBTITLE)
                 .foregroundStyle(.gray300)
                 .frame(maxWidth: .infinity, alignment: .leading)

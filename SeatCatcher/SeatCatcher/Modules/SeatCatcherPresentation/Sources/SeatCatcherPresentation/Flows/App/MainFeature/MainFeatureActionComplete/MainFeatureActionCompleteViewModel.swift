@@ -135,7 +135,7 @@ public final class MainFeatureActionCompleteViewModel: ViewModel {
                 coordinator.popLast(1)
             case let .requestInProcess(_, seat, creditAmount):
                 cancelSeatRequest(seat, requesterId: store.user.id, creditAmount: creditAmount) // 좌석 요청 취소
-                coordinator.popLast(1)
+                coordinator.popLast(2)
             case let .requestAccepted(_, creditAmount):
                 coordinator.push(AppScene.mainFeatureActionComplete(actionCase: .sendCredit(creditAmount: creditAmount)))
             case .unlockedSeat, .requestRejected:
@@ -172,9 +172,8 @@ public final class MainFeatureActionCompleteViewModel: ViewModel {
             .store(in: &cancellables)
     }
     
-    @MainActor
     private func cancelSeatRequest(_ seat: Seat, requesterId: Int, creditAmount: Int) {
-        Task {
+        Task { [cancelRequestSeatUseCase] in
             try await cancelRequestSeatUseCase.execute(seat, requesterId: requesterId, creditAmount: creditAmount)
         }
     }

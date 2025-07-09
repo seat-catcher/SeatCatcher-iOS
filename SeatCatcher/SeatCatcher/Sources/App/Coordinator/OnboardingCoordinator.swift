@@ -26,6 +26,7 @@ final class OnboardingCoordinator: Coordinator {
         self.diContainer = diContainer
     }
 
+    @MainActor
     @ViewBuilder
     func buildScene(_ scene: OnboardingScene) -> some View {
         switch scene {

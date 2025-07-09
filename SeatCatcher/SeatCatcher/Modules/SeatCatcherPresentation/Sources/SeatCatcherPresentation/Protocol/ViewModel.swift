@@ -8,6 +8,7 @@
 import Foundation
 import SeatCatcherCore
 
+@MainActor
 protocol ViewModel {
     associatedtype State
     associatedtype Action

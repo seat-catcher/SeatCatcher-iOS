@@ -34,7 +34,6 @@ public final class MainFeatureViewModel: ViewModel {
     }
 
     enum SeatRequestAction {
-        case willRequestSeat(_ seat: Seat, creditAmount: Int) // 좌석 요청
         case willCancelRequestSeat(_ seat: Seat, creditAmount: Int) // 좌석 요청 취소
         case willAcceptSeatRequest(_ seat: Seat, requester: SeatRequester) // 좌석 요청 수락
         case willRejectSeatRequest(_ seat: Seat, requester: SeatRequester) // 좌석 요청 거절
@@ -90,7 +89,6 @@ public final class MainFeatureViewModel: ViewModel {
     /// 옵셔널 유즈케이스 - 일반 상태
     private let subscribeTrainUseCase: SubscribeTrainUseCase?
     /// 옵셔널 유즈케이스 - 좌석 요청자
-    private let postSeatRequestUseCase : RequestSeatUseCase?
     private let cancelSeatRequestUseCase : CancelRequestSeatUseCase?
     /// 옵셔널 유즈케이스 - 좌석 점유자
     private let acceptSeatRequestUseCase : AcceptRequestSeatUseCase?
@@ -107,7 +105,6 @@ public final class MainFeatureViewModel: ViewModel {
         registerSeatUseCase: RegisterSeatUseCase? = nil,
         moveSeatUseCase: MoveSeatUseCase? = nil,
         cancelSeatUseCase: CancelSeatUseCase? = nil,
-        postSeatRequestUseCase : RequestSeatUseCase? = nil,
         cancelSeatRequestUseCase : CancelRequestSeatUseCase? = nil,
         acceptSeatRequestUseCase : AcceptRequestSeatUseCase? = nil,
         rejectSeatRequestUseCase : RejectRequestSeatUseCase? = nil,
@@ -121,7 +118,6 @@ public final class MainFeatureViewModel: ViewModel {
         self.registerSeatUseCase = registerSeatUseCase
         self.moveSeatUseCase = moveSeatUseCase
         self.cancelSeatUseCase = cancelSeatUseCase
-        self.postSeatRequestUseCase = postSeatRequestUseCase
         self.cancelSeatRequestUseCase = cancelSeatRequestUseCase
         self.acceptSeatRequestUseCase = acceptSeatRequestUseCase
         self.rejectSeatRequestUseCase = rejectSeatRequestUseCase
@@ -154,7 +150,6 @@ public final class MainFeatureViewModel: ViewModel {
         getSeatInTrainCarUseCase: GetSeatInTrainCarUseCase,
         getSeatInSectionUseCase: GetSeatInSectionUseCase,
         subscribeTrainUseCase: SubscribeTrainUseCase,
-        postSeatRequestUseCase : RequestSeatUseCase,
         cancelSeatRequestUseCase : CancelRequestSeatUseCase,
         acceptSeatRequestUseCase : AcceptRequestSeatUseCase,
         rejectSeatRequestUseCase : RejectRequestSeatUseCase,
@@ -165,7 +160,6 @@ public final class MainFeatureViewModel: ViewModel {
             getSeatInTrainCarUseCase: getSeatInTrainCarUseCase,
             getSeatInSectionUseCase: getSeatInSectionUseCase,
             subscribeTrainUseCase: subscribeTrainUseCase,
-            postSeatRequestUseCase : postSeatRequestUseCase,
             cancelSeatRequestUseCase : cancelSeatRequestUseCase,
             acceptSeatRequestUseCase : acceptSeatRequestUseCase,
             rejectSeatRequestUseCase : rejectSeatRequestUseCase,
@@ -258,8 +252,6 @@ public final class MainFeatureViewModel: ViewModel {
             coordinator.pop()
         case let .manageSeatRequest(type):
             switch type {
-            case let .willRequestSeat(seat, creditAmount):
-                postSeatRequest(seat, creditAmount: creditAmount)
             case let .willCancelRequestSeat(seat, creditAmount):
                 cancelSeatRequest(seat, creditAmount: creditAmount)
             case let .willAcceptSeatRequest(seat, requester):
@@ -338,29 +330,23 @@ public final class MainFeatureViewModel: ViewModel {
             case .standing:
                 guard let occupant = seat.occupant else { return }
                 if occupant.id != store.user.id { // 내가 앉은 좌석에는 액션 적용 X
-                    if store.isBlocked {
-                        coordinator.push(AppScene.unlockSeatGuide) // 좌석 정보 잠금 해제 뷰
-                    } else {
+                    if store.isBlocked { coordinator.push(AppScene.unlockSeatGuide) } // 좌석 정보 잠금 해제 뷰
+                    else {
                         coordinator.presentSheet(
                             // 좌석 정보 조회
                             AppSheet.seatInfo(
                                 occupant: occupant,
-                                reportButtonAction: {
-                                    self.action(.reportButtonDidTap)
-                                },
+                                reportButtonAction: { self.action(.reportButtonDidTap) },
                                 yieldButtonAction: {
-                                    self.postSeatRequest(
-                                        seat,
-                                        creditAmount: 10 // FIXME: 크레딧 입력
-                                    )
                                     self.coordinator.dismissSheet()
-                                    self.coordinator.push(
-                                        AppScene.mainFeatureActionComplete(
-                                            actionCase: .requestInProcess(
-                                                stationName: occupant.stationToGetOff,
-                                                seat: seat,
-                                                creditAmount: 10
-                                            )
+                                    self.coordinator.presentSheet(
+                                        AppSheet.verifyRequest(
+                                            confirmationButtonAction: {
+                                                self.coordinator.dismissSheet()
+                                                self.coordinator.push(
+                                                    AppScene.inputCredit(stationName: occupant.stationToGetOff, seat: seat)
+                                                )
+                                            }
                                         )
                                     )
                                 }
@@ -461,21 +447,6 @@ public final class MainFeatureViewModel: ViewModel {
                     // FIXME: 5분 내 취소한 경우에만 나타나도록 수정 필요
                     // FIXME: 크레딧 액수 수정 필요
                     coordinator.push(AppScene.mainFeatureActionComplete(actionCase: .takeBackCreditByCancel(creditAmount: 10)))
-                } catch {
-                    print(error.localizedDescription)
-                }
-            }
-        }
-    }
-
-    @MainActor
-    private func postSeatRequest(_ seat: Seat, creditAmount: Int) {
-        /// 좌석 요청을 송신합니다
-        if let postSeatRequestUseCase {
-            Task {
-                do {
-                    let requesteePublisher = try await postSeatRequestUseCase.execute(seat, requesterId: store.user.id, creditAmount: creditAmount)
-                    store.subscribeToSeatRequesteePublisher(requesteePublisher, seatId: seat.id)
                 } catch {
                     print(error.localizedDescription)
                 }

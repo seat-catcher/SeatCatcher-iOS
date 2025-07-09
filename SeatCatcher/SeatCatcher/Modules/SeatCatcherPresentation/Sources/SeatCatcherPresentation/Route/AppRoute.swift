@@ -36,6 +36,7 @@ public enum AppScene: AppRoute {
     case selectSeatSection
     case unlockSeatGuide
     case mainFeatureActionComplete(actionCase: MainFeatureActionCompleteViewModel.MainFeatureActionCase)
+    case inputCredit(stationName: String, seat: Seat)
 
     public var id: String {
         switch self {
@@ -58,6 +59,8 @@ public enum AppScene: AppRoute {
         case .selectSeatSection: return "selectSeatSection"
         case .unlockSeatGuide: return "unlockSeatGuide"
         case .mainFeatureActionComplete: return "mainFeatureActionComplete"
+        case .inputCredit: return "inputCredit"
+
         case .mypageProfileChange: return "mypageProfileChange"
         case .mypageTermsOfService: return "mypageTermsOfService"
         }
@@ -82,18 +85,11 @@ public enum AppSheet: AppRoute {
         confirmationButtonAction: () -> Void,
         cancelButtonAction: () -> Void
     )
-    case checkSeatExchange(
-        confirmationButtonAction: () -> Void,
-        cancelButtonAction: () -> Void
-    )
     case checkSeatOccupancy(
         confirmationButtonAction: () -> Void,
         cancelButtonAction: () -> Void
     )
-    case exchangeGuiding(
-        confirmationButtonAction: () -> Void
-    )
-    case notifyWaiting(
+    case verifyRequest(
         confirmationButtonAction: () -> Void
     )
     case requestRejected(
@@ -114,14 +110,10 @@ public enum AppSheet: AppRoute {
             return "checkAcceptSeatRequest"
         case .checkRejectSeatRequest:
             return "checkRejectSeatRequest"
-        case .checkSeatExchange:
-            return "checkSeatExchange"
         case .checkSeatOccupancy:
             return "checkSeatOccupancy"
-        case .exchangeGuiding:
-            return "exchangeGuiding"
-        case .notifyWaiting:
-            return "notifyWaiting"
+        case .verifyRequest:
+            return "verifyRequest"
         case .requestRejected:
             return "requestRejected"
         case .seatInfo:

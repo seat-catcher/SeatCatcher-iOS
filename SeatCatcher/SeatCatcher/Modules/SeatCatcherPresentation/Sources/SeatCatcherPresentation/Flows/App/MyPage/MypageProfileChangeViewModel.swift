@@ -48,9 +48,9 @@ public final class MypageProfileChangeViewModel: ViewModel {
                 credit: appStore.user.credit,
                 hasOnBoarded: appStore.user.hasOnBoarded
             )
-            Task {
+            Task { [patchUserInfoUseCase] in
                 do {
-                    try await self.patchUserInfoUseCase.execute(updatedUser)
+                    try await patchUserInfoUseCase.execute(updatedUser)
                     appStore.setUser(updatedUser)
                     state.didChangeNickname = true
                 } catch {
@@ -71,9 +71,9 @@ public final class MypageProfileChangeViewModel: ViewModel {
                 credit: appStore.user.credit,
                 hasOnBoarded: appStore.user.hasOnBoarded
             )
-            Task {
+            Task { [patchUserInfoUseCase] in
                 do {
-                    try await self.patchUserInfoUseCase.execute(updatedUser)
+                    try await patchUserInfoUseCase.execute(updatedUser)
                     appStore.setUser(updatedUser)
                 } catch {
                     dump(error.localizedDescription)
