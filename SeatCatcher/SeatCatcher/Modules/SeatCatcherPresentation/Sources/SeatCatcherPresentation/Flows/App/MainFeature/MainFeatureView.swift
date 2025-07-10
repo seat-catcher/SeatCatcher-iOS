@@ -18,13 +18,18 @@ public struct MainFeatureView: View {
     
     public var body: some View {
         VStack(spacing: 0) {
-            TitleTextView(seatSection: viewModel.state.seatSectionType, status: viewModel.state.userStatus, isBlocked: viewModel.store.isBlocked)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.top, 18)
-                .padding(.bottom, 32)
+            TitleTextView(
+                seatSection: viewModel.state.seatSectionType,
+                status: viewModel.state.userStatus,
+                isBlocked: viewModel.state.isBlocked
+            )
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.top, 18)
+            .padding(.bottom, 32)
+
             SeatSectionView(
                 selectedSeat: viewModel.state.seatSectionState.selectedSeat,
-                isBlocked: viewModel.store.isBlocked,
+                isBlocked: viewModel.state.isBlocked,
                 mySeat: viewModel.state.mySeat,
                 seats: viewModel.state.seatSectionState.seats,
                 userStatus: viewModel.state.userStatus,
@@ -33,16 +38,17 @@ public struct MainFeatureView: View {
                 }
             )
             .padding(.bottom, 12)
+
             if viewModel.state.lookingCount > 0 {
                 LookingCountView(count: viewModel.state.lookingCount)
             }
+
             Spacer()
+
             if viewModel.state.showNoInformationToast {
-                ToastAlertView(
-                    action: {
-                        viewModel.action(.backToSeatSectionPage) // 구역 선택 페이지로 이동
-                    }
-                )
+                ToastAlertView(action: {
+                    viewModel.action(.backToSeatSectionPage)  // 구역 선택 페이지로 이동
+                })
                 .padding(.bottom, 20)
             }
             CTAButtonView(viewModel: viewModel)

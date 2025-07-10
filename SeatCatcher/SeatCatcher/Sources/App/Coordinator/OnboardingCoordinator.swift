@@ -32,7 +32,7 @@ final class OnboardingCoordinator: Coordinator {
         switch scene {
         case .login:
             let loginViewModel = LoginViewModel(
-                appStore: diContainer.resolveAppStore(),
+                store: diContainer.resolveAppStore(),
                 kakaoLoginUseCase: diContainer.resolveKakaoLoginUseCase(),
                 appleLoginUseCase: diContainer.resolveAppleLoginUseCase(),
                 getUserInfoUseCase: diContainer.resolveGetUserInfoUseCase(),
@@ -44,7 +44,7 @@ final class OnboardingCoordinator: Coordinator {
             OnboardingView(viewModel: onboardingViewModel)
         case .userInfo:
             let userInfoViewModel = UserInfoViewModel(
-                appStore: diContainer.resolveAppStore(),
+                store: diContainer.resolveAppStore(),
                 getRandomNicknameuseCase: diContainer.resolveGetRandomNicknameUseCase(),
                 getRandomUserImageUseCase: diContainer.resolveGetRandomUserImageUseCase(),
                 patchUserInfoUseCase: diContainer.resolvePatchUserInfoUseCase(),
@@ -54,7 +54,7 @@ final class OnboardingCoordinator: Coordinator {
         case let .userGreeting(user):
             let userGreetingViewModel = UserGreetingViewModel(
                 user: user,
-                appStore: diContainer.resolveAppStore(),
+                store: diContainer.resolveAppStore(),
                 coordinator: self
             )
             UserGreetingView(viewModel: userGreetingViewModel)

@@ -25,7 +25,7 @@ public final class InputCarCodeViewModel: ViewModel {
     let arrival: Station
     let incoming: Incoming
 
-    private let appStore: AppStore
+    private let store: AppStore
 
     private let startJourneyUseCase: StartJourneyUseCase
     private let subscribeArrivalTimeUseCase: SubscribeArrivalTimeUseCase
@@ -36,7 +36,7 @@ public final class InputCarCodeViewModel: ViewModel {
         departure: Station,
         arrival: Station,
         incoming: Incoming,
-        appStore: AppStore,
+        store: AppStore,
         startJourneyUseCase: StartJourneyUseCase,
         subscribeArrivalTimeUseCase: SubscribeArrivalTimeUseCase,
         coordinator: Coordinator
@@ -44,7 +44,7 @@ public final class InputCarCodeViewModel: ViewModel {
         self.departure = departure
         self.arrival = arrival
         self.incoming = incoming
-        self.appStore = appStore
+        self.store = store
         self.startJourneyUseCase = startJourneyUseCase
         self.subscribeArrivalTimeUseCase = subscribeArrivalTimeUseCase
         self.coordinator = coordinator
@@ -65,7 +65,7 @@ public final class InputCarCodeViewModel: ViewModel {
                 let arrivalTimePublisher = subscribeArrivalTimeUseCase.execute(pathHistoryId: pathHistoryId)
 
                 await MainActor.run {
-                    appStore.startJourney(
+                    store.startJourney(
                         carCode: carCode,
                         incoming: incoming,
                         departure: departure,

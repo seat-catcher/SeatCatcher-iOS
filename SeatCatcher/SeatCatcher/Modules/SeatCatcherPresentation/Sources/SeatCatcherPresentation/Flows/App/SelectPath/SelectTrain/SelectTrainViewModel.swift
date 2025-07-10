@@ -31,7 +31,7 @@ public final class SelectTrainViewModel: ViewModel {
     private(set) var state = State()
 
     private let getIncomingsUseCase: GetIncomingsUseCase
-    private let appStore: AppStore
+    private let store: AppStore
     let coordinator: Coordinator
 
     public init(
@@ -39,14 +39,14 @@ public final class SelectTrainViewModel: ViewModel {
         arrival: Station,
         boardingState: BoardingState,
         getIncomingsUseCase: GetIncomingsUseCase,
-        appStore: AppStore,
+        store: AppStore,
         coordinator: Coordinator
     ) {
         self.departure = departure
         self.arrival = arrival
         self.boardingState = boardingState
         self.getIncomingsUseCase = getIncomingsUseCase
-        self.appStore = appStore
+        self.store = store
         self.coordinator = coordinator
     }
 

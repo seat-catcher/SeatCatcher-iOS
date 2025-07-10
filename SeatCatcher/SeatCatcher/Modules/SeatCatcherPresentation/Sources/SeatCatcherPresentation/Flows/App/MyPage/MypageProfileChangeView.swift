@@ -17,7 +17,7 @@ public struct MypageProfileChangeView: View {
     public var body: some View {
         VStack(alignment: .center, spacing: 0) {
             ZStack(alignment: .bottomTrailing) {
-                Image(viewModel.appStore.user.profileImage.image)
+                Image(viewModel.store.user.profileImage.image)
                     .frame(width: 124, height: 124)
                     .padding(.top, 18)
                 ZStack {
@@ -40,7 +40,7 @@ public struct MypageProfileChangeView: View {
             .padding(.top, 18)
             .padding(.bottom, 32)
             HStack(alignment: .center, spacing: 8) {
-                Text(viewModel.appStore.user.name)
+                Text(viewModel.store.user.name)
                     .font(.T03_SB)
                     .foregroundStyle(viewModel.state.didChangeNickname ? .gray100 : .gray300)
                     .padding(.horizontal, 12)

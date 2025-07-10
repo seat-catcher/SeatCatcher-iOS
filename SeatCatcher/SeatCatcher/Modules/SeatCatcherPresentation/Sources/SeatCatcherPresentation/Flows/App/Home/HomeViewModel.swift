@@ -33,6 +33,11 @@ public final class HomeViewModel: ViewModel {
         var pathHistory: PathHistory?
         var incoming: Incoming?
 
+        var userImage: UserImage { store.user.profileImage }
+        var userNickname: String { store.user.name }
+        var userTags: [UserTag] { store.user.tags }
+        var userCredit: Int { store.user.credit }
+
         var userStatus: UserStatus {
             if store.isOnJourney { .inTransit }
             else if pathHistory == nil { .pathNotExists }
@@ -46,13 +51,12 @@ public final class HomeViewModel: ViewModel {
             }
         }
 
-        var expectedRemainingTime: TimeInterval? {
-            store.expectedArrivalTime?.timeIntervalSinceNow
-        }
+        var departureTime: Date? { store.departureTime }
+        var expectedArrivalTime: Date? { store.expectedArrivalTime }
+        var expectedRemainingTime: TimeInterval? { store.expectedArrivalTime?.timeIntervalSinceNow }
+        var totalTimeInterval: TimeInterval? { store.expectedArrivalTime?.timeIntervalSince(store.departureTime ?? Date()) }
 
-        var totalTimeInterval: TimeInterval? {
-            store.expectedArrivalTime?.timeIntervalSince(store.departureTime ?? Date())
-        }
+        var departure: Station? { store.departure }
     }
 
     let store: AppStore

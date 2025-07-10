@@ -41,6 +41,8 @@ public final class MainFeatureViewModel: ViewModel {
 
     // MARK: State Definition
     struct State {
+        let store: AppStore
+
         var trainCode: String // 열차 코드
         var carCode: String // 차량 코드
         var showNoInformationToast: Bool // 좌석 정보가 없어요 토스트 메시지 띄움 여부
@@ -53,11 +55,12 @@ public final class MainFeatureViewModel: ViewModel {
         var seatRequestState: SeatRequestState
         var isSeatFetched = false
         var isReportAlertPresented = false // 신고 alert
+
+        var isBlocked: Bool { store.isBlocked }
     }
 
     struct SeatSectionState {
         var selectedSeat: Seat? // 선택한 좌석
-        var isBlocked: Bool // 좌석 정보 잠금 상태
         var seats: SeatSection // 좌석 정보
     }
 
@@ -95,7 +98,6 @@ public final class MainFeatureViewModel: ViewModel {
     private let rejectSeatRequestUseCase : RejectRequestSeatUseCase?
 
     // MARK: Initialize
-    @MainActor
     public init(
         store: AppStore,
         coordinator: Coordinator,
@@ -122,6 +124,7 @@ public final class MainFeatureViewModel: ViewModel {
         self.acceptSeatRequestUseCase = acceptSeatRequestUseCase
         self.rejectSeatRequestUseCase = rejectSeatRequestUseCase
         self.state = .init(
+            store: store,
             trainCode: store.trainCode ?? "",
             carCode: store.carCode ?? "",
             showNoInformationToast: false, // 초깃값
@@ -130,7 +133,6 @@ public final class MainFeatureViewModel: ViewModel {
             lookingCount: 0, // 초깃값
             seatSectionState: .init(
                 selectedSeat: nil,
-                isBlocked: store.isBlocked,
                 seats: .init(topSeats: [:], bottomSeats: [:])
             ),
             trainCar: TrainCar(carCode: store.carCode ?? "", seatInfo: [:]),
@@ -143,7 +145,6 @@ public final class MainFeatureViewModel: ViewModel {
 
 
     // MARK: 기본
-    @MainActor
     public convenience init(
         store: AppStore,
         coordinator: Coordinator,
@@ -168,7 +169,6 @@ public final class MainFeatureViewModel: ViewModel {
     }
 
     // MARK: 좌석 등록하는 경우
-    @MainActor
     public convenience init(
         store: AppStore,
         coordinator: Coordinator,
@@ -187,7 +187,6 @@ public final class MainFeatureViewModel: ViewModel {
     }
 
     // MARK: 좌석 이동하는 경우
-    @MainActor
     public convenience init(
         store: AppStore,
         coordinator: Coordinator,
@@ -206,7 +205,6 @@ public final class MainFeatureViewModel: ViewModel {
     }
 
     // MARK: 좌석 취소하는 경우
-    @MainActor
     public convenience init(
         store: AppStore,
         coordinator: Coordinator,
@@ -225,7 +223,6 @@ public final class MainFeatureViewModel: ViewModel {
     }
 
     // MARK: action
-    @MainActor
     func action(_ action: Action) {
         switch action {
         case .willAppear:
@@ -269,7 +266,6 @@ public final class MainFeatureViewModel: ViewModel {
 
     /// 메인피쳐 기본 상태일 시에만 수행합니다
     /// 좌석 등록 / 이동 / 취소 시엔 STOMP 없이 REST API만 작동합니다
-    @MainActor
     private func setupStoreObservers() {
         /// 좌석 정보 업데이트 퍼블리셔
         store.trainCarPublisher
@@ -312,7 +308,6 @@ public final class MainFeatureViewModel: ViewModel {
             .store(in: &cancellables)
     }
 
-    @MainActor
     private func subscribeToTrain(trainCode: String, carCode: String) {
         if let subscribeTrainUseCase {
             let trainCarPublisher = subscribeTrainUseCase.execute(trainCode: trainCode, carCode: carCode)
@@ -320,7 +315,6 @@ public final class MainFeatureViewModel: ViewModel {
         }
     }
 
-    @MainActor
     private func handleSeatSectionAction(_ action: SeatSectionAction) {
         switch action {
         case .willSelectSeat(let seat):
@@ -367,8 +361,6 @@ public final class MainFeatureViewModel: ViewModel {
         }
     }
 
-
-    @MainActor
     private func fetchSeatInSection() {
         let currentTrainCode = state.trainCode
         let currentCarCode = state.carCode
@@ -398,14 +390,12 @@ public final class MainFeatureViewModel: ViewModel {
         }
     }
 
-    @MainActor
     private func findMySeat(in trainCar: TrainCar) -> Seat? {
         trainCar.seatInfo.values
             .flatMap { Array($0.topSeats.values) + Array($0.bottomSeats.values) }
             .first { $0.occupant?.id == store.user.id }
     }
 
-    @MainActor
     private func registerSeat(_ seat: Seat) {
         /// 좌석 정보를 등록합니다
         if let registerSeatUseCase {
@@ -421,7 +411,6 @@ public final class MainFeatureViewModel: ViewModel {
         }
     }
 
-    @MainActor
     private func moveSeat(_ newSeat: Seat) {
         /// 좌석 정보를 이동합니다
         if let moveSeatUseCase, let oldSeat = self.state.mySeat {
@@ -437,7 +426,6 @@ public final class MainFeatureViewModel: ViewModel {
         }
     }
 
-    @MainActor
     private func cancelSeat(_ seat: Seat?) {
         /// 좌석 정보를 취소합니다
         if let cancelSeatUseCase {
@@ -454,7 +442,6 @@ public final class MainFeatureViewModel: ViewModel {
         }
     }
 
-    @MainActor
     private func cancelSeatRequest(_ seat: Seat, creditAmount: Int) {
         /// 좌석 요청을 취소합니다
         if let cancelSeatRequestUseCase {
@@ -468,7 +455,6 @@ public final class MainFeatureViewModel: ViewModel {
         }
     }
 
-    @MainActor
     private func acceptSeatRequest(_ seat: Seat, requester: SeatRequester) {
         /// 좌석 요청을 수락합니다
         if let acceptSeatRequestUseCase {
@@ -482,7 +468,6 @@ public final class MainFeatureViewModel: ViewModel {
         }
     }
 
-    @MainActor
     private func rejectSeatRequest(_ seat: Seat, requester: SeatRequester) {
         /// 좌석 요청을 거절합니다
         if let rejectSeatRequestUseCase {
@@ -496,7 +481,6 @@ public final class MainFeatureViewModel: ViewModel {
         }
     }
 
-    @MainActor
     private func updateUserStatus(from _status: UserStatus, in trainCar: TrainCar) {
         switch _status {
         case .registering, .moving, .cancelling: // 좌석 정보 등록, 이동, 취소
@@ -543,7 +527,6 @@ public final class MainFeatureViewModel: ViewModel {
 
 // MARK: - Seat Request Handling
 extension MainFeatureViewModel {
-    @MainActor
     func presentSeatRequesterSheet(_ seat: Seat, seatRequester: SeatRequester) {
         coordinator.presentSheet(
             AppSheet.checkAcceptSeatRequest(

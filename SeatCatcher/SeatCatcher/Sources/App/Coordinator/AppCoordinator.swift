@@ -50,7 +50,7 @@ final class AppCoordinator: Coordinator {
             HomeView(viewModel: homeViewModel)
         case .mypage:
             let mypageViewModel = MyPageViewModel(
-                appStore: diContainer.resolveAppStore(),
+                store: diContainer.resolveAppStore(),
                 logoutUseCase: diContainer.resolveLogoutUseCase(),
                 coordinator: self
             )
@@ -88,7 +88,7 @@ final class AppCoordinator: Coordinator {
                 arrival: arrival,
                 boardingState: boardingState,
                 getIncomingsUseCase: diContainer.resolveGetIncomingsUseCase(),
-                appStore: diContainer.resolveAppStore(),
+                store: diContainer.resolveAppStore(),
                 coordinator: self
             )
             SelectTrainView(viewModel: selectTrainViewModel)
@@ -105,7 +105,7 @@ final class AppCoordinator: Coordinator {
                 departure: departure,
                 arrival: arrival,
                 incoming: incoming,
-                appStore: diContainer.resolveAppStore(),
+                store: diContainer.resolveAppStore(),
                 startJourneyUseCase: diContainer.resolveStartJourneyUseCase(),
                 subscribeArrivalTimeUseCase: diContainer.resolveSubscribeArrivalTimeUseCase(),
                 coordinator: self
@@ -185,13 +185,13 @@ final class AppCoordinator: Coordinator {
                 stationName: stationName,
                 seat: seat,
                 requestSeatUseCase: diContainer.resolveRequestSeatUseCase(),
-                appStore: diContainer.resolveAppStore(),
+                store: diContainer.resolveAppStore(),
                 coordinator: self
             )
             InputCreditView(viewModel: viewModel)
         case .mypageProfileChange:
             let viewModel = MypageProfileChangeViewModel(
-                appStore: diContainer.resolveAppStore(),
+                store: diContainer.resolveAppStore(),
                 coordinator: self,
                 getRandomNicknameUseCase: diContainer.resolveGetRandomNicknameUseCase(),
                 patchUserInfoUseCase: diContainer.resolvePatchUserInfoUseCase()

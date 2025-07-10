@@ -35,7 +35,7 @@ private struct UserInfoArea: View {
 
     var body: some View {
         ZStack(alignment: .bottomTrailing) {
-            Image(viewModel.appStore.user.profileImage.image)
+            Image(viewModel.state.userImage.image)
                 .resizable()
                 .frame(width: 124, height: 124)
                 .padding(.top, 18)
@@ -55,7 +55,7 @@ private struct UserInfoArea: View {
         }.onTapGesture {
             viewModel.action(.didTapProfileChangeButton)
         }
-        Text(viewModel.appStore.user.name)
+        Text(viewModel.state.userNickname)
             .font(.T02_B)
             .foregroundStyle(.gray100)
             .padding(.top, 16)

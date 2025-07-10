@@ -138,10 +138,12 @@ public final class MainFeatureActionCompleteViewModel: ViewModel {
                 coordinator.popLast(2)
             case let .requestAccepted(_, creditAmount):
                 coordinator.push(AppScene.mainFeatureActionComplete(actionCase: .sendCredit(creditAmount: creditAmount)))
-            case .unlockedSeat, .requestRejected:
+            case .unlockedSeat:
                 coordinator.popLast(2)
-            case .takeBackCreditByCancel,.receivedCreditByRegister, .sendCredit:
+            case .takeBackCreditByCancel,.receivedCreditByRegister, .requestRejected:
                 coordinator.popLast(3)
+            case .sendCredit:
+                coordinator.popLast(4)
             }
         case .willAppear:
             if case let .requestInProcess(stationName, seat, creditAmount) = state.actionCase {

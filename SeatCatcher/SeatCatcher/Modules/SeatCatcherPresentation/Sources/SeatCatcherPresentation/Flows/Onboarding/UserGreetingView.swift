@@ -20,11 +20,11 @@ public struct UserGreetingView: View {
             Group {
                 Spacer().frame(height: 167)
 
-                Image(viewModel.appStore.user.profileImage.image)
+                Image(viewModel.state.userImage.image)
 
                 Spacer().frame(height: 30)
 
-                Text("\(viewModel.appStore.user.name)님\n반가워요")
+                Text("\(viewModel.state.userNickname)님\n반가워요")
                     .font(.T01_SB)
                     .foregroundStyle(.scWhite)
                     .multilineTextAlignment(.center)

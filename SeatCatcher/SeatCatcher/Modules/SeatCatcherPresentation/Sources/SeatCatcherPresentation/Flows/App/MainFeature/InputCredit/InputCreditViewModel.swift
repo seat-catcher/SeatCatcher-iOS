@@ -12,17 +12,17 @@ import SeatCatcherDomain
 @Observable
 public final class InputCreditViewModel: ViewModel {
     struct State {
-        let appStore: AppStore
+        let store: AppStore
 
         var credit = ""
         var creditAmount: Int? { Int(credit) }
         var isCreditExceeded: Bool {
             guard let creditAmount = Int(credit) else { return false }
-            return appStore.user.credit < creditAmount
+            return store.user.credit < creditAmount
         }
         var isCreditValid: Bool {
             guard let creditAmount = Int(credit) else { return false }
-            return appStore.user.credit >= creditAmount
+            return store.user.credit >= creditAmount
         }
         var errorMessage: String?
     }
@@ -37,7 +37,7 @@ public final class InputCreditViewModel: ViewModel {
     private let stationName: String
     private let seat: Seat
     private let requestSeatUseCase: RequestSeatUseCase
-    private let appStore: AppStore
+    private let store: AppStore
     let coordinator: Coordinator
 
 
@@ -45,15 +45,15 @@ public final class InputCreditViewModel: ViewModel {
         stationName: String,
         seat: Seat,
         requestSeatUseCase: RequestSeatUseCase,
-        appStore: AppStore,
+        store: AppStore,
         coordinator: Coordinator
     ) {
         self.stationName = stationName
         self.seat = seat
         self.requestSeatUseCase = requestSeatUseCase
-        self.appStore = appStore
+        self.store = store
         self.coordinator = coordinator
-        self.state = .init(appStore: appStore)
+        self.state = .init(store: store)
     }
 
     func action(_ action: Action) {
@@ -66,11 +66,11 @@ public final class InputCreditViewModel: ViewModel {
                 do {
                     let requesteePublisher = try await requestSeatUseCase.execute(
                         seat,
-                        requesterId: appStore.user.id,
+                        requesterId: store.user.id,
                         creditAmount: creditAmount
                     )
                     await MainActor.run {
-                        appStore.subscribeToSeatRequesteePublisher(requesteePublisher, seatId: seat.id)
+                        store.subscribeToSeatRequesteePublisher(requesteePublisher, seatId: seat.id)
                         coordinator.push(AppScene.mainFeatureActionComplete(actionCase:
                                 .requestInProcess(
                                     stationName: stationName,

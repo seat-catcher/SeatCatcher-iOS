@@ -56,17 +56,17 @@ private struct UserInfoCardView: View {
             viewModel.action(.userInfoCardTapped)
         } label: {
             HStack(alignment: .center, spacing: 12) {
-                Image(viewModel.store.user.profileImage.image)
+                Image(viewModel.state.userImage.image)
                     .resizable()
                     .frame(width: 68, height: 68)
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("\(viewModel.store.user.name)")
+                    Text("\(viewModel.state.userNickname)")
                         .font(.B01_SB)
                         .foregroundStyle(.white)
                     HStack(spacing: 6) {
                         ScrollView(.horizontal, showsIndicators: false) {
                             HStack(spacing: 6) {
-                                ForEach(viewModel.store.user.tags) {
+                                ForEach(viewModel.state.userTags) {
                                     UserInfoBadge(.tag($0))
                                 }
                             }
@@ -75,7 +75,7 @@ private struct UserInfoCardView: View {
                             )
                         }
                         .frame(maxWidth: tagScrollViewWidth)
-                        UserInfoBadge(.credit(viewModel.store.user.credit))
+                        UserInfoBadge(.credit(viewModel.state.userCredit))
                         Spacer()
                     }
                 }
@@ -221,10 +221,10 @@ private struct PathCardInTransit: View {
                 let remainingTime = Int((viewModel.state.expectedRemainingTime ?? 0) / 60)
                 return remainingTime <= 0 ? "곧 도착해요" : "\(remainingTime)분 남았어요"
             }
-            var departureTimeString: String { (viewModel.store.departureTime ?? now).amPmTime }
-            var arrivalTimeString: String { (viewModel.store.expectedArrivalTime ?? now).hour12Time }
+            var departureTimeString: String { (viewModel.state.departureTime ?? now).amPmTime }
+            var arrivalTimeString: String { (viewModel.state.expectedArrivalTime ?? now).hour12Time }
             var elapsedTime: Double? {
-                guard let departureTime = viewModel.store.departureTime else { return nil }
+                guard let departureTime = viewModel.state.departureTime else { return nil }
                 return now.timeIntervalSince(departureTime)
             }
             var progressFraction: CGFloat {
@@ -279,9 +279,9 @@ private struct PathCardInTransit: View {
                     .font(.B03_M)
                     .foregroundStyle(.gray400)
                     .padding(.trailing, 10)
-                LineNumberCircle(.init(rawValue: viewModel.store.departure?.line ?? 2) ?? .two)
+                LineNumberCircle(.init(rawValue: viewModel.state.departure?.line ?? 2) ?? .two)
                     .padding(.trailing, 4)
-                Text("\(viewModel.store.departure?.name ?? "")역")
+                Text("\(viewModel.state.departure?.name ?? "")역")
                     .font(.B03_M)
                     .foregroundStyle(.scWhite)
                 Spacer()

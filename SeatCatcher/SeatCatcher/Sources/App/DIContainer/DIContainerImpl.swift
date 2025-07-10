@@ -13,7 +13,7 @@ import SeatCatcherData
 
 final class DIContainerImpl {
     // MARK: - Store Instances
-    private lazy var appStore = AppStore(
+    private lazy var store = AppStore(
         user: User(hasOnBoarded: true),
         endJourneyUseCase: endJourneyUseCase
     )
@@ -143,5 +143,5 @@ extension DIContainerImpl: DIContainer {
     func resolveGetIncomingsUseCase() -> GetIncomingsUseCase { return getIncomingsUseCase }
 
     // MARK: - Store
-    func resolveAppStore() -> AppStore { return appStore }
+    func resolveAppStore() -> AppStore { return store }
 }
