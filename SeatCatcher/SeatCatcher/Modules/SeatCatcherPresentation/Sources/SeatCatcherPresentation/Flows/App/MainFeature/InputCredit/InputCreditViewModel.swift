@@ -15,14 +15,16 @@ public final class InputCreditViewModel: ViewModel {
         let appStore: AppStore
 
         var credit = ""
+        var creditAmount: Int? { Int(credit) }
         var isCreditExceeded: Bool {
-            if let credit = Int(credit) { return appStore.user.credit < credit }
-            else { return false }
+            guard let creditAmount = Int(credit) else { return false }
+            return appStore.user.credit < creditAmount
         }
         var isCreditValid: Bool {
-            if let credit = Int(credit) { return appStore.user.credit >= credit }
-            else { return false }
+            guard let creditAmount = Int(credit) else { return false }
+            return appStore.user.credit >= creditAmount
         }
+        var errorMessage: String?
     }
 
     enum Action {
@@ -48,12 +50,9 @@ public final class InputCreditViewModel: ViewModel {
     ) {
         self.stationName = stationName
         self.seat = seat
-
         self.requestSeatUseCase = requestSeatUseCase
-
         self.appStore = appStore
         self.coordinator = coordinator
-
         self.state = .init(appStore: appStore)
     }
 
@@ -64,20 +63,26 @@ public final class InputCreditViewModel: ViewModel {
         case .requestButtonDidTap:
             guard let creditAmount = Int(state.credit) else { return }
             Task { [requestSeatUseCase] in
-                let requesteePublisher = try await requestSeatUseCase.execute(
-                    seat,
-                    requesterId: appStore.user.id,
-                    creditAmount: creditAmount
-                )
-                await MainActor.run {
-                    appStore.subscribeToSeatRequesteePublisher(requesteePublisher, seatId: seat.id)
-                    coordinator.push(AppScene.mainFeatureActionComplete(actionCase:
-                        .requestInProcess(
-                            stationName: stationName,
-                            seat: seat,
-                            creditAmount: creditAmount
-                        )
-                    ))
+                do {
+                    let requesteePublisher = try await requestSeatUseCase.execute(
+                        seat,
+                        requesterId: appStore.user.id,
+                        creditAmount: creditAmount
+                    )
+                    await MainActor.run {
+                        appStore.subscribeToSeatRequesteePublisher(requesteePublisher, seatId: seat.id)
+                        coordinator.push(AppScene.mainFeatureActionComplete(actionCase:
+                                .requestInProcess(
+                                    stationName: stationName,
+                                    seat: seat,
+                                    creditAmount: creditAmount
+                                )
+                        ))
+                    }
+                } catch {
+                    await MainActor.run {
+                        self.state.errorMessage = error.localizedDescription
+                    }
                 }
             }
         }

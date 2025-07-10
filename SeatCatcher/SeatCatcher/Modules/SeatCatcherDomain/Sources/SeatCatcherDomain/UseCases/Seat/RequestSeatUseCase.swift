@@ -22,7 +22,7 @@ public final class RequestSeatUseCaseImpl: RequestSeatUseCase {
         self.seatRepository = seatRepository
         self.seatStompRepository = seatStompRepository
     }
-    
+
     @MainActor
     public func execute(_ seat: Seat, requesterId: Int, creditAmount: Int) async throws -> AnyPublisher<SeatRequestee, Error> {
         /// 좌석 요청을 송신합니다
