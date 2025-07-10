@@ -28,11 +28,11 @@ struct SeatCatcherApp: App {
     private let diContainer: DIContainerImpl
 
     // 유저 상태 저장을 위한 Store
-    @State private var appStore: AppStore
+    @State private var store: AppStore
 
     // 유저 상태 기반으로 present할 flow를 선택하는 computed property
     private var currentFlow: AppFlow {
-        if isSignedIn { appStore.user.hasOnBoarded ? .authenticated : .onboarding }
+        if isSignedIn { store.user.hasOnBoarded ? .authenticated : .onboarding }
         else { .unauthenticated }
     }
 
@@ -41,7 +41,7 @@ struct SeatCatcherApp: App {
         self.diContainer = DIContainerImpl()
 
         // AppStore @State 프로퍼티 초기화
-        self._appStore = State(initialValue: diContainer.resolveAppStore())
+        self._store = State(initialValue: diContainer.resolveAppStore())
 
         // Coordinator 인스턴스 생성
         let appCoordinator = AppCoordinator(diContainer: diContainer)
@@ -130,7 +130,7 @@ extension SeatCatcherApp {
     private func setAppStore(getUserInfoUseCase: GetUserInfoUseCase) async {
         guard currentFlow != .unauthenticated,
         let user = try? await getUserInfoUseCase.execute() else { return }
-        self.appStore.setUser(user)
+        self.store.setUser(user)
     }
 }
 

@@ -12,7 +12,12 @@ import SeatCatcherDomain
 @Observable
 public final class UserGreetingViewModel: ViewModel {
     struct State {
+        let store: AppStore
+
         var isPresented = true
+
+        var userImage: UserImage { store.user.profileImage }
+        var userNickname: String { store.user.name }
     }
 
     enum Action {
@@ -21,19 +26,21 @@ public final class UserGreetingViewModel: ViewModel {
     }
 
     let user: User
-    let appStore: AppStore
+    let store: AppStore
     let coordinator: Coordinator
 
-    private(set) var state = State()
+    private(set) var state: State
 
     public init(
         user: User,
-        appStore: AppStore,
+        store: AppStore,
         coordinator: Coordinator
     ) {
         self.user = user
-        self.appStore = appStore
+        self.store = store
         self.coordinator = coordinator
+
+        self.state = .init(store: store)
     }
 
     func action(_ action: Action) {
@@ -48,11 +55,11 @@ public final class UserGreetingViewModel: ViewModel {
                 try? await Task.sleep(for: .seconds(1))
 
                 self.action(.fadedOut)
-                appStore.setUser(user)
+                store.setUser(user)
             }
         case .fadedOut:
             // AppStore에 User 정보 전달 -> user.hasOnBoarded가 true로 전환되며 메인 플로우 시작
-            appStore.setUser(user)
+            store.setUser(user)
         }
     }
 }

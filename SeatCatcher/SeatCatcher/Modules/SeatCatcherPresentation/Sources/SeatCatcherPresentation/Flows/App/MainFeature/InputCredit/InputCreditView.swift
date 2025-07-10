@@ -26,6 +26,7 @@ public struct InputCreditView: View {
             )
             .disabled(!viewModel.state.isCreditValid)
         }
+        .padding(.horizontal, 18)
         .withBackground(.gray900)
         .withNavigationBar(
             viewModel.coordinator,

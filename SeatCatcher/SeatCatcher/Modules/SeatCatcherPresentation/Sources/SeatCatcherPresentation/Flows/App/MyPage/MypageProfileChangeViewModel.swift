@@ -23,15 +23,15 @@ public final class MypageProfileChangeViewModel: ViewModel {
         case WillSetProfileImage(UserImage)
     }
 
-    let appStore: AppStore
+    let store: AppStore
     private let getRandomNicknameUseCase: GetRandomNicknameUseCase
     private let patchUserInfoUseCase: PatchUserInfoUseCase
     let coordinator: Coordinator
     private(set) var state: State
     
-    public init(appStore: AppStore, coordinator: Coordinator, getRandomNicknameUseCase: GetRandomNicknameUseCase, patchUserInfoUseCase: PatchUserInfoUseCase) {
-        self.appStore = appStore
-        self.state = .init(nickname: appStore.user.name, profileImage: appStore.user.profileImage)
+    public init(store: AppStore, coordinator: Coordinator, getRandomNicknameUseCase: GetRandomNicknameUseCase, patchUserInfoUseCase: PatchUserInfoUseCase) {
+        self.store = store
+        self.state = .init(nickname: store.user.name, profileImage: store.user.profileImage)
         self.getRandomNicknameUseCase = getRandomNicknameUseCase
         self.patchUserInfoUseCase = patchUserInfoUseCase
         self.coordinator = coordinator
@@ -41,17 +41,17 @@ public final class MypageProfileChangeViewModel: ViewModel {
         switch action {
         case .willSetNewNickname:
             let updatedUser = User(
-                id: appStore.user.id,
+                id: store.user.id,
                 name: getRandomNicknameUseCase.execute(),
-                profileImage: appStore.user.profileImage,
-                tags: appStore.user.tags,
-                credit: appStore.user.credit,
-                hasOnBoarded: appStore.user.hasOnBoarded
+                profileImage: store.user.profileImage,
+                tags: store.user.tags,
+                credit: store.user.credit,
+                hasOnBoarded: store.user.hasOnBoarded
             )
             Task { [patchUserInfoUseCase] in
                 do {
                     try await patchUserInfoUseCase.execute(updatedUser)
-                    appStore.setUser(updatedUser)
+                    store.setUser(updatedUser)
                     state.didChangeNickname = true
                 } catch {
                     dump(error.localizedDescription)
@@ -64,17 +64,17 @@ public final class MypageProfileChangeViewModel: ViewModel {
             )
         case let .WillSetProfileImage(image):
             let updatedUser = User(
-                id: appStore.user.id,
+                id: store.user.id,
                 name: getRandomNicknameUseCase.execute(),
                 profileImage: image,
-                tags: appStore.user.tags,
-                credit: appStore.user.credit,
-                hasOnBoarded: appStore.user.hasOnBoarded
+                tags: store.user.tags,
+                credit: store.user.credit,
+                hasOnBoarded: store.user.hasOnBoarded
             )
             Task { [patchUserInfoUseCase] in
                 do {
                     try await patchUserInfoUseCase.execute(updatedUser)
-                    appStore.setUser(updatedUser)
+                    store.setUser(updatedUser)
                 } catch {
                     dump(error.localizedDescription)
                 }

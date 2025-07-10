@@ -18,7 +18,6 @@ public struct UserInfoView: View {
 
     public var body: some View {
         VStack(spacing: 0) {
-            UserInfoNavigationBar(viewModel: viewModel)
             UserInfoTextView(viewModel: viewModel)
             UserInfoGridView(viewModel: viewModel)
             Spacer()
@@ -26,6 +25,7 @@ public struct UserInfoView: View {
         }
         .padding(.horizontal, 20)
         .withBackground(.gray900)
+        .withNavigationBar(viewModel.coordinator, config: .title(title: ""))
         .applyToolbarVisibility(.hidden, for: .navigationBar)
         .alert(
             viewModel.state.isAlertPresented,
@@ -37,22 +37,6 @@ public struct UserInfoView: View {
             )
         )
         .onAppear { viewModel.action(.viewAppeared) }
-    }
-}
-
-private struct UserInfoNavigationBar: View {
-    let viewModel: UserInfoViewModel
-
-    var body: some View {
-        HStack {
-            Button(action: viewModel.coordinator.pop) {
-                Image(.iconLeftArrow)
-            }
-            .padding(.top, 12)
-            .padding(.bottom, 28)
-
-            Spacer()
-        }
     }
 }
 
@@ -96,10 +80,10 @@ private struct SelectTagCell: View {
                 Text(tag.displayValue)
                     .font(.B02_M)
             }
-            .foregroundStyle(viewModel.appStore.user.tags.contains(tag) ? .scGreen : .gray300)
+            .foregroundStyle(viewModel.state.tags.contains(tag) ? .scGreen : .gray300)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(viewModel.appStore.user.tags.contains(tag) ? .scGreen700 : .gray500)
+        .background(viewModel.state.tags.contains(tag) ? .scGreen700 : .gray500)
         .clipShape(.rect(cornerRadius: 8))
         .onTapGesture { viewModel.action(.tagSelected(tag)) }
     }
@@ -130,14 +114,14 @@ private struct SelectTagNextButton: View {
             viewModel.action(.nextButtonTapped)
         } label: {
             Text("다음")
-                .foregroundStyle(viewModel.appStore.user.tags.isEmpty ? .gray300 : .scWhite)
+                .foregroundStyle(viewModel.state.tags.isEmpty ? .gray300 : .scWhite)
                 .font(.B01_SB)
                 .padding(.vertical, 16)
                 .frame(maxWidth: .infinity)
-                .background(viewModel.appStore.user.tags.isEmpty ? .gray500 : .scGreen)
+                .background(viewModel.state.tags.isEmpty ? .gray500 : .scGreen)
                 .clipShape(.rect(cornerRadius: 8))
         }
-        .disabled(viewModel.appStore.user.tags.isEmpty)
+        .disabled(viewModel.state.tags.isEmpty)
 
     }
 }

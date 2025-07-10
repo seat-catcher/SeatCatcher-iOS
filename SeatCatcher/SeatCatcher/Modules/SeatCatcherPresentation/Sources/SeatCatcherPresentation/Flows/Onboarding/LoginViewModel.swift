@@ -23,20 +23,20 @@ public final class LoginViewModel: ViewModel {
     }
 
     private(set) var state = State()
-    private let appStore: AppStore
+    private let store: AppStore
     private let kakaoLoginUseCase: KakaoLoginUseCase
     private let appleLoginUseCase: AppleLoginUseCase
     private let getUserInfoUseCase: GetUserInfoUseCase
     private let coordinator: Coordinator
 
     public init(
-        appStore: AppStore,
+        store: AppStore,
         kakaoLoginUseCase: KakaoLoginUseCase,
         appleLoginUseCase: AppleLoginUseCase,
         getUserInfoUseCase: GetUserInfoUseCase,
         coordinator: Coordinator
     ) {
-        self.appStore = appStore
+        self.store = store
         self.kakaoLoginUseCase = kakaoLoginUseCase
         self.appleLoginUseCase = appleLoginUseCase
         self.getUserInfoUseCase = getUserInfoUseCase
@@ -50,7 +50,7 @@ public final class LoginViewModel: ViewModel {
                 do {
                     try await kakaoLoginUseCase.execute()
                     let user = try await getUserInfoUseCase.execute()
-                    appStore.setUser(user)
+                    store.setUser(user)
                 } catch { self.action(.loginFailure(error)) }
             }
         case let .loginFailure(error):
@@ -79,7 +79,7 @@ public final class LoginViewModel: ViewModel {
                 do {
                     try await appleLoginUseCase.execute(identityToken: identityToken.base64EncodedString())
                     let user = try await getUserInfoUseCase.execute()
-                    appStore.setUser(user)
+                    store.setUser(user)
                 } catch { self.action(.loginFailure(error)) }
             }
 

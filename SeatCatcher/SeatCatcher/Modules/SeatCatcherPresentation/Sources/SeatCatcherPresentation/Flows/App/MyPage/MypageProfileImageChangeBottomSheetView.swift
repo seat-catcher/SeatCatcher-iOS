@@ -27,7 +27,7 @@ public struct MypageProfileImageChangeBottomSheetView: View {
                     .padding(.leading, 16)
                     .padding(.top, 40)
                     .padding(.bottom, 31)
-                Image(viewModel.state.selectedProfileImage?.image ?? viewModel.appStore.user.profileImage.image)
+                Image(viewModel.state.selectedProfileImage?.image ?? viewModel.store.user.profileImage.image)
                     .resizable()
                     .frame(width: 124, height: 124)
                     .padding(.top, 20)
