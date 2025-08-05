@@ -25,7 +25,8 @@ public final class KakaoLoginUseCaseImpl: KakaoLoginUseCase {
     }
 
     public func execute() async throws {
-        let token = try await loginRepository.kakaoLogin()
+        let fcmToken = try tokenRepository.getFCMToken()
+        let token = try await loginRepository.kakaoLogin(fcmToken: fcmToken ?? "")
         try tokenRepository.saveTokens(token)
         userRepository.isSignedIn = true
     }

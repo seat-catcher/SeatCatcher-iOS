@@ -47,6 +47,11 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         completionHandler([.list, .banner])
     }
+    
+    func didReceiveNotificationResponse(_ response: UNNotificationResponse,
+                                        withCompletionHandler completionHandler: @escaping () -> Void) {
+        dump(response)
+    }
 }
 
 extension AppDelegate: MessagingDelegate {

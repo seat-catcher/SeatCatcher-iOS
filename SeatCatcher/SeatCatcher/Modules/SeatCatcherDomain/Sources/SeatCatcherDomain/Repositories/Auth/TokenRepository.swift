@@ -20,6 +20,10 @@ public protocol TokenRepository: AnyObject {
     func saveRefreshToken(_ token: String) throws
     func getRefreshToken() throws -> String?
     func deleteRefreshToken() throws
+    
+    func saveFCMToken(_ token: String) throws
+    func getFCMToken() throws -> String?
+    func deleteFCMToken() throws
 
     func saveTokens(_ token: Token) throws
     func deleteTokens() throws

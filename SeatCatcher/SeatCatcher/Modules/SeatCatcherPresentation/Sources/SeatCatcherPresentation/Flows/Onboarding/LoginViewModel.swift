@@ -71,13 +71,14 @@ public final class LoginViewModel: ViewModel {
         case let .success(authorization):
             // identityToken 언래핑
             guard let credential = authorization.credential as? ASAuthorizationAppleIDCredential,
-                  let identityToken = credential.identityToken
+                  let identityToken = credential.identityToken,
+                  let authorizationCode = credential.authorizationCode
             else { return }
-
+            
             // authUseCase에 identityToken을 넘겨 서버와 로그인 로직 수행
             Task { [appleLoginUseCase, getUserInfoUseCase] in
                 do {
-                    try await appleLoginUseCase.execute(identityToken: identityToken.base64EncodedString())
+                    try await appleLoginUseCase.execute(identityToken: identityToken.base64EncodedString(), authorizationCode: authorizationCode.base64EncodedString())
                     let user = try await getUserInfoUseCase.execute()
                     store.setUser(user)
                 } catch { self.action(.loginFailure(error)) }

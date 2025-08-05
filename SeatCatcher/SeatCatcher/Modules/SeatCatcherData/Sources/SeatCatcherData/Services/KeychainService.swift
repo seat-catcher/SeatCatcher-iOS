@@ -9,7 +9,7 @@ import Foundation
 import Security
 
 struct KeychainService {
-    private static let service = "com.SeatCatcher.SeatCatcher"
+    private static let service = "com.seatcatcher.ios"
 
     enum KeyChainError: Error {
         case saveError

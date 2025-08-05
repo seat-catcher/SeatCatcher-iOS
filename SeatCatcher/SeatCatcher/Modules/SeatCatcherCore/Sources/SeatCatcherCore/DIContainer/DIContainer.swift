@@ -14,6 +14,7 @@ public protocol DIContainer {
     func resolveKakaoLoginUseCase() -> KakaoLoginUseCase
     func resolveValidateTokenUseCase() -> ValidateTokenUseCase
     func resolveLogoutUseCase() -> LogoutUseCase
+    func resolveSaveFCMTokenUseCase() -> SaveFCMTokenUseCase
 
     // MARK: - User UseCases
     func resolveGetRandomNicknameUseCase() -> GetRandomNicknameUseCase

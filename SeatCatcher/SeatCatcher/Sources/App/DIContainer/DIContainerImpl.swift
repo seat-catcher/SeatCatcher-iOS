@@ -56,6 +56,7 @@ final class DIContainerImpl {
         tokenRepository: tokenRepository,
         userRepository: userRepository
     )
+    private lazy var saveFCMTokenUseCase = SaveFCMTokenUseCaseImpl(tokenRepository: tokenRepository)
 
     // MARK: - User UseCase Instances
     private lazy var getRandomNicknameUseCase = GetRandomNicknameUseCaseImpl(userRepository: userRepository)
@@ -108,6 +109,7 @@ extension DIContainerImpl: DIContainer {
     func resolveKakaoLoginUseCase() -> KakaoLoginUseCase { return kakaoLoginUseCase }
     func resolveValidateTokenUseCase() -> ValidateTokenUseCase { return validateTokenUseCase }
     func resolveLogoutUseCase() -> LogoutUseCase { return logoutUseCase }
+    func resolveSaveFCMTokenUseCase() -> SaveFCMTokenUseCase { return saveFCMTokenUseCase }
 
     // MARK: - User UseCases
     func resolveGetRandomNicknameUseCase() -> GetRandomNicknameUseCase { return getRandomNicknameUseCase }

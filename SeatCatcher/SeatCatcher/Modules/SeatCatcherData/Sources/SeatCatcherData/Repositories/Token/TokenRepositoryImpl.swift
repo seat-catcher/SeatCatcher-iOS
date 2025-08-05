@@ -17,6 +17,7 @@ public final class TokenRepositoryImpl: TokenRepository {
     // 키체인 접근 Key
     private let accessToken = "accessToken"
     private let refreshToken = "refreshToken"
+    private let fcmToken = "fcmToken"
 
     private let networkService: NetworkService
 
@@ -65,6 +66,16 @@ public final class TokenRepositoryImpl: TokenRepository {
     public func deleteRefreshToken() throws {
         try KeychainService.delete(key: refreshToken)
     }
+    // MARK: - FCMToken
+    public func saveFCMToken(_ token: String) throws {
+        try KeychainService.save(token: token, key: fcmToken)
+    }
+    public func getFCMToken() throws -> String? {
+        return try KeychainService.get(key: fcmToken)
+    }
+    public func deleteFCMToken() throws {
+        try KeychainService.delete(key: fcmToken)
+    }
 
     public func saveTokens(_ token: Token) throws {
         try saveAccessToken(token.accessToken)
@@ -74,5 +85,6 @@ public final class TokenRepositoryImpl: TokenRepository {
     public func deleteTokens() throws {
         try deleteAccessToken()
         try deleteRefreshToken()
+        try deleteFCMToken()
     }
 }

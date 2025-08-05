@@ -59,6 +59,9 @@ struct SeatCatcherApp: App {
 
         // Presentation 모듈 Resource의 폰트 등록
         Fonts.registerCustomFonts()
+        
+        // FCM 토큰 저장
+        saveFCMToken()
 
         // AccessToken 유효성 검사 후 invalid시 reissue
         // authenticated 상태일 시 유저 정보 fetch
@@ -134,6 +137,21 @@ extension SeatCatcherApp {
         guard currentFlow != .unauthenticated,
         let user = try? await getUserInfoUseCase.execute() else { return }
         self.store.setUser(user)
+    }
+    
+    private func saveFCMToken() {
+        let saveFCMTokenUseCase = diContainer.resolveSaveFCMTokenUseCase()
+        
+        NotificationCenter.default.addObserver(
+            forName: NSNotification.Name("FCMToken"),
+            object: nil,
+            queue: .main,
+            using: { data in
+                let fcmToken = data.userInfo?["token"] as? String
+                try? saveFCMTokenUseCase.execute(fcmToken: fcmToken ?? "")
+                print("FCM 토큰 저장...")
+            }
+        )
     }
 }
 

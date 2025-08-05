@@ -6,7 +6,7 @@
 //
 
 public protocol AppleLoginUseCase {
-    func execute(identityToken token: String) async throws
+    func execute(identityToken token: String, authorizationCode: String) async throws
 }
 
 public final class AppleLoginUseCaseImpl: AppleLoginUseCase {
@@ -24,8 +24,9 @@ public final class AppleLoginUseCaseImpl: AppleLoginUseCase {
         self.userRepository = userRepository
     }
 
-    public func execute(identityToken token: String) async throws {
-        let token = try await loginRepository.appleLogin(identityToken: token)
+    public func execute(identityToken token: String, authorizationCode: String) async throws {
+        let fcmToken = try tokenRepository.getFCMToken()
+        let token = try await loginRepository.appleLogin(identityToken: token, fcmToken: fcmToken ?? "", authorizationCode: authorizationCode)
         try tokenRepository.saveTokens(token)
         userRepository.isSignedIn = true
     }

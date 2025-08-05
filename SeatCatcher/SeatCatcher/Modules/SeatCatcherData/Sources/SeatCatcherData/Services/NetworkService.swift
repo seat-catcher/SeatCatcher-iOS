@@ -9,6 +9,7 @@ import Foundation
 import Alamofire
 import Moya
 import SeatCatcherDomain
+import CryptoKit
 
 public struct NetworkService: Sendable {
     /// _AuthInterceptor는 Alamofire의 RequestInterceptor 프로토콜을 채택하여,
@@ -138,15 +139,26 @@ public struct NetworkService: Sendable {
     public init() {}
 
     // MARK: - Auth
-    func postAppleLogin(_ token: String) async throws -> AppleLoginResponseDTO {
-        let requestDTO = AppleLoginRequestDTO(identityToken: token)
+    func postAppleLogin(_ token: String, fcmToken: String, authorizationCode: String) async throws -> AppleLoginResponseDTO {
+        let requestDTO = AppleLoginRequestDTO(identityToken: token, fcmToken: fcmToken, authorizationCode: authorizationCode, nonce: generateNonce())
+        dump(requestDTO)
         let response = try await provider.request(.postSignInWithApple(requestDTO: requestDTO))
         let responseDTO = try JSONDecoder().decode(AppleLoginResponseDTO.self, from: response)
         return responseDTO
     }
 
-    func postKakaoLogin(_ token: String) async throws -> KakaoLoginResponseDTO {
-        let requestDTO = KakaoLoginRequestDTO(accessToken: token)
+    func generateNonce() -> String {
+        // 임의의 32자 문자열 생성
+        let letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+        let nonce = String((0..<32).map { _ in letters.randomElement()! })
+        // SHA-256 해시
+        let inputData = Data(nonce.utf8)
+        let hashed = SHA256.hash(data: inputData)
+        return hashed.compactMap { String(format: "%02x", $0) }.joined()
+    }
+
+    func postKakaoLogin(_ token: String, fcmToken: String) async throws -> KakaoLoginResponseDTO {
+        let requestDTO = KakaoLoginRequestDTO(accessToken: token, fcmToken: fcmToken)
         let response = try await provider.request(.postSignInWithKakao(requestDTO: requestDTO))
         let responseDTO = try JSONDecoder().decode(KakaoLoginResponseDTO.self, from: response)
         return responseDTO

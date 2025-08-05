@@ -8,6 +8,6 @@
 import Foundation
 
 public protocol LoginRepository {
-    func appleLogin(identityToken token: String) async throws -> Token
-    func kakaoLogin() async throws -> Token
+    func appleLogin(identityToken token: String, fcmToken: String, authorizationCode: String) async throws -> Token
+    func kakaoLogin(fcmToken: String) async throws -> Token
 }
