@@ -146,6 +146,11 @@ public struct NetworkService: Sendable {
         let responseDTO = try JSONDecoder().decode(AppleLoginResponseDTO.self, from: response)
         return responseDTO
     }
+    
+    // MARK: - Withdraw
+    func withdraw() async throws -> Void {
+        let _ = try await provider.request(.withdraw)
+    }
 
     func generateNonce() -> String {
         // 임의의 32자 문자열 생성

@@ -65,7 +65,7 @@ public final class MypageProfileChangeViewModel: ViewModel {
         case let .WillSetProfileImage(image):
             let updatedUser = User(
                 id: store.user.id,
-                name: getRandomNicknameUseCase.execute(),
+                name: store.user.name,
                 profileImage: image,
                 tags: store.user.tags,
                 credit: store.user.credit,

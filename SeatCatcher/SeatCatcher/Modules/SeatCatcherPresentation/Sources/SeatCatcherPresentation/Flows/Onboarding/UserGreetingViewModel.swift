@@ -56,6 +56,7 @@ public final class UserGreetingViewModel: ViewModel {
 
                 self.action(.fadedOut)
                 store.setUser(user)
+                coordinator.popToRoot()
             }
         case .fadedOut:
             // AppStore에 User 정보 전달 -> user.hasOnBoarded가 true로 전환되며 메인 플로우 시작

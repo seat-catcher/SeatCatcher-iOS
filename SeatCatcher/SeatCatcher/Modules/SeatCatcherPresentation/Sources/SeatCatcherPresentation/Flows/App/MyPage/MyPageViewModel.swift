@@ -29,11 +29,13 @@ public final class MyPageViewModel: ViewModel {
 
     let store: AppStore
     private let logoutUseCase: LogoutUseCase
+    private let withdrawUseCase: WithdrawUseCase
     let coordinator: Coordinator
     private(set) var state: State
-    public init(store: AppStore, logoutUseCase: LogoutUseCase, coordinator: Coordinator) {
+    public init(store: AppStore, logoutUseCase: LogoutUseCase, withdrawUseCase: WithdrawUseCase, coordinator: Coordinator) {
         self.store = store
         self.logoutUseCase = logoutUseCase
+        self.withdrawUseCase = withdrawUseCase
         self.coordinator = coordinator
 
         self.state = .init(store: store)
@@ -45,7 +47,13 @@ public final class MyPageViewModel: ViewModel {
         case .logoutButtonTapped:
             try? logoutUseCase.execute()
         case .withdrawalButtonTapped:
-            try? logoutUseCase.execute()
+            Task { [withdrawUseCase] in
+                do {
+                    try await withdrawUseCase.execute()
+                } catch (let error){
+                    dump(error)
+                }
+            }
         case .didTapProfileChangeButton:
             coordinator.push(AppScene.mypageProfileChange)
         case .termsButtonTapped:

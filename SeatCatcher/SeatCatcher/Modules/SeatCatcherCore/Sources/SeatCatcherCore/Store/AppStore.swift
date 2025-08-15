@@ -13,6 +13,7 @@ import SeatCatcherDomain
 public final class AppStore {
     public var user: User
 
+    public var isSignedIn: Bool
     public var isOnJourney: Bool { expectedArrivalTime != nil }
 
     // MARK: - 메인피쳐
@@ -74,6 +75,7 @@ public final class AppStore {
 
     public init(
         user: User,
+        isSignedIn: Bool = false,
         carCode: String? = nil,
         seatSectionType: SeatSectionType? = nil,
         isBlocked: Bool = true,
@@ -81,6 +83,7 @@ public final class AppStore {
         expectedArrivalTime: Date? = nil,
         endJourneyUseCase: EndJourneyUseCase
     ) {
+        self.isSignedIn = isSignedIn
         self.user = user
         self.carCode = carCode
         self.seatSectionType = seatSectionType

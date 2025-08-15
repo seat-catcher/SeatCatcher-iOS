@@ -36,4 +36,8 @@ public final class UserRepositoryImpl: UserRepository {
         let dto = try await networkService.patchUser(user)
         return dto.domainModel
     }
+    
+    public func withdraw() async throws {
+        try await networkService.withdraw()
+    }
 }

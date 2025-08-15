@@ -52,6 +52,7 @@ final class AppCoordinator: Coordinator {
             let mypageViewModel = MyPageViewModel(
                 store: diContainer.resolveAppStore(),
                 logoutUseCase: diContainer.resolveLogoutUseCase(),
+                withdrawUseCase: diContainer.resolveWithdrawUseCase(),
                 coordinator: self
             )
             MyPageView(viewModel: mypageViewModel)

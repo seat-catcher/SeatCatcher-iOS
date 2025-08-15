@@ -14,6 +14,7 @@ enum SeatCatcherAPI: Sendable {
     case postSignInWithApple(requestDTO: AppleLoginRequestDTO)
     case postSignInWithKakao(requestDTO: KakaoLoginRequestDTO)
     case postRefreshToken(requestDTO: RefreshTokenRequestDTO)
+    case withdraw
 
     case getUser
     case patchUser(requestDTO: PatchUserRequestDTO)
@@ -93,6 +94,8 @@ extension SeatCatcherAPI: TargetType {
             return "/user/seats"
         case .patchCredit:
             return "/credit"
+        case .withdraw:
+            return "/user/me"
         }
     }
     
@@ -140,6 +143,8 @@ extension SeatCatcherAPI: TargetType {
             return .patch
         case .patchCredit:
             return .patch
+        case .withdraw:
+            return .delete
         }
     }
     
@@ -237,6 +242,8 @@ extension SeatCatcherAPI: TargetType {
                 bodyEncoding: JSONEncoding.default,
                 urlParameters: queryParameter
             )
+        case .withdraw:
+            return .requestPlain
         }
     }
     
@@ -291,6 +298,8 @@ extension SeatCatcherAPI: TargetType {
         case .patchSeatOccupant:
             return baseWithAuth
         case .patchCredit:
+            return baseWithAuth
+        case .withdraw:
             return baseWithAuth
         }
     }

@@ -15,6 +15,7 @@ public protocol DIContainer {
     func resolveValidateTokenUseCase() -> ValidateTokenUseCase
     func resolveLogoutUseCase() -> LogoutUseCase
     func resolveSaveFCMTokenUseCase() -> SaveFCMTokenUseCase
+    func resolveWithdrawUseCase() -> WithdrawUseCase
 
     // MARK: - User UseCases
     func resolveGetRandomNicknameUseCase() -> GetRandomNicknameUseCase

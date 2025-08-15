@@ -14,7 +14,7 @@ import SeatCatcherData
 final class DIContainerImpl {
     // MARK: - Store Instances
     private lazy var store = AppStore(
-        user: User(hasOnBoarded: true),
+        user: User(hasOnBoarded: false),
         endJourneyUseCase: endJourneyUseCase
     )
 
@@ -57,6 +57,7 @@ final class DIContainerImpl {
         userRepository: userRepository
     )
     private lazy var saveFCMTokenUseCase = SaveFCMTokenUseCaseImpl(tokenRepository: tokenRepository)
+    private lazy var withdrawUseCase = WithdrawUseCaseImpl(tokenRepository: tokenRepository, userRepository: userRepository)
 
     // MARK: - User UseCase Instances
     private lazy var getRandomNicknameUseCase = GetRandomNicknameUseCaseImpl(userRepository: userRepository)
@@ -110,6 +111,7 @@ extension DIContainerImpl: DIContainer {
     func resolveValidateTokenUseCase() -> ValidateTokenUseCase { return validateTokenUseCase }
     func resolveLogoutUseCase() -> LogoutUseCase { return logoutUseCase }
     func resolveSaveFCMTokenUseCase() -> SaveFCMTokenUseCase { return saveFCMTokenUseCase }
+    func resolveWithdrawUseCase() -> WithdrawUseCase { return withdrawUseCase }
 
     // MARK: - User UseCases
     func resolveGetRandomNicknameUseCase() -> GetRandomNicknameUseCase { return getRandomNicknameUseCase }
