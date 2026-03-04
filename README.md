@@ -10,9 +10,6 @@
 | :---: | :---: | :---: |
 | <img src="https://github.com/user-attachments/assets/15756220-4f17-487f-b9da-4befffc8a0ed" width="200" /> | <img src="https://github.com/user-attachments/assets/c17156f7-df3c-4874-a1c6-76c6c72f4669" width="200" /> | <img src="https://github.com/user-attachments/assets/50efb5bc-e4e2-4090-825c-22d8350d586b" width="200" /> |
 
-> **Highlight**: 지하철 노선도처럼 직관적인 UI에서, 좌석이 점유되거나 해제되는 순간이 **Live Animation**으로 즉시 반영됩니다.
-"https://github.com/user-attachments/assets/c17156f7-df3c-4874-a1c6-76c6c72f4669"
-
 
 ---
 
